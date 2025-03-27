@@ -15,12 +15,12 @@ export const ManagerSidebarMenuRoutes: MenuItem[] = [
     icon: <LogoutOutlined />,
   },
   {
-    key: '/products/items',
-    label: 'Записи',
+    key: '/admin/projects',
+    label: 'Сервисы',
     icon: <AppstoreOutlined />,
   },
   {
-    key: '/storage-requests',
+    key: '/admin/storage-requests',
     label: 'Заявки',
     icon: <CalendarOutlined />,
   },

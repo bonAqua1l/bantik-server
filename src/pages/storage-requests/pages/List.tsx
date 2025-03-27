@@ -73,7 +73,9 @@ const columns: ColumnsType<ProductsStorageRequestTypes.Table> = [
     title: 'Услуга',
     dataIndex: 'service',
     key: 'service',
-    render: (service: { name: string }) => service.name,
+    render: (_, record) => (
+      <Link href={`/admin/projects/${record.service.id}`}>{record.service.name}</Link>
+    ),
   },
   {
     title: 'Мастер',
@@ -98,6 +100,7 @@ export const List: React.FC = () => {
       StorageRequestGET,
       setSelectedRowKeys,
       StorageRequestApproveIncomingPOST,
+      handlePageChange,
       // StorageRequestCancelIncomingPOST,
     },
   } = ProductsStorageRequest.Hooks.List.use()
@@ -138,7 +141,7 @@ export const List: React.FC = () => {
         </Flex>
         <Table<ProductsStorageRequestTypes.Table>
           columns={columns}
-          dataSource={storageRequestList || []}
+          dataSource={storageRequestList?.results || []}
           rowKey={(record) => record.id}
           loading={isStorageRequestLoading}
           scroll={{ x: 'max-content' }}
@@ -151,7 +154,11 @@ export const List: React.FC = () => {
               },
             }
           }
-          pagination={false}
+          pagination={{
+            position: ['bottomRight'],
+            pageSize: 10,
+            onChange: handlePageChange,
+          }}
           rowClassName={(_, index) => (index % 2 !== 0 ? cls.evenRow : cls.oddRow)}
         />
       </div>
