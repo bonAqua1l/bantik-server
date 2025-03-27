@@ -5,12 +5,12 @@ import { MenuProps } from 'antd'
 
 export const EmployeeSidebarMenuRoutes: MenuItem[] = [
   {
-    key: '/products/incoming',
+    key: '/admin/products/incoming',
     label: 'Приход',
     icon: <DownloadOutlined />,
   },
   {
-    key: '/products/outgoing',
+    key: '/admin/products/outgoing',
     label: 'Уход',
     icon: <LogoutOutlined />,
   },

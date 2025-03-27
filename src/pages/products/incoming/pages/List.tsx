@@ -2,7 +2,7 @@
 
 import React from 'react'
 
-import { Table, Tag, Flex, Button, Popover, Typography, Pagination } from 'antd'
+import { Table, Tag, Popover, Typography, Pagination } from 'antd'
 import { ColumnsType } from 'antd/es/table'
 import dayjs from 'dayjs'
 import Link from 'next/link'
@@ -116,12 +116,6 @@ export const ListProductsIncoming: React.FC = () => {
         <div className={cls.navigation__info}>
           <Breadcrumb items={breadcrumbData}/>
           <h2>Лиды</h2>
-        </div>
-        <div className={cls.header}>
-          <Flex gap={10} className={cls.filter_and_btn}>
-            {/* <FilterPanel defaultValue={'all_products'} options={[{ value: 'all_products', label: 'Все товары' }, { value: 'not_all_products', label: 'Не все товары' }]}/> */}
-            <Button type="primary" onClick={() => router.push('/products/incoming/create')} className={cls.btn}>Добавить лид</Button>
-          </Flex>
         </div>
         <Table<ProductsIncomingTypes.Table>
           columns={createColumns(checkStatus, getTagColor)}

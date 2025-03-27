@@ -141,7 +141,7 @@ function useCreate() {
       }
 
       const response = await ProductsIncoming.API.List.createProductIncoming(formData).finally(() => {
-        router.push('/products/incoming')
+        router.push('/admin/products/incoming')
       })
 
       if (response.status !== 201) {
@@ -172,7 +172,7 @@ function useCreate() {
 
   const breadcrumbData = [
     { href: '/', title: 'Главная' },
-    { href: '/products/incoming', title: 'Приход товаров' },
+    { href: '/admin/products/incoming', title: 'Приход товаров' },
     { title: 'Создать' },
   ]
 

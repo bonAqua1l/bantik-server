@@ -126,7 +126,7 @@ export const ListProductsIncoming: React.FC = () => {
         </div>
         <div className={cls.header}>
           <Flex gap={8} className={cls.header__btn}>
-            <Button type="default" onClick={() => router.push('/products/incoming')} className={cls.btn_switch}>
+            <Button type="default" onClick={() => router.push('/admin/products/incoming')} className={cls.btn_switch}>
               Приход <ArrowUpOutlined />
             </Button>
             <Button type="primary" className={cls.btn_switch}>
