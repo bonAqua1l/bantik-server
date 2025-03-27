@@ -1,0 +1,181 @@
+.create {
+    padding: 20px 15px;
+}
+
+.main__title {
+    font-size: 24px;
+    font-weight: 500;
+    margin: 20px 0px;
+    color: #0d1924;
+}
+
+.products {
+    width: 100% !important;
+}
+
+.products :global(.ant-table-wrapper) {
+    width: 100% !important;
+}
+
+.products__title {
+    font-size: 18px;
+    font-weight: 500;
+    color: #0d1924;
+}
+
+.search_and_title {
+    width: 400px;
+    color: #0d1924;
+}
+
+.selected_table {
+    border: 1px solid #6c63ff;
+    border-radius: 8px;
+}
+
+.selected_table :global(.ant-table) {
+    border-radius: 8px !important;
+}
+
+.selected_table :global(.ant-table-thead > tr:first-child >th:first-child) {
+    border-start-start-radius: 8px !important;
+}
+
+.selected_table :global(.ant-table-thead > tr:first-child >th:last-child) {
+    border-start-end-radius: 8px !important;
+}
+
+.selected_table :global(.ant-table-thead >tr>th) {
+    font-weight: 500 !important;
+    color: #0d1924 !important;
+}
+
+.selected_table :global(.ant-empty-normal) {
+    margin-block: unset;
+}
+
+.selected_table :global(.ant-table-tbody > tr:last-child) {
+    border-end-start-radius: 8px !important;
+    border-end-end-radius: 8px !important;
+}
+
+.selected_table :global(.ant-table-tbody > tr:last-child > td:last-child) {
+    border-bottom: 0px !important;
+    border-end-start-radius: 8px !important;
+    border-end-end-radius: 8px !important;
+}
+
+.counter {
+    color: #6c63ff;
+}
+
+.selected_table_has {
+    border: 1px solid #6c63ff;
+    border-radius: 8px;
+}
+
+.selected_table_has :global(.ant-table) {
+    border-radius: 8px !important;
+}
+
+.selected_table_has :global(.ant-table-thead > tr:first-child >th:first-child) {
+    border-start-start-radius: 8px !important;
+}
+
+.selected_table_has :global(.ant-table-thead > tr:first-child >th:last-child) {
+    border-start-end-radius: 8px !important;
+}
+
+.selected_table_has :global(.ant-table-thead >tr>th) {
+    font-weight: 500 !important;
+    color: #0d1924 !important;
+}
+
+.selected_table_has :global(.ant-empty-normal) {
+    margin-block: unset;
+}
+
+.selected_table_has :global(.ant-table-tbody > tr:last-child) {
+    border-end-start-radius: 8px !important;
+    border-end-end-radius: 8px !important;
+}
+
+.filter_btn {
+    box-shadow: none !important;
+}
+
+.dragger_filed {
+    margin-top: 10px;
+}
+
+.products_table_main {
+    border: 1px solid #6c63ff;
+    border-radius: 8px;
+}
+
+.evenRow {
+    background-color: #F4F3FF !important;
+}
+
+.products_table_main :global(.ant-table) {
+    border-radius: 8px !important;
+}
+
+.products_table_main :global(.ant-table-thead > tr > th) {
+    background-color: #F4F3FF !important;
+}
+
+.products_table_main :global(.ant-table-thead > tr:first-child >th:first-child) {
+    border-start-start-radius: 8px !important;
+}
+
+.products_table_main :global(.ant-table-thead > tr:first-child >th:last-child) {
+    border-start-end-radius: 8px !important;
+}
+
+.products_table_main :global(.ant-table-thead >tr>th) {
+    font-weight: 500 !important;
+    color: #0d1924 !important;
+}
+
+.products_table_main :global(.ant-empty-normal) {
+    margin-block: unset;
+}
+
+.products_table_main :global(.ant-table-tbody > tr:last-child) {
+    border-end-start-radius: 8px !important;
+    border-end-end-radius: 8px !important;
+}
+
+.products_table_main :global(.ant-table-tbody > tr:last-child > td:last-child) {
+    border-end-end-radius: 8px !important;
+}
+
+.products_table_main :global(.ant-table-tbody > tr:last-child > td:first-child) {
+    border-end-start-radius: 8px !important;
+}
+
+.inputs {
+    margin-top: 20px;
+}
+
+
+@media screen and (max-width: 835px) {
+    .products_header {
+        flex-direction: column;
+        align-items: flex-start !important;
+        gap: 10px !important;
+    }
+    .search_and_title {
+        flex-direction: column;
+        align-items: flex-start !important;
+        width: 100% !important;
+        gap: 10px !important;
+    }
+    .create_btn {
+        width: 100%;
+    }
+    .filter_btn {
+        width: 100%;
+    }
+}

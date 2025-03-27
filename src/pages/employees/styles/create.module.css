@@ -1,0 +1,44 @@
+.filter__panel{
+    gap: 8px;
+}
+
+.main_title h2{
+    font-weight: 400;
+    font-size: 24px;
+}
+
+.custom__popover{
+    cursor: pointer;
+}
+
+.card{
+    width: 400px !important;
+}
+
+.main_title{
+    margin: 13px 0px 17px 0px;
+}
+
+.filter_panel{
+    justify-content: flex-end;
+    gap: 10px;
+    margin-bottom: 19px;
+}
+
+.employee {
+    flex-direction: column;
+    width: 500px;
+}
+
+.main_form {
+    width: 100%;
+}
+
+.form {
+    width: 100%;
+}
+
+.radio_field {
+    width: 100%;
+    margin-top: 10px !important;
+}

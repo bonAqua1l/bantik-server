@@ -1,0 +1,137 @@
+.navigation__info{
+    display: flex;
+    flex-direction: column;
+    gap: 13px;
+}
+
+.navigation__info h2 {
+    font-weight: 400;
+    font-size: 24px;
+}
+
+.mainBlock {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    height: auto;
+}
+
+.leftSide {
+    width: 100% !important;
+}
+  
+.infoCard {
+    width: 100% !important;
+}
+
+.carouselCard{
+    width: 400px !important;
+}
+
+.card_image{
+    width: 100% !important;
+    height: auto !important;
+}
+
+.card_image_carousel{
+    width: 100% !important;
+    height: 230px !important;
+}
+
+.viewContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.actions {
+    display: flex;
+    gap: 8px;
+}
+
+
+.carouselImage{
+    width: 100% !important;
+    height: 230px !important;
+}
+
+
+.imageCard {
+    width: 200px;
+    text-align: center;
+}
+  
+  
+.characteristicsBlock {
+    width: 100%;
+}
+  
+.barcodeBlock {
+    margin-top: 16px;
+}
+
+.barcode_img{
+    width: 400px !important;
+    height: auto !important;
+}
+
+.page :global(.ant-card){
+    border-color: #000 !important;
+}
+
+.image{
+    width: 100% !important;
+    height: 220px !important;
+    object-fit: cover !important;
+}
+
+.btn_red{
+    color: #fff !important;
+    border: none !important;
+    background-color: red !important;
+    transition: 0.3s ease;
+    font-size: 16px;
+}
+
+
+@media screen and (max-width: 1135px) {
+    .mainBlock{
+        flex-direction: column !important;
+    }
+    .carouselCard{
+        width: 100% !important;
+        height: 400px !important;
+    }
+
+    .carousel{
+        height: 100% !important;
+    }
+
+    .image{
+        width: 100% !important;
+        height: 340px !important;
+    }
+}
+
+@media screen and (max-width: 670px) {
+    .actions_main{
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 15px;
+    }
+    .infoCard {
+        padding: 10px;
+        margin: 0 10px;
+    }
+    .infoCard .ant-descriptions-item-label,
+    .infoCard .ant-descriptions-item-content {
+        font-size: 14px;
+        word-break: break-word;
+    }
+}

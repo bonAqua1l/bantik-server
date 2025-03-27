@@ -1,0 +1,174 @@
+.Menu {
+    background-color: #22252a !important;
+}
+
+.Menu :global(.ant-menu-item .ant-menu-item-only-child) {
+    padding: 0px 0px 0px 10px !important;
+}
+
+.Menu :global(.ant-menu-item-selected) {
+    background-color: #444856 !important;
+    color: #fff !important;
+    border-radius: 3px !important;
+}
+
+.Menu :global(.ant-menu-item-group-title) {
+    display: none !important;
+}
+
+.Menu :global(.ant-menu-submenu-title) {
+    padding: 0px 0px 0px 10px !important;
+}
+
+.Menu :global(.ant-menu-item) {
+    padding: 0px 0px 0px 10px !important;
+}   
+
+.Menu :global(.ant-menu-inline) {
+    background: none !important;
+}
+
+.Menu :global(.ant-menu-item:hover) {
+    border-radius: 3px !important;
+}
+
+.Menu :global(.ant-menu-submenu:hover) {
+    border-radius: 3px !important;
+}
+
+.Menu :global(.ant-menu-item.search_sidebar) {
+    padding: 0px !important;
+    border: none !important;
+  }
+.Menu :global(.ant-menu-item-group .ant-menu-item-group-list .ant-menu-item-active.search_sidebar) {
+    border-color: transparent !important;
+    cursor: initial  !important;
+    border: none !important;
+    background-color: transparent !important;
+}
+
+.sidebar_wrapper {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+  
+.sidebar_wrapper :global(.ant-menu) {
+    flex: 1;
+    overflow: auto;
+}
+  
+.sidebar_footer {
+    padding: 0px 16px; 
+}
+
+.navbar__user{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    padding-bottom: 16px;
+}
+
+.navbar__user:hover .arrow_icon {
+    color: #000 !important;
+}
+
+.navbar__user span {
+    font-size: 14px;
+    font-weight: 400;
+}
+
+.account{
+    align-items: center;
+    gap: 8px;
+}
+
+.arrow_icon{
+    color: rgba(0, 0, 0, 0.25) !important;
+    transition: 0.5s ease;
+}
+.sidebar_divider{
+    margin: 15px 0px !important;
+}
+.sidebar_navigation__item{
+    display: flex;
+    align-items: center;
+    height: 40px;
+    gap: 10px;
+    cursor: pointer;
+    margin-block: 4px;
+
+}
+.sidebar_navigation{
+    display: flex;
+    flex-direction: column;
+}
+
+.Menu :global(.ant-menu-title-content) {
+    color: white !important;
+}
+
+.Menu :global(svg) {
+    color: white !important;
+}
+
+.profile {
+    background-color: #1b1d21;
+    padding: 10px;
+    align-items: center;
+    column-gap: 10px; 
+}
+
+.usernames {
+    font-size: 18px;
+    color: #ffffff;
+    font-weight: 500;
+}
+
+.role {
+    font-size: 14px;
+    color: #ffffff;
+}
+
+.default_avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: #22252a;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #ffffff;
+    font-size: 24px;
+}
+
+.profile_image {
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.exit {
+    background-color: #1b1d21;
+    padding: 10px;
+    align-items: center;
+    column-gap: 10px; 
+    cursor: pointer;
+    transition-duration: 0.3s;
+}
+
+.exit_title {
+    font-size: 16px;
+    font-weight: 500;
+    color: #ffffff;
+}
+
+.svg :global(svg) {
+    color: #ffffff !important;
+    width: 18px !important;
+    height: 18px !important;
+}
+
+.exit:hover {
+    background-color: #1b1d21e9;
+}

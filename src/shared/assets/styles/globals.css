@@ -1,0 +1,82 @@
+/* Общие стили */
+html,
+body {
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  /* color: #dfe5e9 !important; */
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Удаление спиннеров для input[type=number] */
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  margin: 0;
+}
+
+/* Объединённые стили для отступов */
+.spacing-wrapper,
+.page-spacing-wrapper,
+.form-spacing-wrapper,
+.form-spacing {
+  padding: 23px 30px;
+}
+
+/* Отступы для контента внутри layouts */
+.main{
+  margin: 20px 15px;
+}
+/* Стили для Loader */
+.loader {
+  width: 100%;
+  height: 100%;
+}
+
+.g2-axis-label,
+.g2-axis-title,
+.g2-axis-line,
+.g2-grid,
+.g2-axis-subtick,
+.g2-axis-tickline {
+  display: none !important;
+}
+
+.logo {
+  padding: 0px 0px 0px 10px !important;
+}
+
+.logo:hover {
+  background-color: transparent !important;
+}
+
+.moreButton{
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: blue;
+  margin-left: 8px;
+}
+
+@media screen and (max-width: 768px) {
+  .spacing-wrapper,
+  .page-spacing-wrapper {
+    padding: 20px;
+  }
+
+  .form-spacing-wrapper,
+  .form-spacing {
+    padding: 20px 0;
+  }
+}

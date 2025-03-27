@@ -1,0 +1,42 @@
+.modal :global(div:first-child .ant-modal-content   ){
+    padding: 24px 0px !important;
+}
+
+.modal__header{
+    margin: 0px 24px;
+}
+
+.modal__footer{
+    margin: 0px 24px;
+}
+
+.form{
+    margin: 0px 24px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 10px !important;
+}
+
+.modal__body{
+    overflow-y: scroll !important;
+    max-height: 77vh !important;
+}
+
+.divider{
+    margin: 22px 0px 12px 0px !important;
+}
+
+.form__item{
+    height: 40px !important;
+    width: 100% !important;
+    margin: 0px !important;
+}
+
+.color_square{
+    width: 20px;
+    height: 20px;
+}
+
+.color_picker_main{
+    text-align: center !important;
+}

@@ -1,0 +1,30 @@
+.colorPickerField :global(.ant-form-item-row){
+    display: initial !important;
+}
+
+.colorPickerField :global(.ant-form-item-row .ant-form-item-label){
+    text-align: left !important;
+} 
+
+.colorPickerField{
+    margin: 0px !important;
+}
+
+.wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+  
+.colorSquare {
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+    transition: 0.2s ease;
+    border-radius: 3px;
+}
+  
+.colorSquare:hover {
+    transform: scale(1.1);
+}
+  
