@@ -44,9 +44,9 @@ export const View = () => {
             <Flex className={cls.form_flex} justify="center" align="center">
               <Flex className={cls.form__items} gap={16}>
                 <TextField
-                  name="username"
-                  type="text"
-                  label="Имя пользователя"
+                  name="email"
+                  type="email"
+                  label="Email"
                 />
 
                 <TextFieldPassword

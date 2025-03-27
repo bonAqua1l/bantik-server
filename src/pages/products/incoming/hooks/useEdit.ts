@@ -199,7 +199,7 @@ function useEdit() {
   const breadcrumbData = React.useMemo(() => {
     return [
       { href: '/', title: 'Главная' },
-      { href: '/products/incoming', title: 'Приход товаров' },
+      { href: '/admin/products/incoming', title: 'Приход товаров' },
       { title: 'Редактировать' },
     ]
   }, [])

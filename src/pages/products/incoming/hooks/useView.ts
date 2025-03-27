@@ -10,7 +10,7 @@ function useView() {
   const [incomingItemLoading, setIncomingItemLoading] = React.useState(true)
   const breadcrumbData = [
     { href: '/', title: 'Главная' },
-    { href: '/products/incoming', title: 'Приход товаров' },
+    { href: '/admin/products/incoming', title: 'Приход товаров' },
     { title: `#${incomingItem?.act}` },
   ]
 

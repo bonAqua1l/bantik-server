@@ -1,7 +1,6 @@
 import React, { Suspense } from 'react'
 
 import { SFPro } from '@/shared/assets/fonts/fonts'
-import { ManagerLayout } from '@/shared/layouts/manager'
 import { getSession } from '@/shared/lib/session'
 import AntdProvider from '@/shared/providers/Antd'
 import '@/shared/assets/styles/globals.css'
@@ -33,7 +32,7 @@ export default async function RootLayout({
         <ReduxProvider initialState={initialState}>
           <AntdProvider>
             <Suspense fallback={<Loader />}>
-              <ManagerLayout>{children}</ManagerLayout>
+              {children}
             </Suspense>
           </AntdProvider>
         </ReduxProvider>
