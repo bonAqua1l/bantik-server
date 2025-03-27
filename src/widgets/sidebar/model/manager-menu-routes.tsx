@@ -1,4 +1,4 @@
-import { AppstoreOutlined, DownloadOutlined, LogoutOutlined } from '@ant-design/icons'
+import { AppstoreOutlined, CalendarOutlined, DownloadOutlined, LogoutOutlined } from '@ant-design/icons'
 import { MenuProps } from 'antd'
 
 type MenuItem = Required<MenuProps>['items'][number];
@@ -18,5 +18,10 @@ export const ManagerSidebarMenuRoutes: MenuItem[] = [
     key: '/products/items',
     label: 'Записи',
     icon: <AppstoreOutlined />,
+  },
+  {
+    key: '/storage-requests',
+    label: 'Заявки',
+    icon: <CalendarOutlined />,
   },
 ]
