@@ -16,6 +16,7 @@ interface Props extends DatePickerProps {
   pickerMode?: 'year' | 'month' | 'date'
   // eslint-disable-next-line no-unused-vars
   onChange?: (value: Dayjs | null) => void
+  showTime?: boolean
 }
 
 export const DatePickerField: React.FC<Props> = (props) => {
@@ -38,6 +39,7 @@ export const DatePickerField: React.FC<Props> = (props) => {
         placeholder={props.placeholder}
         onChange={handleChange}
         className={`${cls.datepicker} ${props.className}`}
+        showTime={props.showTime}
       />
     </FormItem>
   )

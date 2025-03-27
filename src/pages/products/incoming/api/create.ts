@@ -37,9 +37,7 @@ export const getProductIncomingProject = async () => {
 }
 
 export const getUsers = async () => {
-  return axiosRequest.get('/users/', {
-    baseURL: NEXT_PUBLIC_COMPANY_BASE_URL,
-  })
+  return axiosRequest.get('/employees/')
 }
 
 export const createProduct = async (body: ProductsItemsTypes.Item) => {
@@ -52,4 +50,8 @@ export const getProductsColors = async () => {
   return axiosRequest.get('/products/colors/', {
     baseURL: NEXT_PUBLIC_COMPANY_BASE_URL,
   })
+}
+
+export const getClients = async () => {
+  return axiosRequest.get('/clients/')
 }

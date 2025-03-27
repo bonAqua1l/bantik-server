@@ -23,7 +23,7 @@ function useList() {
     setIsIncomingLoading(true)
 
     try {
-      const response = await ProductsIncoming.API.List.getProductsIncomingList(url || '/incomings/', previusURL)
+      const response = await ProductsIncoming.API.List.getProductsIncomingList(url || '/leads/', previusURL)
 
       setProductsIncomingList(response.data)
     } catch (error) {
