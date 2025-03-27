@@ -2,109 +2,109 @@
 
 import React from 'react'
 
-import { Table, Tag, Flex, Popover, Typography, Button } from 'antd'
+import { Table, Tag, Flex, Button } from 'antd'
 import { ColumnsType } from 'antd/es/table'
 import dayjs from 'dayjs'
 import Link from 'next/link'
 
 import { Breadcrumb } from '@/shared/ui/breadcrumb/breadcrumb'
-import { SelectField } from '@/shared/ui/select-field/select-field'
 
 import { ProductsStorageRequest } from '..'
 import cls from '../styles/list.module.css'
 import { ProductsStorageRequestTypes } from '../types'
 
-const { Paragraph } = Typography
+const columns: ColumnsType<ProductsStorageRequestTypes.Table> = [
+  {
+    title: 'Номер заказа',
+    dataIndex: 'id',
+    key: 'id',
+    render: (id: number, record) => (
+      <Link href={`/orders/${id}/`} onClick={() => console.log('Заказ', record)}>
+        #{id}
+      </Link>
+    ),
+  },
+  {
+    title: 'Клиент',
+    dataIndex: 'client_name',
+    key: 'client_name',
+  },
+  {
+    title: 'Телефон',
+    dataIndex: 'phone',
+    key: 'phone',
+  },
+  {
+    title: 'Дата/время',
+    dataIndex: 'date_time',
+    key: 'date_time',
+    render: (date: string) => {
+      const formatted = dayjs(date).format('DD.MM.YYYY HH:mm')
 
-const createColumns = (checkStatus: any, getTagColor: any): ColumnsType<ProductsStorageRequestTypes.Table> => {
-  const columns: ColumnsType<ProductsStorageRequestTypes.Table> = [
-    {
-      title: 'Номер документа',
-      dataIndex: 'act',
-      key: 'act',
-      render: (_, record) => (
-        <Link href={`/products/incoming/${record.id}/`} onClick={() => console.log('id', record)}>#{record.act}</Link>
-      ),
+      return <span>{formatted}</span>
     },
-    {
-      title: 'Кол-во товаров',
-      dataIndex: 'total_quantity',
-      key: 'total_quantity',
-    },
-    {
-      title: 'Статус',
-      dataIndex: 'status',
-      key: 'status',
-      render: (status: string) => (
-        <Tag color={getTagColor(status)}>{checkStatus(status)}</Tag>
-      ),
-    },
-    {
-      title: 'Дата',
-      dataIndex: 'date',
-      key: 'date',
-      render: (date: string) => {
-        const formatted = dayjs(date).format('DD.MM.YYYY')
+  },
+  {
+    title: 'Аванс',
+    dataIndex: 'prepayment',
+    key: 'prepayment',
+  },
+  {
+    title: 'Подтвержден',
+    dataIndex: 'is_confirmed',
+    key: 'is_confirmed',
+    render: (isConfirmed: boolean) => (
+      <Tag color={isConfirmed ? 'green' : 'red'}>
+        {isConfirmed ? 'Да' : 'Нет'}
+      </Tag>
+    ),
+  },
+  {
+    title: 'Создано',
+    dataIndex: 'created_at',
+    key: 'created_at',
+    render: (date: string) => {
+      const formatted = dayjs(date).format('DD.MM.YYYY HH:mm')
 
-        return (
-          <span>{formatted}</span>
-        )
-      },
+      return <span>{formatted}</span>
     },
-    {
-      title: 'Поставщик',
-      dataIndex: 'supplier',
-      key: 'supplier',
-    },
-    {
-      title: 'Ответственный',
-      dataIndex: 'responsible',
-      key: 'responsible',
-      render: (responsible: ProductsStorageRequestTypes.Responsible) => (
-        <Link href={`/users/${responsible.uuid}`}>{`${responsible.first_name} ${responsible.last_name}`}</Link>
-      ),
-    },
-    {
-      title: 'Комментарий',
-      dataIndex: 'message',
-      key: 'message',
-      render: (comment: string) => {
-        return (
-          <Popover overlayClassName={cls.card} className={cls.custom__popover} content={comment}>
-            <Paragraph>{!comment ? '' : `${comment.slice(0, 10)}...`}...</Paragraph>
-          </Popover>
-        )
-      },
-    },
-  ]
-
-  return columns
-}
+  },
+  {
+    title: 'Услуга',
+    dataIndex: 'service',
+    key: 'service',
+    render: (service: { name: string }) => service.name,
+  },
+  {
+    title: 'Мастер',
+    dataIndex: 'master',
+    key: 'master',
+    render: (master: { uuid: string; first_name: string; last_name: string }) => (
+      <Link href={`/users/${master.uuid}`}>
+        {`${master.first_name} ${master.last_name}`}
+      </Link>
+    ),
+  },
+]
 
 export const List: React.FC = () => {
   const {
     breadcrumbData,
     storageRequestList,
     isStorageRequestLoading,
-    type,
     selectedRowKeys,
     submitted,
     actions: {
       StorageRequestGET,
-      checkStatus,
-      getTagColor,
-      setType,
       setSelectedRowKeys,
       StorageRequestApproveIncomingPOST,
-      StorageRequestApproveOutgoingPOST,
-      StorageRequestCancelIncomingPOST,
-      StorageRequestCancelOutgoingPOST,
+      // StorageRequestCancelIncomingPOST,
     },
   } = ProductsStorageRequest.Hooks.List.use()
 
   React.useEffect(() => {
-    StorageRequestGET(type)
-  }, [type])
+    StorageRequestGET()
+  }, [])
 
   return (
     <div>
@@ -112,57 +112,32 @@ export const List: React.FC = () => {
         <Flex className={cls.header} align="center" justify="space-between">
           <div className={cls.navigation__info}>
             <Breadcrumb items={breadcrumbData}/>
-            <h2>Заявки на склад</h2>
+            <h2>Заявки</h2>
           </div>
 
           <Flex className={cls.panel} gap={10}>
-            <SelectField
-              options={
-                [
-                  { value: 'incoming', label: 'Приход' },
-                  { value: 'outgoing', label: 'Уход' },
-                ]
-              }
-              defaultValue={'incoming'}
-              className={cls.select_type}
-              onChange={(value) => {
-                setType(value)
-              }}
-            />
             <div className={cls.approve}>
               <Button
                 disabled={selectedRowKeys.length === 0 || submitted}
                 type="primary"
-                onClick={() => {
-                  if (type === 'incoming') {
-                    StorageRequestApproveIncomingPOST(selectedRowKeys)
-                  } else {
-                    StorageRequestApproveOutgoingPOST(selectedRowKeys)
-                  }
-                }}
+                onClick={() => StorageRequestApproveIncomingPOST(selectedRowKeys)}
               >
                 Принять
               </Button>
             </div>
             <div className={cls.cancel}>
-              <Button
+              {/* <Button
                 disabled={selectedRowKeys.length === 0}
                 type="primary"
-                onClick={() => {
-                  if (type === 'outgoing') {
-                    StorageRequestCancelOutgoingPOST(selectedRowKeys)
-                  } else {
-                    StorageRequestCancelIncomingPOST(selectedRowKeys)
-                  }
-                }}
+                onClick={() => StorageRequestCancelIncomingPOST(selectedRowKeys)}
               >
                 Отклонить
-              </Button>
+              </Button> */}
             </div>
           </Flex>
         </Flex>
         <Table<ProductsStorageRequestTypes.Table>
-          columns={createColumns(checkStatus, getTagColor)}
+          columns={columns}
           dataSource={storageRequestList || []}
           rowKey={(record) => record.id}
           loading={isStorageRequestLoading}
@@ -178,25 +153,6 @@ export const List: React.FC = () => {
           }
           pagination={false}
           rowClassName={(_, index) => (index % 2 !== 0 ? cls.evenRow : cls.oddRow)}
-          expandable={{
-            rowExpandable: (record) => record.items && record.items.length > 0,
-            expandedRowRender: (record) => (
-              <Table
-                columns={[
-                  { title: 'Товар', dataIndex: 'product_title', key: 'product_title', render: (_, record) => (
-                    <Link href={`/product/${record.product.slug}`}>{record.product.title}</Link>
-                  ) },
-                  { title: 'Количество', dataIndex: 'quantity', key: 'quantity' },
-                  { title: 'Цена закупки', dataIndex: 'purchase_price', key: 'purchase_price' },
-                  { title: 'Общая стоимость', dataIndex: 'total_price', key: 'total_price' },
-                ]}
-                dataSource={record.items}
-                rowKey={(item) => item.product.slug ? item.product.slug : ''}
-                pagination={false}
-                size="small"
-              />
-            ),
-          }}
         />
       </div>
     </div>
