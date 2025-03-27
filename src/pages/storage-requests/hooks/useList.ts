@@ -12,9 +12,9 @@ import { ProductsStorageRequestTypes } from '../types'
 function useList() {
   const router = useRouter()
   const [currentPage, setCurrentPage] = React.useState(1)
-  const [products, setProducts] = React.useState<ProductsStorageRequestTypes.Product[] | null>(null)
-  const [selectedProduct, setSelectedProduct] = React.useState<ProductsStorageRequestTypes.Product | null>(null)
-  const [storageRequestList, setStorageRequestList] = React.useState<ProductsStorageRequestTypes.Table[] | null>(null)
+  const [products, setProducts] = React.useState<ProductsStorageRequestTypes.Table[] | null>(null)
+  const [selectedProduct, setSelectedProduct] = React.useState<ProductsStorageRequestTypes.Table | null>(null)
+  const [storageRequestList, setStorageRequestList] = React.useState<ProductsStorageRequestTypes.AppointmentResponse | null>(null)
   const [isStorageRequestLoading, setIsStorageRequestLoading] = React.useState(true)
   const [selectedRowKeys, setSelectedRowKeys] = React.useState<React.Key[]>([])
   const [submitted, setSubmitted] = React.useState(false)
@@ -67,6 +67,14 @@ function useList() {
     }
   }, [])
 
+  const handlePageChange = () => {
+    const nextPageUrl = storageRequestList?.next
+
+    if (nextPageUrl) {
+      StorageRequestGET(nextPageUrl)
+    }
+  }
+
   const breadcrumbData = [
     { href: '/', title: 'Главная' },
     { title: 'Заявки' },
@@ -87,6 +95,7 @@ function useList() {
       setSelectedProduct,
       setProducts,
       setCurrentPage,
+      handlePageChange,
       StorageRequestGET,
       setSelectedRowKeys,
       StorageRequestApproveIncomingPOST,
