@@ -8,27 +8,20 @@ export namespace ProductsIncomingTypes {
     results: Table[];
   }
   export interface Table {
-    id: number
-    files: Files[]
-    status: string
-    act: string
-    document: string
-    supplier: string
-    message: string | null
-    barcode: string | null
-    warehouse: number
-    date: number
-    items: {
-      product: ProductsItemsTypes.Item
-      product_title: string,
-      quantity: number,
-      purchase_price: string,
-      total_price: number
-    }[]
-    project: number
-    responsible: string
-    total_quantity: number
-    total_price: string
+    id: number,
+    client_name: string,
+    client: {
+      name: string,
+      phone: string
+    }
+    phone: string,
+    date_time: string,
+    prepayment: string,
+    service: {
+      name: string
+      id: number
+    },
+    master: string
   }
 
   export interface SelectedItem {
@@ -38,17 +31,19 @@ export namespace ProductsIncomingTypes {
     purchase_price: string,
     total_price: number
   }
+
+  export interface Clients {
+    id: number
+    phone: string
+    name: string
+  }
   export interface Form {
-    files: File
-    quantity: string
-    purchase_price: string
-    supplier: string
-    message: string
-    project: number
-    responsible: string | undefined
-    act: string
-    total_cost: number
-    items: ProductItems[]
+    client: any
+    phone: string
+    date_time: string
+    prepayment?: string
+    service: number
+    master: string
   }
 
   export interface  FormProduct {
@@ -82,20 +77,33 @@ export namespace ProductsIncomingTypes {
     title: string
   }
   export interface Responsible {
-    email: string
-    first_name: string
-    last_name: string
-    surname: string
-    uuid: string
-    image: string
+    uuid: string,
+    last_login: string,
+    email: string,
+    phone_number: string,
+    avatar: string | null,
+    date_joined: string,
+    date_of_birth: string,
+    first_name: string,
+    last_name: string,
+    surname: string | null,
+    gender: string,
+    citizenship: string | null,
+    role: string,
+    is_fired: boolean,
+    termination_reason: string,
+    termination_order_date: string | null,
+    termination_date: string | null,
+    is_employee: boolean,
+    schedule_start: string,
+    schedule_end: string,
+    services: number[]
   }
-  export interface Project {
-    id: number
-    image: string
-    title: string
-    description: string
-    color: string
-    warehouse: number
+  export interface Service {
+    id: number,
+    name: string,
+    duration: number,
+    price: string
   }
 
   export interface Item {

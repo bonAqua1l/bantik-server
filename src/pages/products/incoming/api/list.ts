@@ -2,9 +2,10 @@ import { axiosRequest } from '@/shared/api/axios'
 import { NEXT_PUBLIC_COMPANY_BASE_URL } from '@/shared/utils/consts'
 
 import { ProductsItemsTypes } from '../../items/types'
+import { ProductsIncomingTypes } from '../types'
 
 export const getProductsIncomingList = async (url?: string, previusURL?: string) => {
-  return axiosRequest.get((previusURL || url) || '/incomings/', {
+  return axiosRequest.get((previusURL || url) || '/leads/', {
     baseURL: NEXT_PUBLIC_COMPANY_BASE_URL,
   })
 }
@@ -15,19 +16,12 @@ export const getProductSearchedList = async (search: string | undefined) => {
   })
 }
 
-export const createProductIncoming = async (body: FormData) => {
-  return axiosRequest.post('/incomings/', body, {
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    baseURL: NEXT_PUBLIC_COMPANY_BASE_URL,
-  })
+export const createProductIncoming = async (body: ProductsIncomingTypes.Form) => {
+  return axiosRequest.post('/leads/', body)
 }
 
-export const getProductIncomingProject = async () => {
-  return axiosRequest.get('/project/', {
-    baseURL: NEXT_PUBLIC_COMPANY_BASE_URL,
-  })
+export const getServices = async () => {
+  return axiosRequest.get('/services/')
 }
 
 export const getUsersByProject = async (id: number) => {
