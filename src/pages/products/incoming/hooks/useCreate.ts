@@ -19,6 +19,7 @@ function useCreate() {
   const [userResponsible, setUserResponsible] = React.useState<ProductsIncomingTypes.Responsible[] | null>(null)
   const [clients, setClients] = React.useState<ProductsIncomingTypes.Clients[] | null>(null)
   const [submitted, setSubmitted] = React.useState(false)
+  const [isNotUser, setIsNotUser] = React.useState(true)
 
   const router = useRouter()
   const user = useAppSelector((state) => state.user.userData)
@@ -87,11 +88,13 @@ function useCreate() {
     user,
     router,
     clients,
+    isNotUser,
     actions: {
       ServiceGET,
       ProductsIncomingUsers,
       createIncoming,
       ClientsGET,
+      setIsNotUser,
     },
   }
 }

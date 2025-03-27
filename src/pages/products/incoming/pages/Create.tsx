@@ -23,11 +23,13 @@ export const Create = () => {
     createModal,
     router,
     clients,
+    isNotUser,
     actions: {
       ProductsIncomingUsers,
       createIncoming,
       ServiceGET,
       ClientsGET,
+      setIsNotUser,
     },
   } = ProductsIncoming.Hooks.Create.use()
 
@@ -56,9 +58,40 @@ export const Create = () => {
                   label: item.name,
                   value: item.id,
                 }))}
-                rules={[{ required: true }]}
+                rules={[{ required: isNotUser ? false : true }]}
                 label="Клиент"
+                onChange={() => {
+                  setIsNotUser(false)
+                }}
               />
+
+              {
+                isNotUser ? (
+                  <>
+                    <TextField
+                      name="phone"
+                      type="text"
+                      label="Номер телефона клиента"
+                      placeholder="Введите номер телефона: 9 цифр (без нуля)"
+                      className={cls.form__item}
+                      rules={[
+                        { required: isNotUser ? true : false, message: 'Введите номер телефона' },
+                        { pattern: /^\d{9}$/, message: 'Номер должен содержать ровно 9 цифр' },
+                      ]}
+                    />
+
+                    <TextField
+                      name="client_name"
+                      type="text"
+                      label="Имя клиента"
+                      placeholder="Введите предоплату если она есть"
+                      className={cls.form__item}
+                      rules={[{ required: isNotUser ? true : false }]}
+                    />
+                  </>
+                ) : null
+              }
+
               <DatePickerField
                 name="date_time"
                 placeholder="Введите дату"
