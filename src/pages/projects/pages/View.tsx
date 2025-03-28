@@ -5,7 +5,7 @@ import React from 'react'
 import { Button, Card, Flex } from 'antd'
 import Image from 'next/image'
 
-import { NoPhoto } from '@/shared/assets/images/'
+import { BantikPhoto } from '@/shared/assets/images/'
 import { Breadcrumb } from '@/shared/ui/breadcrumb/breadcrumb'
 
 import { Projects } from '..'
@@ -56,7 +56,7 @@ export const View: React.FC<Props> = (props) => {
         <Flex className={cls.card_container} align="start" gap={24}>
           <Image
             // eslint-disable-next-line react/no-array-index-key
-            src={items.image || NoPhoto.src}
+            src={items.image || BantikPhoto.src}
             alt={items.name}
             width={0}
             height={0}
