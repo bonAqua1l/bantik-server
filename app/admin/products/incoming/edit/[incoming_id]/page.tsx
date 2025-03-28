@@ -7,5 +7,5 @@ type Props = {
 export default async function Page({ params }: Props) {
   const incoming_id = (await params).incoming_id
 
-  return <ProductsIncoming.Pages.Edit incoming_id={incoming_id} />
+  return <ProductsIncoming.Pages.Edit lead_id={incoming_id} />
 }

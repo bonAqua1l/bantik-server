@@ -107,20 +107,32 @@ export namespace ProductsIncomingTypes {
   }
 
   export interface Item {
-    id: number
-    files: Files[]
-    status: string
-    act: string
-    supplier: string
-    message: string | null
-    barcode: string | null
-    warehouse: number
-    date: number
-    items: Items[]
-    project: number
-    responsible: Responsible
-    total_quantity: number
-    total_price: string
+      id: number,
+      client_name: string,
+      phone: string,
+      date_time: string,
+      prepayment: string,
+      is_confirmed: boolean,
+      created_at: string,
+      client: {
+          id: number,
+          phone: string,
+          name: string
+      },
+      service: {
+          id: number,
+          name: string,
+          duration: number,
+          price: string
+      },
+      master: {
+          uuid: string,
+          avatar: string | null,
+          first_name: string,
+          last_name: string,
+          surname: string | null,
+          email: string
+      }
   }
 
   export interface Items {

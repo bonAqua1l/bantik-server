@@ -11,7 +11,6 @@ import { TextField } from '@/shared/ui/textfield/textfield'
 
 import { ProductsIncoming } from '..'
 import cls from '../styles/create.module.css'
-import ModalCreateIncomingItem from '../ui/modals/modal-create-incoming-product'
 
 export const Create = () => {
   const {
@@ -20,7 +19,6 @@ export const Create = () => {
     services,
     submitted,
     form,
-    createModal,
     router,
     clients,
     isNotUser,
@@ -137,10 +135,6 @@ export const Create = () => {
           </Form>
         </Flex>
       </div>
-      <ModalCreateIncomingItem
-        onCloseModal={createModal.onClose}
-        isModalOpen={createModal.isOpen}
-      />
     </div>
   )
 }

@@ -59,8 +59,8 @@ export const getIncomingDetail = (id: number) => {
   return axiosRequest.get(`/incomings/${id}/`)
 }
 
-export const editIncoming = async (body: ProductsIncomingTypes.EditForm, id: number) => {
-  return axiosRequest.patch(`/incomings/${id}/`, body)
+export const editIncoming = async (body: ProductsIncomingTypes.Form, id: number) => {
+  return axiosRequest.patch(`/leads/${id}/`, body)
 }
 
 export const addFiles = async (body: FormData, id: number) => {

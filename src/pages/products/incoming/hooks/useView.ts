@@ -11,10 +11,10 @@ function useView() {
   const breadcrumbData = [
     { href: '/', title: 'Главная' },
     { href: '/admin/products/incoming', title: 'Приход товаров' },
-    { title: `#${incomingItem?.act}` },
+    { title: `#${incomingItem?.id}` },
   ]
 
-  const getIncomingDetails = React.useCallback(async (id: string) => {
+  const getIncomingDetails = React.useCallback(async (id: number) => {
     setIncomingItemLoading(true)
 
     try {

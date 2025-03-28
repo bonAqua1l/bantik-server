@@ -5,6 +5,7 @@ import React from 'react'
 import { Table, Pagination, Flex, Button } from 'antd'
 import { ColumnsType } from 'antd/es/table'
 import dayjs from 'dayjs'
+import Link from 'next/link'
 
 import { Breadcrumb } from '@/shared/ui/breadcrumb/breadcrumb'
 // import { FilterPanel } from '@/shared/ui/filter-panel/filter-panel'
@@ -16,7 +17,15 @@ import { ProductsIncomingTypes } from '../types'
 const createColumns = (): ColumnsType<ProductsIncomingTypes.Table> => {
   const columns: ColumnsType<ProductsIncomingTypes.Table> = [
     {
-      title: 'Номер документа',
+      title: 'ID лида',
+      dataIndex: 'id',
+      key: 'id',
+      render: (_, record) => (
+        <Link href={`/admin/products/incoming/${record.id}/`}>BANTIK-{record.id}</Link>
+      ),
+    },
+    {
+      title: 'Клиент',
       dataIndex: 'client_name',
       key: 'client_name',
       render: (_, record) => (

@@ -1,7 +1,7 @@
 import { ProductsIncoming } from '@/pages/products/incoming'
 
 type Props = {
-    params: Promise<{ incoming_id: string }>
+    params: Promise<{ incoming_id: number }>
 }
 
 export default async function Page({ params }: Props) {

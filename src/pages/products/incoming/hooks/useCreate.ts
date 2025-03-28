@@ -20,9 +20,27 @@ function useCreate() {
   const [clients, setClients] = React.useState<ProductsIncomingTypes.Clients[] | null>(null)
   const [submitted, setSubmitted] = React.useState(false)
   const [isNotUser, setIsNotUser] = React.useState(true)
+  const [incomingItem, setIncomingItem] = React.useState<ProductsIncomingTypes.Item | null>(null)
+  const [incomingItemLoading, setIncomingItemLoading] = React.useState(true)
 
   const router = useRouter()
   const user = useAppSelector((state) => state.user.userData)
+
+  const getIncomingDetails = React.useCallback(async (id: number) => {
+    setIncomingItemLoading(true)
+
+    try {
+      const response = await ProductsIncoming.API.View.getProductsIncomingList(id)
+
+      if (response.status === 200) {
+        setIncomingItem(response.data)
+      }
+    } catch (error) {
+      console.log('get incoming details error', error)
+    } finally {
+      setIncomingItemLoading(false)
+    }
+  }, [])
 
   const ServiceGET = React.useCallback(async () => {
     try {
@@ -89,12 +107,15 @@ function useCreate() {
     router,
     clients,
     isNotUser,
+    incomingItem,
+    incomingItemLoading,
     actions: {
       ServiceGET,
       ProductsIncomingUsers,
       createIncoming,
       ClientsGET,
       setIsNotUser,
+      getIncomingDetails,
     },
   }
 }
