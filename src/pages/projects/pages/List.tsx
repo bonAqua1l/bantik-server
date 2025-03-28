@@ -6,7 +6,7 @@ import { BorderlessTableOutlined } from '@ant-design/icons'
 import {  Button, Flex, List as ListAntd } from 'antd'
 import Image from 'next/image'
 
-import { NoPhoto } from '@/shared/assets/images/'
+import { BantikPhoto } from '@/shared/assets/images/'
 import { Breadcrumb } from '@/shared/ui/breadcrumb/breadcrumb'
 
 import { Projects } from '..'
@@ -72,7 +72,7 @@ export const List = () => {
                     sizes="100vw"
                     style={{ width: '100%' }}
                     className={cls.card_image}
-                    src={item.image || NoPhoto.src}
+                    src={BantikPhoto.src}
                     alt={item.name ||  'image'}
                     priority={true}
                   />
