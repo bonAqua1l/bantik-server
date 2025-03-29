@@ -2,6 +2,7 @@ import { AppstoreOutlined, CalendarOutlined, DownloadOutlined, LogoutOutlined, T
 import { MenuProps } from 'antd'
 
 type MenuItem = Required<MenuProps>['items'][number];
+// commit
 
 export const ManagerSidebarMenuRoutes: MenuItem[] = [
   {
