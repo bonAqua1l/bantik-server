@@ -34,9 +34,9 @@ function useView() {
 
   const formatRussianDate = (dateString?: string, dayName?: string) => {
     if (!dateString) return ''
-    const parsed = dayjs(dateString) // '2025-03-29'
-    const day = parsed.date()        // 29
-    const monthIndex = parsed.month() // 2 (март, т.к. начинается с 0)
+    const parsed = dayjs(dateString)
+    const day = parsed.date()
+    const monthIndex = parsed.month()
     const months = [
       'Января', 'Февраля', 'Марта', 'Апреля', 'Мая', 'Июня',
       'Июля', 'Августа', 'Сентября', 'Октября', 'Ноября', 'Декабря',

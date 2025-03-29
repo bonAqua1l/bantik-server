@@ -32,8 +32,6 @@ export const View = ({ timetable_date }: Props) => {
     TimetableGET(timetable_date)
   }, [timetable_date])
 
-  console.log(timetable)
-
   return (
     <div className={cls.main}>
       <Spin spinning={loading}>
