@@ -1,19 +1,19 @@
-.title {
-    font-weight: 400;
-    margin-top: 0.4rem;
-    font-size: 24px;
-    color: #333;
-}
-  
 .container {
     padding: 20px;
-    background: #f9f9f9;
+    background: #f0f2f5;
+    min-height: 100vh;
 }
   
 .header {
-    display: flex;
-    flex-direction: column;
     margin-bottom: 20px;
+}
+  
+.title {
+    font-weight: 600;
+    margin-top: 0.4rem;
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 16px;
 }
   
 .controls {
@@ -29,16 +29,71 @@
     color: #555;
 }
   
-.tableWrapper {
-    background: #fff;
+.scrollWrapper {
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding-bottom: 8px;
+    margin-bottom: 16px;
+    border-radius: 8px;
+    background-color: #fff;
+}
+  
+.daysRow {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 16px;
     padding: 16px;
-    border-radius: 4px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    min-width: max-content;
+}
+  
+.dayColumn {
+    flex: 0 0 auto;
+    width: 280px;
+}
+  
+.dayCard {
+    border-radius: 6px;
+    margin-bottom: 0;
+    border: 1px solid #999 !important;
+    cursor: pointer;
+}
+  
+.dayCardHeader {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+  
+.dayName {
+    font-weight: 500;
+    font-size: 16px;
+    color: #1890ff;
+}
+  
+.dayDate {
+    font-size: 14px;
+    color: #888;
+    margin-top: 4px;
+}
+  
+.leadsTimeline {
+    margin-top: 16px;
+}
+  
+.timeLabel {
+    color: #555;
+    font-weight: 500;
+}
+  
+.leadInfo {
+    font-size: 14px;
+    line-height: 1.5;
+    margin-bottom: 8px;
 }
   
 .noRecords {
-    padding: 16px;
     text-align: center;
+    padding: 12px 0;
     color: #999;
     font-style: italic;
 }

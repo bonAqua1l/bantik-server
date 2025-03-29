@@ -13,7 +13,7 @@ function useList() {
   const router = useRouter()
   const [timetable, setTimetable] = React.useState<TimetableTypes.Item | null>(null)
   const [currentDate, setCurrentDate] = React.useState(dayjs(date))
-  const [loading, setLoading] = React.useState(true)
+  const [loading, setLoading] = React.useState(false)
 
   const breadcrumbData = [
     { href: '/', title: 'Главная' },
@@ -22,12 +22,14 @@ function useList() {
 
   const TimetableGET = async (date: string) => {
     try {
+      setLoading(true)
       const response = await Timetable.API.List.getWeeklyLeads(date)
 
-      setLoading(false)
       setTimetable(response.data)
     } catch (error) {
       console.log(error)
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -36,21 +38,20 @@ function useList() {
 
     setCurrentDate(newDate)
     TimetableGET(newDate.format('YYYY-MM-DD'))
-  }, [currentDate, TimetableGET])
+  }, [currentDate])
 
   const handleNext = React.useCallback(() => {
     const newDate = currentDate.add(7, 'day')
 
     setCurrentDate(newDate)
     TimetableGET(newDate.format('YYYY-MM-DD'))
-  }, [currentDate, TimetableGET])
+  }, [currentDate])
 
   return {
     breadcrumbData,
     timetable,
-    date,
-    loading,
     currentDate,
+    loading,
     actions: {
       router,
       TimetableGET,
