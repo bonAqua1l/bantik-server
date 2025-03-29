@@ -42,6 +42,12 @@ export namespace TimetableTypes {
 
     export interface Item {
         days: Day[];
-      }
+    }
+
+    export interface ItemDetail {
+      date: string;
+      day: string;
+      leads: Lead[];
+  }
 
 }
