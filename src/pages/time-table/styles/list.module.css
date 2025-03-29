@@ -1,0 +1,45 @@
+.title {
+    font-weight: 400;
+    margin-top: 0.4rem;
+    font-size: 24px;
+    color: #333;
+}
+  
+.container {
+    padding: 20px;
+    background: #f9f9f9;
+}
+  
+.header {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+}
+  
+.controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 16px 0;
+}
+  
+.dateDisplay {
+    font-size: 18px;
+    font-weight: 500;
+    color: #555;
+}
+  
+.tableWrapper {
+    background: #fff;
+    padding: 16px;
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+  
+.noRecords {
+    padding: 16px;
+    text-align: center;
+    color: #999;
+    font-style: italic;
+}
+  
