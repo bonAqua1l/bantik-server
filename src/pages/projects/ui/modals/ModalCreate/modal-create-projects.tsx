@@ -77,6 +77,7 @@ const ModalCreateProjects: React.FC<Props> = ({ isModalOpen, onCloseModal }) => 
           name="duration"
           placeholder="Введите длительность сервиса"
           label="Длительность сервиса"
+          type="number"
         />
 
         <TextField
