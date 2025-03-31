@@ -22,6 +22,7 @@ export const Create = () => {
     router,
     clients,
     isNotUser,
+    contextHolder,
     actions: {
       ProductsIncomingUsers,
       createIncoming,
@@ -47,6 +48,7 @@ export const Create = () => {
         <h1 className={cls.main__title}>Создать лид</h1>
 
         <Flex vertical className={cls.form}>
+          {contextHolder}
           <Form id="createIncoming" form={form} onFinish={(data) => createIncoming(data)}>
             <Flex vertical gap={10} className={cls.inputs}>
               <SelectField

@@ -3,10 +3,12 @@
 import React from 'react'
 
 import { Form } from 'antd'
+import { AxiosError } from 'axios'
 import { useRouter } from 'next/navigation'
 
 import { useAppSelector } from '@/shared/hooks/redux'
 import { useDisclosure } from '@/shared/hooks/useDisclosure'
+import useNotification from '@/shared/hooks/useNotifications'
 
 import { ProductsIncoming } from '..'
 import { ProductsIncomingTypes } from '../types'
@@ -25,6 +27,7 @@ function useCreate() {
 
   const router = useRouter()
   const user = useAppSelector((state) => state.user.userData)
+  const { contextHolder, showError } = useNotification()
 
   const getIncomingDetails = React.useCallback(async (id: number) => {
     setIncomingItemLoading(true)
@@ -75,15 +78,23 @@ function useCreate() {
   const createIncoming = async (formValue: ProductsIncomingTypes.Form) => {
     setSubmitted(true)
     try {
-      const response = await ProductsIncoming.API.List.createProductIncoming(formValue).finally(() => {
-        router.push('/admin/products/incoming')
-      })
+      const response = await ProductsIncoming.API.List.createProductIncoming(formValue)
 
       if (response.status !== 201) {
         throw new Error(`Submission failed: ${response.statusText}`)
       }
 
-    } catch (error) {
+      router.push('/admin/products/incoming')
+
+    } catch (e) {
+      const error = e as AxiosError
+
+      if (error.response && Array.isArray(error.response.data) && error.response.data[0] === 'Этот мастер не оказывает данную услугу.') {
+        showError('Этот мастер не оказывает данную услугу.')
+
+        return
+      }
+
       console.error('Ошибка создания прихода:', error)
     } finally {
       setSubmitted(false)
@@ -109,6 +120,7 @@ function useCreate() {
     isNotUser,
     incomingItem,
     incomingItemLoading,
+    contextHolder,
     actions: {
       ServiceGET,
       ProductsIncomingUsers,

@@ -39,7 +39,8 @@ export const DatePickerField: React.FC<Props> = (props) => {
         placeholder={props.placeholder}
         onChange={handleChange}
         className={`${cls.datepicker} ${props.className}`}
-        showTime={props.showTime}
+        showTime={props.showTime ? { format: 'HH:mm' } : false}
+        disabledDate={(current) => current && current < dayjs().startOf('day')}
       />
     </FormItem>
   )
