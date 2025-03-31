@@ -22,8 +22,6 @@ export const List = () => {
     }
   }, [createModal.isOpen])
 
-  console.log(services)
-
   return (
     <div>
       <div className="main">
@@ -68,9 +66,9 @@ export const List = () => {
                 <Flex justify={'center'}>
                   <Image
                     width={0}
-                    height={120}
+                    height={0}
                     sizes="100vw"
-                    style={{ width: '100%' }}
+                    style={{ width: '100%', height: '120px' }}
                     className={cls.card_image}
                     src={BantikPhoto.src}
                     alt={item.name ||  'image'}

@@ -31,19 +31,20 @@
   
 .scrollWrapper {
     overflow-x: auto;
-    overflow-y: hidden;
+    overflow-y: auto;
     padding-bottom: 8px;
     margin-bottom: 16px;
     border-radius: 8px;
     background-color: #fff;
+    /* height: 75vh; */
 }
   
 .daysRow {
     display: flex;
-    flex-wrap: nowrap;
     gap: 16px;
     padding: 16px;
     min-width: max-content;
+    height: 75vh;
 }
   
 .dayColumn {
@@ -53,7 +54,6 @@
   
 .dayCard {
     border-radius: 6px;
-    margin-bottom: 0;
     border: 1px solid #999 !important;
     cursor: pointer;
 }
