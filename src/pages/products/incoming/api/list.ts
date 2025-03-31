@@ -15,7 +15,7 @@ export const getProductSearchedList = async (search: string | undefined) => {
     baseURL: NEXT_PUBLIC_COMPANY_BASE_URL,
   })
 }
-
+//TODO: переписать names
 export const createProductIncoming = async (body: ProductsIncomingTypes.Form) => {
   return axiosRequest.post('/leads/', body)
 }
