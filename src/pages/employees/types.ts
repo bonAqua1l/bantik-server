@@ -16,10 +16,18 @@ export namespace EmployeeTypes {
         is_staff: boolean
         groups: any[]
         user_permissions: string[]
+        is_employee: boolean
+        services: number[]
     }
     export interface FireEmployeeForm {
         termination_reason: string,
         termination_order_date: string | Dayjs,
         termination_date: string | Dayjs,
+    }
+    export interface Services {
+        id: number,
+        name: string,
+        duration: number,
+        price: string
     }
 }

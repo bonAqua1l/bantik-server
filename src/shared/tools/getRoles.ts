@@ -6,7 +6,7 @@ export function getRoles(role: string) {
     },
     {
       label: 'worker',
-      value: 'Сотрудник',
+      value: 'Мастер',
     },
     {
       label: 'director',

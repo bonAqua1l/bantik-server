@@ -42,7 +42,7 @@ export const View: React.FC<Props> = ({ incoming_id }) => {
 
             <Flex className={cls.incoming_header} justify="space-between" align="center" style={{ marginTop: '20px' }}>
               <Flex align="center" gap={10} className={cls.incoming_header_title}>
-                <h2>Лид #{incomingItem?.id}</h2>
+                <h2>Заявка #{incomingItem?.id}</h2>
 
                 <span className={cls.incoming_date}>{dayjs(incomingItem?.created_at).format('DD MMMM YYYY HH:mm')}</span>
               </Flex>
@@ -55,14 +55,14 @@ export const View: React.FC<Props> = ({ incoming_id }) => {
 
           <Flex className={cls.incoming_info} vertical gap={20} style={{ marginTop: '20px' }}>
             <Flex className={cls.incoming_info__block}>
-              <h3 className={cls.details_title}>Детали лида</h3>
+              <h3 className={cls.details_title}>Детали заявки</h3>
             </Flex>
 
             <Flex className={cls.details_items} vertical gap={10}>
               <Flex className={cls.docs_item} align="center" justify="space-between">
                 Клиент:
                 <Link href={'#'} className={cls.file}>
-                  {incomingItem?.client_name}
+                  {incomingItem?.client.name}
                 </Link>
               </Flex>
 

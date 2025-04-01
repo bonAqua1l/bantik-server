@@ -20,3 +20,7 @@ export const editEmployee = async (uuid: string, data: EmployeeTypes.Item) => {
     baseURL: NEXT_PUBLIC_COMPANY_BASE_URL,
   })
 }
+
+export const deleteEmployee = async (id: string) => {
+  return axiosRequest.delete(`/users/${id}/`)
+}

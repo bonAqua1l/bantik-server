@@ -2,8 +2,11 @@
 
 import React from 'react'
 
-import { Form, notification } from 'antd'
+import { Form } from 'antd'
+import { AxiosError } from 'axios'
 import { useRouter } from 'next/navigation'
+
+import useNotification from '@/shared/hooks/useNotifications'
 
 import { Employees } from '..'
 import { EmployeeTypes } from '../types'
@@ -11,7 +14,8 @@ import { EmployeeTypes } from '../types'
 function useEdit() {
   const [form] = Form.useForm()
   const [submitted, setSubmitted] = React.useState(false)
-  const [api, contextHolder] = notification.useNotification()
+  const { contextHolder, showError } = useNotification()
+  const [services, setServices] = React.useState<EmployeeTypes.Services[]>([])
   const [employee, setEmployee] = React.useState<EmployeeTypes.Item | null>(null)
   const [isEmployeeLoading, setIsEmployeeLoading] = React.useState(true)
 
@@ -19,9 +23,21 @@ function useEdit() {
 
   const breadcrumbData = [
     { href: '/', title: 'Главная' },
-    { href: '/employees', title: 'Персонал' },
+    { href: '/admin/employees', title: 'Персонал' },
     { title: 'Редактировать сотрудника' },
   ]
+
+  const getServices = React.useCallback(async () => {
+    try {
+      const response = await Employees.API.Create.getServices()
+
+      if (response.status === 200) {
+        setServices(response.data.results)
+      }
+    } catch (error) {
+      console.log('error', error)
+    }
+  }, [])
 
   const EmployeeGET = React.useCallback(async (uuid: string) => {
     try {
@@ -44,19 +60,18 @@ function useEdit() {
       const response = await Employees.API.Edit.editEmployee(uuid, data)
 
       if (response.status === 200) {
-        api.success({
-          message: 'Сотрудник успешно был изменён',
-          placement: 'top',
-        })
-        router.push('/employees/')
+        router.push('/admin/employees/')
       } else {
-        api.error({
-          message: 'Что-то пошло не так',
-          placement: 'top',
-        })
+        showError('Что-то пошло не так!')
       }
-    } catch (error) {
-      console.log('error edit employee', error)
+    } catch (e) {
+      const error = e as AxiosError<{ email?: string[] }>
+
+      if (error.response?.status === 400 && error.response.data?.email?.[0] === 'Пользователь with this Электронная почта already exists.') {
+        showError('Пользователь с таким email уже существует')
+      }
+
+      console.log('error create employee', error)
     } finally {
       setSubmitted(false)
     }
@@ -69,10 +84,12 @@ function useEdit() {
     employee,
     isEmployeeLoading,
     form,
+    services,
     actions: {
       router,
       EditEmployee,
       EmployeeGET,
+      getServices,
     },
   }
 }

@@ -2,7 +2,8 @@
 
 import React from 'react'
 
-import { Button, Flex, Form, Radio } from 'antd'
+import { Button, Checkbox, Flex, Form } from 'antd'
+import FormItem from 'antd/es/form/FormItem'
 
 import { Breadcrumb } from '@/shared/ui/breadcrumb/breadcrumb'
 import { LoaderData } from '@/shared/ui/loader/Loader'
@@ -22,14 +23,18 @@ export const Edit: React.FC<Props> = (props) => {
     form,
     isEmployeeLoading,
     submitted,
+    services,
+    contextHolder,
     actions: {
       EmployeeGET,
       EditEmployee,
+      getServices,
     },
   } = Employees.Hooks.Edit.use()
 
   React.useEffect(() => {
     EmployeeGET(props.employee_id)
+    getServices()
   }, [])
 
   return (
@@ -45,18 +50,21 @@ export const Edit: React.FC<Props> = (props) => {
 
         <LoaderData isLoading={isEmployeeLoading} data={employee}>
           <Flex className={cls.main_form}>
+            {contextHolder}
             <Form form={form} className={cls.form} initialValues={{ ...employee }} onFinish={(data) => EditEmployee(props.employee_id, data)}>
               <TextField name="first_name" placeholder="Введите имя пользвотеля" label="Имя сотрудника" />
               <TextField name="last_name" placeholder="Введите фамилию пользвотеля" label="Фамилия сотрудника" />
               <TextField name="surname" placeholder="Введите отчество пользвотеля" label="Отчество сотрудника" />
               <TextField name="email" placeholder="Введите email пользвотеля" label="Email сотрудника" />
-              <Form.Item name={'role'} label="Выберите роль" rules={[{ required: true, message: 'Поле обязательно' }]} className={cls.radio_field}>
-                <Radio.Group>
-                  <Radio value={'manager'}>Менеджер</Radio>
-                  <Radio value={'worker'}>Работник</Radio>
-                  <Radio value={'director'}>Директор</Radio>
-                </Radio.Group>
-              </Form.Item>
+              <FormItem name={'services'} label="Выберите сервисы" rules={[{ required: true, message: 'Поле обязательно' }]} className={cls.radio_field}>
+                <Checkbox.Group>
+                  {
+                    services.map((service) => (
+                      <Checkbox key={service.id} value={service.id}>{service.name}</Checkbox>
+                    ))
+                  }
+                </Checkbox.Group>
+              </FormItem>
               <Button htmlType="submit" type="primary" className={cls.btn} loading={submitted}>Сохранить</Button>
             </Form>
           </Flex>

@@ -9,8 +9,7 @@ function useView() {
   const [incomingItem, setIncomingItem] = React.useState<ProductsIncomingTypes.Item | null>(null)
   const [incomingItemLoading, setIncomingItemLoading] = React.useState(true)
   const breadcrumbData = [
-    { href: '/', title: 'Главная' },
-    { href: '/admin/products/incoming', title: 'Приход товаров' },
+    { href: '/admin/storage-requests/', title: 'Заявки' },
     { title: `#${incomingItem?.id}` },
   ]
 

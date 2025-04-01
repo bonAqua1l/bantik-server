@@ -55,7 +55,7 @@ export const Edit = ({ lead_id }: Props) => {
           <Breadcrumb items={breadcrumbData}/>
         </div>
 
-        <h1 className={cls.main__title}>Редактировать лид</h1>
+        <h1 className={cls.main__title}>Редактировать заявку</h1>
 
         <LoaderData isLoading={incomingItemLoading} data={incomingItem}>
           <Flex vertical className={cls.form}>

@@ -18,8 +18,8 @@ const columns: ColumnsType<ProductsStorageRequestTypes.Table> = [
     title: 'Номер заказа',
     dataIndex: 'id',
     key: 'id',
-    render: (id: number, record) => (
-      <Link href={`/orders/${id}/`} onClick={() => console.log('Заказ', record)}>
+    render: (id: number) => (
+      <Link href={`/admin/products/incoming/${id}/`}>
         #{id}
       </Link>
     ),
@@ -28,11 +28,17 @@ const columns: ColumnsType<ProductsStorageRequestTypes.Table> = [
     title: 'Клиент',
     dataIndex: 'client_name',
     key: 'client_name',
+    render: (_, record) => (
+      <span>{record.client.name}</span>
+    ),
   },
   {
     title: 'Телефон',
     dataIndex: 'phone',
     key: 'phone',
+    render: (_, record) => (
+      <span>{record.client.phone}</span>
+    ),
   },
   {
     title: 'Дата/время',
@@ -97,6 +103,7 @@ export const List: React.FC = () => {
     selectedRowKeys,
     submitted,
     actions: {
+      router,
       StorageRequestGET,
       setSelectedRowKeys,
       StorageRequestApproveIncomingPOST,
@@ -112,7 +119,7 @@ export const List: React.FC = () => {
   return (
     <div>
       <div className="main">
-        <Flex className={cls.header} align="center" justify="space-between">
+        <Flex className={cls.header} align="center" justify="space-between" style={{ marginBottom: '15px' }}>
           <div className={cls.navigation__info}>
             <Breadcrumb items={breadcrumbData}/>
             <h2>Заявки</h2>
@@ -128,15 +135,7 @@ export const List: React.FC = () => {
                 Принять
               </Button>
             </div>
-            <div className={cls.cancel}>
-              {/* <Button
-                disabled={selectedRowKeys.length === 0}
-                type="primary"
-                onClick={() => StorageRequestCancelIncomingPOST(selectedRowKeys)}
-              >
-                Отклонить
-              </Button> */}
-            </div>
+            <Button type="primary" onClick={() => router.push('/admin/products/incoming/create')} className={cls.btn}>Добавить заявку</Button>
           </Flex>
         </Flex>
         <Table<ProductsStorageRequestTypes.Table>

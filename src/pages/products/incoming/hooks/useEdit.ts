@@ -91,9 +91,8 @@ function useEdit() {
   }
 
   const breadcrumbData = [
-    { href: '/', title: 'Главная' },
-    { href: '/admin/products/incoming', title: 'Лиды' },
-    { title: 'Создать' },
+    { href: '/admin/storage-requests/', title: 'Заявки' },
+    { title: 'Редактировать' },
   ]
 
   return {

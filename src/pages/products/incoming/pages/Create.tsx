@@ -45,7 +45,7 @@ export const Create = () => {
           <Breadcrumb items={breadcrumbData}/>
         </div>
 
-        <h1 className={cls.main__title}>Создать лид</h1>
+        <h1 className={cls.main__title}>Создать заявку</h1>
 
         <Flex vertical className={cls.form}>
           {contextHolder}

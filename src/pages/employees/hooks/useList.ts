@@ -25,7 +25,7 @@ function useList() {
 
   const breadcrumbData = [
     { href: '/', title: 'Главная' },
-    { href: '/employees', title: 'Персонал' },
+    { href: '/employees', title: 'Мастера' },
   ]
 
   const getEmployeesList = React.useCallback(async () => {
@@ -120,6 +120,17 @@ function useList() {
     setSelectedEmployee(employee)
   }
 
+  const deleteUser = React.useCallback(async (id: string) => {
+    try {
+      await Employees.API.Edit.deleteEmployee(id)
+
+      getEmployeesList()
+
+    } catch (error) {
+      console.log('error', error)
+    }
+  }, [])
+
   return {
     breadcrumbData,
     employees,
@@ -137,6 +148,7 @@ function useList() {
       handleSelectedEmployee,
       EditEmployee,
       EmployeeGET,
+      deleteUser,
     },
   }
 }

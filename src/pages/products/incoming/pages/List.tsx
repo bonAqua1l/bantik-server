@@ -17,7 +17,7 @@ import { ProductsIncomingTypes } from '../types'
 const createColumns = (): ColumnsType<ProductsIncomingTypes.Table> => {
   const columns: ColumnsType<ProductsIncomingTypes.Table> = [
     {
-      title: 'ID лида',
+      title: 'ID заявки',
       dataIndex: 'id',
       key: 'id',
       render: (_, record) => (
@@ -94,11 +94,11 @@ export const ListProductsIncoming: React.FC = () => {
       <div className="main">
         <div className={cls.navigation__info}>
           <Breadcrumb items={breadcrumbData}/>
-          <h2>Лиды</h2>
+          <h2>Заявки</h2>
         </div>
         <div className={cls.header}>
           <Flex gap={10} className={cls.filter_and_btn}>
-            <Button type="primary" onClick={() => router.push('/admin/products/incoming/create')} className={cls.btn}>Добавить лиды</Button>
+            <Button type="primary" onClick={() => router.push('/admin/products/incoming/create')} className={cls.btn}>Добавить заявку</Button>
           </Flex>
         </div>
         <Table<ProductsIncomingTypes.Table>
@@ -110,6 +110,14 @@ export const ListProductsIncoming: React.FC = () => {
           rootClassName={cls.table}
           pagination={false}
           rowClassName={(_, index) => (index % 2 !== 0 ? cls.evenRow : cls.oddRow)}
+          rowSelection={
+            {
+              type: 'checkbox',
+              // onChange: (selectedRowKey) => {
+              //   setSelectedRowKeys(selectedRowKey)
+              // },
+            }
+          }
         />
 
         <Pagination

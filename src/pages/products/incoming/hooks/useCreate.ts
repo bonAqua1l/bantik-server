@@ -84,7 +84,7 @@ function useCreate() {
         throw new Error(`Submission failed: ${response.statusText}`)
       }
 
-      router.push('/admin/products/incoming')
+      router.push('/admin/storage-requests/')
 
     } catch (e) {
       const error = e as AxiosError

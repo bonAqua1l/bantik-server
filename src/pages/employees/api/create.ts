@@ -8,3 +8,7 @@ export const createEmployee = async (data: EmployeeTypes.Item) => {
     baseURL: NEXT_PUBLIC_COMPANY_BASE_URL,
   })
 }
+
+export const getServices = async () => {
+  return axiosRequest.get('/services/')
+}

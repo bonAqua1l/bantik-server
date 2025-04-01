@@ -16,7 +16,7 @@ import EmployeeFireModal from '../modals/EmployeeFireModal/EmployeeFireModal'
 import cls from '../styles/list.module.css'
 import { EmployeeTypes } from '../types'
 
-const createColumns = (handleSelectedEmployee: (employee: EmployeeTypes.Item) => void, onOpenFireModal: () => void, router: any) => {
+const createColumns = (handleSelectedEmployee: (employee: EmployeeTypes.Item) => void, onOpenFireModal: () => void, router: any, deleteUser: any) => {
   const columns: ColumnsType<EmployeeTypes.Item> = [
     {
       title: 'ФИО',
@@ -47,13 +47,9 @@ const createColumns = (handleSelectedEmployee: (employee: EmployeeTypes.Item) =>
       key: 'actions',
       render: (_, record) => (
         <Flex gap={15}>
-          <Button icon={<UserDeleteOutlined />} shape="circle" onClick={() => {
-            handleSelectedEmployee(record)
-            onOpenFireModal()
-          }}
-          />
+          <Button onClick={() => router.push(`/admin/employees/edit/${record.uuid}`)}>Изменить</Button>
 
-          <Button onClick={() => router.push(`/employees/edit/${record.uuid}`)}>Изменить</Button>
+          <Button onClick={() => deleteUser(record.uuid)}>Удалить</Button>
         </Flex>
       ),
     },
@@ -73,6 +69,7 @@ export const List = () => {
       getEmployeesList,
       handleSelectedEmployee,
       router,
+      deleteUser,
     },
   } = Employees.Hooks.List.use()
 
@@ -86,15 +83,15 @@ export const List = () => {
         <Breadcrumb items={breadcrumbData}/>
       </div>
 
-      <Flex className={cls.main_title} justify="space-between" align="center">
-        <h2>Персонал</h2>
+      <Flex className={cls.main_title} justify="space-between" align="center" style={{ margin: '15px 0px' }}>
+        <h2>Мастера</h2>
 
-        <Button type="primary" onClick={() => router.push('/employees/create/')}>Добавить сотрудника</Button>
+        <Button type="primary" onClick={() => router.push('/admin/employees/create/')}>Добавить мастера</Button>
       </Flex>
 
       <Table
         rowKey="uuid"
-        columns={createColumns(handleSelectedEmployee, fireEmployeeModal.onOpen, router)}
+        columns={createColumns(handleSelectedEmployee, fireEmployeeModal.onOpen, router, deleteUser)}
         dataSource={employees ? employees : []}
         loading={isEmployeesLoading}
         pagination={{ position: ['bottomRight'] }}
