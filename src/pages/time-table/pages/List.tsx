@@ -3,11 +3,12 @@
 import React, { useEffect } from 'react'
 
 import { LeftOutlined, RightOutlined } from '@ant-design/icons'
-import { Card, Button, Spin, Timeline } from 'antd'
+import { Card, Button, Spin, Timeline, Flex } from 'antd'
 import dayjs from 'dayjs'
 import Link from 'next/link'
 
 import { Breadcrumb } from '@/shared/ui/breadcrumb/breadcrumb'
+import { SelectField } from '@/shared/ui/select-field/select-field'
 
 import { Timetable } from '..'
 import cls from '../styles/list.module.css'
@@ -15,23 +16,53 @@ import cls from '../styles/list.module.css'
 export const List = () => {
   const {
     breadcrumbData,
-    timetable,
     currentDate,
     loading,
-    actions: { TimetableGET, handleNext, handlePrev },
+    services,
+    employee,
+    days,
+    actions: {
+      TimetableGET,
+      ServicesGET,
+      handleNext,
+      handlePrev,
+      getEmployeesList,
+      handleServiceChange,
+      handleMasterChange,
+    },
   } = Timetable.Hooks.List.use()
 
   useEffect(() => {
     TimetableGET(currentDate.format('YYYY-MM-DD'))
+    ServicesGET()
+    getEmployeesList()
   }, [])
-
-  const days = timetable?.days || []
 
   return (
     <div className={cls.container}>
       <div className={cls.header}>
         <Breadcrumb items={breadcrumbData} />
-        <h1 className={cls.title}>Расписание</h1>
+        <Flex align={'center'} justify={'space-between'}>
+          <h1 className={cls.title}>Расписание</h1>
+          <Flex gap={8}>
+            <SelectField
+              placeholder="Выбрать сервис"
+              options={services?.map(item => ({
+                label: item.name,
+                value: item.id,
+              }))}
+              onChange={handleServiceChange}
+            />
+            <SelectField
+              placeholder="Выбрать мастера"
+              options={employee?.map(item => ({
+                value: item.uuid,
+                label: `${item.first_name} ${item.last_name}`,
+              }))}
+              onChange={handleMasterChange}
+            />
+          </Flex>
+        </Flex>
 
         <div className={cls.controls}>
           <Button icon={<LeftOutlined />} onClick={handlePrev} />
@@ -61,7 +92,9 @@ export const List = () => {
                     )}
                   >
                     {!leads?.length && (
-                      <div className={cls.noRecords}>Нет записей на этот день</div>
+                      <div className={cls.noRecords}>
+                        Нет записей на этот день
+                      </div>
                     )}
 
                     {leads?.length > 0 && (
@@ -71,12 +104,11 @@ export const List = () => {
                           const confirmed = lead.is_confirmed ? 'Да' : 'Нет'
 
                           return (
-                            <Timeline.Item
-                              key={lead.id}
-                            >
+                            <Timeline.Item key={lead.id}>
                               <div className={cls.leadInfo}>
                                 <div>
-                                  <strong>Мастер:</strong> {lead.master.first_name} {lead.master.last_name}
+                                  <strong>Мастер:</strong> {lead.master.first_name}{' '}
+                                  {lead.master.last_name}
                                 </div>
                                 <div>
                                   <strong>Услуга:</strong> {lead.service.name}

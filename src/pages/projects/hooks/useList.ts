@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react'
+import React from 'react'
 
 import { Form, notification, Upload } from 'antd'
 import { UploadProps } from 'antd/lib'
@@ -17,7 +17,7 @@ function useList() {
   const router = useRouter()
   const [submitted, setSubmitted] = React.useState(false)
   const [isCreated, setIsCreated] = React.useState(false)
-  const [services, setServices] = useState<ProjectsType.Service[] | undefined>(undefined)
+  const [services, setServices] = React.useState<ProjectsType.Service[] | undefined>(undefined)
   const [api, contextHolder] = notification.useNotification()
 
   const createService = (async (data: ProjectsType.Form) => {
