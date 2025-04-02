@@ -13,7 +13,7 @@ import Loader from '../../../../app/loading'
 import cls from '../styles/view.module.css'
 
 interface Props {
-  service_id: number
+  service_id: number;
 }
 
 export const View: React.FC<Props> = (props) => {
