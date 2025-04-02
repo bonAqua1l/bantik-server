@@ -22,7 +22,7 @@ export async function middleware(request: NextRequest) {
   }
 
   if (session && refreshToken && publicRoutes.includes(request.nextUrl.pathname)) {
-    return NextResponse.redirect(new URL('/admin/products/incoming', request.url))
+    return NextResponse.redirect(new URL('/admin/storage-requests/', request.url))
   }
 
   return await updateSession(request)

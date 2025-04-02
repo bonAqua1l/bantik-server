@@ -45,6 +45,7 @@ export const Create = () => {
             <TextField name="last_name" placeholder="Введите фамилию пользвотеля" label="Фамилия сотрудника" rules={[{ required: true, message: 'Поле обязательно' }]} />
             <TextField name="surname" placeholder="Введите отчество пользвотеля" label="Отчество сотрудника" />
             <TextField name="email" placeholder="Введите email пользвотеля" label="Email сотрудника" rules={[{ required: true, message: 'Поле обязательно' }]} />
+            <TextField name="about" placeholder="Введите описание" label="О мастере" />
             <FormItem name={'services'} label="Выберите сервисы" rules={[{ required: true, message: 'Поле обязательно' }]} className={cls.radio_field}>
               <Checkbox.Group>
                 {
@@ -54,6 +55,7 @@ export const Create = () => {
                 }
               </Checkbox.Group>
             </FormItem>
+            <TextField type="password" name="password" placeholder="Пароль" label="Пароль сотрудника" rules={[{ required: true, message: 'Поле обязательно' }]} />
             <Button htmlType="submit" type="primary" className={cls.btn} loading={submitted} style={{ marginTop: '15px' }}>Сохранить</Button>
           </Form>
         </Flex>

@@ -41,8 +41,6 @@ function useCreate() {
     try {
       const response = await Employees.API.Create.createEmployee({ ...data, role: 'worker', is_employee: true })
 
-      console.log('response', response)
-
       if (response.status === 201) {
         router.push('/admin/employees/')
       } else {
