@@ -70,7 +70,7 @@ export const List = () => {
                     sizes="100vw"
                     style={{ width: '100%', height: '120px' }}
                     className={cls.card_image}
-                    src={BantikPhoto.src}
+                    src={item.image || BantikPhoto.src}
                     alt={item.name ||  'image'}
                     priority={true}
                   />

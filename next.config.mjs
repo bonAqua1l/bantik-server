@@ -2,7 +2,7 @@
 const nextConfig = {
   reactStrictMode: false,
   images: {
-    domains: ['outdoorvitals.com', 'magic.qstorage.bilimmotion.com'],
+    domains: ['outdoorvitals.com', 'magic.qstorage.bilimmotion.com', 'qrm.bantik.soulist.life'],
   },
 }
 

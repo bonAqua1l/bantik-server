@@ -10,6 +10,7 @@ export namespace TimetableTypes {
         name: string;
         duration: number;
         price: string;
+        image: string
       }
 
     export interface Master {
@@ -48,6 +49,25 @@ export namespace TimetableTypes {
       date: string;
       day: string;
       leads: Lead[];
-  }
+    }
+
+    export interface Employee {
+      uuid: string
+      password: string
+      last_login: string
+      is_superuser: boolean
+      email: string
+      avatar: string | null
+      first_name: string
+      last_name: string | null
+      surname: string | null
+      role: string
+      is_active: boolean
+      is_staff: boolean
+      groups: any[]
+      user_permissions: string[]
+      is_employee: boolean
+      services: number[]
+    }
 
 }

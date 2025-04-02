@@ -1,8 +1,20 @@
 import { axiosRequest } from '@/shared/api/axios'
-import { NEXT_PUBLIC_COMPANY_BASE_URL } from '@/shared/utils/consts'
 
-export const getWeeklyLeads = async (date: string) => {
+export const getWeeklyLeads = async (date: string, master_uuid?: string, service_id?: string) => {
   return axiosRequest.get(`/leads/weekly_leads/?date=${date}`, {
-    baseURL: NEXT_PUBLIC_COMPANY_BASE_URL,
+    params: {
+      master_uuid,
+      service_id,
+    },
+  })
+}
+
+export const getServices = async () => {
+  return axiosRequest.get('/services/', {
+  })
+}
+
+export const getEmployeesList = async () => {
+  return axiosRequest.get('/users', {
   })
 }

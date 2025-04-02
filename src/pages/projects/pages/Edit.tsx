@@ -49,6 +49,13 @@ export const Edit: React.FC<Props> = (props) => {
             className={cls.Form}
             initialValues={{
               ...items,
+              image: items?.image
+                ? [{
+                  uid: '-1',
+                  name: 'current_image',
+                  url: items.image,
+                }]
+                : [],
             }}
             onFinish={(data) => EditService(props.service_id, data)}
           >
