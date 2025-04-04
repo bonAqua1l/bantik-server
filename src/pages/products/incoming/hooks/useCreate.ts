@@ -24,6 +24,7 @@ function useCreate() {
   const [isNotUser, setIsNotUser] = React.useState(true)
   const [incomingItem, setIncomingItem] = React.useState<ProductsIncomingTypes.Item | null>(null)
   const [incomingItemLoading, setIncomingItemLoading] = React.useState(true)
+  const [filteredServices, setFilteredServices] = React.useState<ProductsIncomingTypes.Service[] | null>(null)
 
   const router = useRouter()
   const user = useAppSelector((state) => state.user.userData)
@@ -121,6 +122,7 @@ function useCreate() {
     incomingItem,
     incomingItemLoading,
     contextHolder,
+    filteredServices,
     actions: {
       ServiceGET,
       ProductsIncomingUsers,
@@ -128,6 +130,7 @@ function useCreate() {
       ClientsGET,
       setIsNotUser,
       getIncomingDetails,
+      setFilteredServices,
     },
   }
 }

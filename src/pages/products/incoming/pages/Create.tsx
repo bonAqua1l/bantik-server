@@ -23,12 +23,14 @@ export const Create = () => {
     clients,
     isNotUser,
     contextHolder,
+    filteredServices,
     actions: {
       ProductsIncomingUsers,
       createIncoming,
       ServiceGET,
       ClientsGET,
       setIsNotUser,
+      setFilteredServices,
     },
   } = ProductsIncoming.Hooks.Create.use()
 
@@ -118,13 +120,18 @@ export const Create = () => {
                   label: `${responsible.first_name} ${responsible.last_name}`,
                 }))}
                 rules={[{ required: true }]}
+                onChange={(value) => {
+                  const selected = userResponsible?.find(master => master.uuid === value)
+
+                  setFilteredServices(selected?.services || [])
+                }}
               />
               <SelectField
                 name="service"
                 className={cls.form__item}
                 placeholder="Выберите сервис"
                 label="Сервис:"
-                options={services?.map(service => ({
+                options={filteredServices?.map(service => ({
                   value: service.id,
                   label: service.name,
                 }))}

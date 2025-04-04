@@ -97,7 +97,7 @@ export namespace ProductsIncomingTypes {
     is_employee: boolean,
     schedule_start: string,
     schedule_end: string,
-    services: number[]
+    services: any[]
   }
   export interface Service {
     id: number,
