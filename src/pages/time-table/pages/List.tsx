@@ -107,11 +107,12 @@ export const List = () => {
                             <Timeline.Item key={lead.id}>
                               <div className={cls.leadInfo}>
                                 <div>
-                                  <strong>Мастер:</strong> {lead.master.first_name}{' '}
-                                  {lead.master.last_name}
+                                  <strong>Мастер:</strong>
+                                  <Link href={'/admin/employees/'}> {lead.master.first_name}{' '}{lead.master.last_name}</Link>
                                 </div>
                                 <div>
-                                  <strong>Услуга:</strong> {lead.service.name}
+                                  <strong>Услуга:</strong>
+                                  <Link href={`/admin/projects/${lead.service.id}`}> {lead.service.name}</Link>
                                 </div>
                                 <div>
                                   <strong>Подтв.:</strong> {confirmed}

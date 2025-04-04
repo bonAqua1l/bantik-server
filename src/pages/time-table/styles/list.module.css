@@ -37,6 +37,7 @@
     border-radius: 8px;
     background-color: #fff;
     /* height: 75vh; */
+    transform: rotateX(180deg);
 }
   
 .daysRow {
@@ -45,6 +46,7 @@
     padding: 16px;
     min-width: max-content;
     height: 75vh;
+    transform: rotateX(180deg);
 }
   
 .dayColumn {
