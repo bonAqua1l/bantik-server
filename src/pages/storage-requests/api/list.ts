@@ -1,7 +1,7 @@
 import { axiosRequest } from '@/shared/api/axios'
 
 export const getLeadRequest = async (url?: string) => {
-  return axiosRequest.get(url || '/pendings/pending/')
+  return axiosRequest.get(url || '/leads/')
 }
 
 export const approveLeadStorageRequest = async (lead_ids: React.Key[]) => {

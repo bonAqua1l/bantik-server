@@ -4,7 +4,6 @@ import React from 'react'
 
 import { useRouter } from 'next/navigation'
 
-import { ProductsStorageRequestTypes } from '@/pages/storage-requests/types'
 import { useAppSelector } from '@/shared/hooks/redux'
 
 import { ProductsIncoming } from '..'
@@ -17,7 +16,6 @@ function useList() {
   const [selectedProduct, setSelectedProduct] = React.useState<ProductsIncomingTypes.Product | null>(null)
   const [productsIncomingList, setProductsIncomingList] = React.useState<ProductsIncomingTypes.ApiResponse | undefined>(undefined)
   const [isIncomingLoading, setIsIncomingLoading] = React.useState(true)
-  const [selectedProductMain, setSelectedProductMain] = React.useState<ProductsStorageRequestTypes.Table | null>(null)
 
   const currentWarehouse = useAppSelector((state) => state.user.userData?.current_warehouse)
 

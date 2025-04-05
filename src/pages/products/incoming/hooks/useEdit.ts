@@ -76,7 +76,7 @@ function useEdit() {
     setSubmitted(true)
     try {
       const response = await ProductsIncoming.API.Edit.editIncoming(formValue, id).finally(() => {
-        router.push('/admin/products/incoming')
+        router.push('/admin/storage-requests/')
       })
 
       if (response.status !== 201) {

@@ -172,7 +172,7 @@ function useCreate() {
 
   const breadcrumbData = [
     { href: '/', title: 'Главная' },
-    { href: '/admin/products/incoming', title: 'Приход товаров' },
+    { href: '/admin/storage-requests/', title: 'Приход товаров' },
     { title: 'Создать' },
   ]
 

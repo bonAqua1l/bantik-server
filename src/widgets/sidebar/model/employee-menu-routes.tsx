@@ -5,7 +5,7 @@ import { MenuProps } from 'antd'
 
 export const EmployeeSidebarMenuRoutes: MenuItem[] = [
   {
-    key: '/admin/products/incoming',
+    key: '/admin/storage-requests/',
     label: 'Приход',
     icon: <DownloadOutlined />,
   },

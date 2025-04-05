@@ -24,7 +24,7 @@ export const useLogin = () => {
       TokenManagerClient.setRefreshToken(response.refresh)
 
       if (response && response.success) {
-        router.push('/admin/products/incoming')
+        router.push('/admin/storage-requests/')
       } else {
         showError('Что то пошло не так!')
         console.error('Login failed:', response || 'Unknown error')

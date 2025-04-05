@@ -86,34 +86,6 @@ export const Edit = ({ lead_id }: Props) => {
                     setIsNotUser(false)
                   }}
                 />
-
-                {
-                  isNotUser ? (
-                    <>
-                      <TextField
-                        name="phone"
-                        type="text"
-                        label="Номер телефона клиента"
-                        placeholder="Введите номер телефона: 9 цифр (без нуля)"
-                        className={cls.form__item}
-                        rules={[
-                          { required: isNotUser ? true : false, message: 'Введите номер телефона' },
-                          { pattern: /^\d{9}$/, message: 'Номер должен содержать ровно 9 цифр' },
-                        ]}
-                      />
-
-                      <TextField
-                        name="client_name"
-                        type="text"
-                        label="Имя клиента"
-                        placeholder="Введите предоплату если она есть"
-                        className={cls.form__item}
-                        rules={[{ required: isNotUser ? true : false }]}
-                      />
-                    </>
-                  ) : null
-                }
-
                 <DatePickerField
                   name="date_time"
                   placeholder="Введите дату"

@@ -151,6 +151,9 @@ export const List: React.FC = () => {
               onChange: (selectedRowKey) => {
                 setSelectedRowKeys(selectedRowKey)
               },
+              getCheckboxProps: (record) => ({
+                disabled: record.is_confirmed === true,
+              }),
             }
           }
           pagination={{
