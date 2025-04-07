@@ -9,3 +9,9 @@ export const approveLeadStorageRequest = async (lead_ids: React.Key[]) => {
     lead_ids: lead_ids,
   })
 }
+
+export const rejectIncomingStorageRequest = async (incoming_ids: React.Key[]) => {
+  return axiosRequest.post('/pendings/reject/', {
+    lead_ids: incoming_ids,
+  })
+}

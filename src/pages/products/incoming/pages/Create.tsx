@@ -2,7 +2,8 @@
 
 import React from 'react'
 
-import { Button, Flex, Form } from 'antd'
+import { Button, Checkbox, Flex, Form } from 'antd'
+import FormItem from 'antd/es/form/FormItem'
 
 import { Breadcrumb } from '@/shared/ui/breadcrumb/breadcrumb'
 import { DatePickerField } from '@/shared/ui/date-picker-field/date-picker-field'
@@ -126,17 +127,15 @@ export const Create = () => {
                   setFilteredServices(selected?.services || [])
                 }}
               />
-              <SelectField
-                name="service"
-                className={cls.form__item}
-                placeholder="Выберите сервис"
-                label="Сервис:"
-                options={filteredServices?.map(service => ({
-                  value: service.id,
-                  label: service.name,
-                }))}
-                rules={[{ required: true }]}
-              />
+              <FormItem name={'services'} label="Выберите сервисы" rules={[{ required: true, message: 'Поле обязательно' }]} className={cls.radio_field}>
+                <Checkbox.Group>
+                  {
+                    filteredServices?.map((service) => (
+                      <Checkbox key={service.id} value={service.id}>{service.name}</Checkbox>
+                    ))
+                  }
+                </Checkbox.Group>
+              </FormItem>
             </Flex>
 
             <Flex gap={10} style={{ marginTop: '20px' }}>

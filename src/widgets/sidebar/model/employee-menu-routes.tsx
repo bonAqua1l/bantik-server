@@ -1,4 +1,4 @@
-import { AppstoreOutlined, BarsOutlined, DownloadOutlined, LogoutOutlined, ProfileOutlined } from '@ant-design/icons'
+import { AppstoreOutlined, BarsOutlined, ClockCircleOutlined, DownloadOutlined, LogoutOutlined, ProfileOutlined } from '@ant-design/icons'
 import { MenuProps } from 'antd'
 
   type MenuItem = Required<MenuProps>['items'][number];
@@ -28,5 +28,10 @@ export const EmployeeSidebarMenuRoutes: MenuItem[] = [
     key: '/history',
     label: 'История',
     icon: <ProfileOutlined />,
+  },
+  {
+    key: '/admin/reports',
+    label: 'Отчетность',
+    icon: <ClockCircleOutlined />,
   },
 ]

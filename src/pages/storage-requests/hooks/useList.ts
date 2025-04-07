@@ -55,7 +55,7 @@ function useList() {
     setSubmitted(true)
 
     try {
-      const response = await ProductsStorageRequest.API.List.approveLeadStorageRequest(incoming_ids)
+      const response = await ProductsStorageRequest.API.List.rejectIncomingStorageRequest(incoming_ids)
 
       if (response.status === 200) {
         StorageRequestGET()

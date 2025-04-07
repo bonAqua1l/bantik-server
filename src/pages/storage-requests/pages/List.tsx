@@ -60,8 +60,8 @@ const columns: ColumnsType<ProductsStorageRequestTypes.Table> = [
     dataIndex: 'is_confirmed',
     key: 'is_confirmed',
     render: (isConfirmed: boolean) => (
-      <Tag color={isConfirmed ? 'green' : 'red'}>
-        {isConfirmed ? 'Да' : 'Нет'}
+      <Tag color={isConfirmed === null ? 'gray' : typeof isConfirmed === 'boolean' && isConfirmed ? 'green' : 'red'}>
+        {isConfirmed === null ? 'Не обработан' : typeof isConfirmed === 'boolean' && isConfirmed ? 'Да' : 'Нет'}
       </Tag>
     ),
   },
@@ -79,8 +79,12 @@ const columns: ColumnsType<ProductsStorageRequestTypes.Table> = [
     title: 'Услуга',
     dataIndex: 'service',
     key: 'service',
-    render: (_, record) => (
-      <Link href={`/admin/projects/${record.service.id}`}>{record.service.name}</Link>
+    render: (services: { id: number; name: string }[]) => (
+      <div>
+        {services.map((s) => (
+          <div key={s.id}>{s.name}</div>
+        ))}
+      </div>
     ),
   },
   {
@@ -108,7 +112,7 @@ export const List: React.FC = () => {
       setSelectedRowKeys,
       StorageRequestApproveIncomingPOST,
       handlePageChange,
-      // StorageRequestCancelIncomingPOST,
+      StorageRequestCancelIncomingPOST,
     },
   } = ProductsStorageRequest.Hooks.List.use()
 
@@ -135,6 +139,13 @@ export const List: React.FC = () => {
                 Принять
               </Button>
             </div>
+            <Button
+              disabled={selectedRowKeys.length === 0 || submitted}
+              danger
+              onClick={() => StorageRequestCancelIncomingPOST(selectedRowKeys)}
+            >
+              Отклонить
+            </Button>
             <Button type="primary" onClick={() => router.push('/admin/products/incoming/create')} className={cls.btn}>Добавить заявку</Button>
           </Flex>
         </Flex>
@@ -152,7 +163,7 @@ export const List: React.FC = () => {
                 setSelectedRowKeys(selectedRowKey)
               },
               getCheckboxProps: (record) => ({
-                disabled: record.is_confirmed === true,
+                disabled: record.is_confirmed !== null,
               }),
             }
           }
