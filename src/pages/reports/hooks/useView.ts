@@ -33,9 +33,9 @@ function useView() {
     }
   }, [])
 
-  const getLeads = React.useCallback(async (start_date?: string, end_date?: string) => {
+  const getLeads = React.useCallback(async (type?: string, start_date?: string, end_date?: string) => {
     try {
-      const response = await Reports.API.View.getLeads(start_date, end_date)
+      const response = await Reports.API.View.getLeads(type, start_date, end_date)
 
       setLeads(response.data)
     } catch (error) {
@@ -62,7 +62,7 @@ function useView() {
 
       getTotalAmount(undefined, startDate, endDate)
       getClients(undefined, startDate, endDate)
-      getLeads(startDate, endDate)
+      getLeads(undefined, startDate, endDate)
       setToday(false)
       setLoading(false)
     } else {

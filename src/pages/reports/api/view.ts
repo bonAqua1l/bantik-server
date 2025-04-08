@@ -16,8 +16,9 @@ export const getClients = (type?: string, start_date?: string, end_date?: string
   })
 }
 
-export const getLeads = (start_date?: string, end_date?: string) => {
+export const getLeads = (type?: string, start_date?: string, end_date?: string) => {
   return axiosRequest.post('/reports/average-bookings-report/', {
+    type,
     start_date,
     end_date,
   })

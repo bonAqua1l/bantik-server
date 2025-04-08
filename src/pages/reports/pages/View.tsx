@@ -57,14 +57,16 @@ export const View = () => {
             getTotalAmount('week')
             getClients('week')
             getSpecials('week')
-            setToday(true)
+            getLeads('week')
+            setToday(false)
           }}
           >За неделю</Button>
           <Button type="primary" onClick={() => {
             getTotalAmount('month')
             getClients('month')
             getSpecials('month')
-            setToday(true)
+            getLeads('month')
+            setToday(false)
           }}
           >За месяц</Button>
           <Flex style={{ width: '400px' }}>
@@ -95,7 +97,7 @@ export const View = () => {
             </Card>
 
             <Card>
-              <h3 className={cls.title}>Среднее кол-во записей за {today ? 'сегодня' : 'период'}</h3>
+              <h3 className={cls.title}>Среднее кол-во записей</h3>
 
               <div className={cls.text}>Общее кол-во записей {leads.total_bookings}</div>
               <div className={cls.text}>Дней за период {leads.days_in_period}</div>
