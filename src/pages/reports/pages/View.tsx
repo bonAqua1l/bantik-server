@@ -48,16 +48,22 @@ export const View = () => {
         <Flex className={cls.filter__panel}>
           <Button type="primary" onClick={() => {
             getTotalAmount('day')
+            getClients('day')
+            getSpecials('day')
             setToday(true)
           }}
           >За сегодня</Button>
           <Button type="primary" onClick={() => {
             getTotalAmount('week')
+            getClients('week')
+            getSpecials('week')
             setToday(true)
           }}
           >За неделю</Button>
           <Button type="primary" onClick={() => {
             getTotalAmount('month')
+            getClients('month')
+            getSpecials('month')
             setToday(true)
           }}
           >За месяц</Button>
