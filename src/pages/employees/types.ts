@@ -41,14 +41,17 @@ export namespace EmployeeTypes {
     }
 
     export interface Schedule {
+        time?: any
         id: number;
         weekday: number;
         start_time: string;
         end_time: string;
-        weekday_name: 'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturday' | 'sunday';
+        weekday_name: string;
     }
 
     export interface ScheduleForm {
+        id: number
+        weekday: number
         start_time: string;
         end_time: string;
     }

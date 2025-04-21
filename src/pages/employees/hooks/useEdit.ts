@@ -46,7 +46,6 @@ function useEdit() {
       const data = response.data
 
       setEmployee(data)
-
     } catch (error) {
       console.log('error employee by uuid', error)
     } finally {
@@ -56,16 +55,9 @@ function useEdit() {
 
   const EditEmployee = React.useCallback(async (uuid: string, data: EmployeeTypes.Item) => {
     setSubmitted(true)
+
     try {
-      const formData = {
-        ...data,
-        schedule: data.schedule.map((item: any) => ({
-          weekday: item.weekday,
-          start_time: item.time.format('HH:mm:ss'),
-          end_time: item.time.format('HH:mm:ss'),
-        })),
-      }
-      const response = await Employees.API.Edit.editEmployee(uuid, formData)
+      const response = await Employees.API.Edit.editEmployee(uuid, data)
 
       if (response.status === 200) {
         router.push('/admin/employees/')
