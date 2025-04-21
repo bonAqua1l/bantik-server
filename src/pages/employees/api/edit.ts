@@ -21,6 +21,12 @@ export const editEmployee = async (uuid: string, data: EmployeeTypes.Item) => {
   })
 }
 
+export const editEmployeeSchedule = async (id: number, data: EmployeeTypes.ScheduleForm) => {
+  return axiosRequest.patch(`/employees/schedule/${id}/`, data, {
+    baseURL: NEXT_PUBLIC_COMPANY_BASE_URL,
+  })
+}
+
 export const deleteEmployee = async (id: string) => {
   return axiosRequest.delete(`/users/${id}/`)
 }

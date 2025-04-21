@@ -5,6 +5,7 @@ import React from 'react'
 import { Card, Col, Flex, Row, Spin } from 'antd'
 import Title from 'antd/lib/typography/Title'
 import dayjs from 'dayjs'
+import Link from 'next/link'
 
 import { Breadcrumb } from '@/shared/ui/breadcrumb/breadcrumb'
 
@@ -59,16 +60,16 @@ export const View = ({ timetable_date }: Props) => {
                       <span style={{ fontWeight: 'bold' }}>Телефон:</span> <span>{lead.phone}</span>
                     </div>
                     <div className={cls.leadInfo}>
-                      <span style={{ fontWeight: 'bold' }}>Услуга:</span> <span>{lead.service.name}</span>
+                      <span style={{ fontWeight: 'bold' }}>Услуга:</span> <Link href={`/admin/projects/${lead.service.id}`}><span>{lead.service.name}</span></Link>
                     </div>
                     <div className={cls.leadInfo}>
-                      <span style={{ fontWeight: 'bold' }}>Цена:</span> <span>{lead.service.price} сом</span>
+                      <span style={{ fontWeight: 'bold' }}>Цена:</span> <span>{parseInt(lead.service.price)} сом</span>
                     </div>
                     <div className={cls.leadInfo}>
                       <span style={{ fontWeight: 'bold' }}>Время:</span> <span>{time}</span>
                     </div>
                     <div className={cls.leadInfo}>
-                      <span style={{ fontWeight: 'bold' }}>Длительность:</span> <span>{lead.service.duration}</span>
+                      <span style={{ fontWeight: 'bold' }}>Длительность:</span> <span>{lead.service.duration} мин</span>
                     </div>
                     <div className={cls.leadInfo}>
                       <span style={{ fontWeight: 'bold' }}>Мастер:</span>{' '}

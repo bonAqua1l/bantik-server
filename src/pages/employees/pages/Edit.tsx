@@ -51,7 +51,7 @@ export const Edit: React.FC<Props> = (props) => {
         <LoaderData isLoading={isEmployeeLoading} data={employee}>
           <Flex className={cls.main_form}>
             {contextHolder}
-            <Form form={form} className={cls.form} initialValues={{ ...employee }} onFinish={(data) => EditEmployee(props.employee_id, data)}>
+            <Form form={form} className={cls.form} initialValues={{ ...employee, services: employee?.services.map((item) => item.id) }} onFinish={(data) => EditEmployee(props.employee_id, data)}>
               <TextField name="first_name" placeholder="Введите имя пользвотеля" label="Имя сотрудника" />
               <TextField name="last_name" placeholder="Введите фамилию пользвотеля" label="Фамилия сотрудника" />
               <TextField name="surname" placeholder="Введите отчество пользвотеля" label="Отчество сотрудника" />

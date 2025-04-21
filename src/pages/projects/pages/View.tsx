@@ -68,10 +68,10 @@ export const View: React.FC<Props> = (props) => {
           <div style={{ flex: 1 }}>
             <h2 style={{ marginBottom: 8 }}>{items.name}</h2>
             <p style={{ color: '#888' }}>
-              Длительность: <b>{items.duration}</b>
+              Длительность: <b>{items.duration} мин</b>
             </p>
             <p style={{ color: '#888' }}>
-              Цена: <b>{items.price}</b>
+              Цена: <b>{parseInt(items.price)} сом</b>
             </p>
 
             <div style={{ marginTop: 24 }}>

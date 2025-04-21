@@ -79,11 +79,9 @@ const columns: ColumnsType<ProductsStorageRequestTypes.Table> = [
     title: 'Услуга',
     dataIndex: 'service',
     key: 'service',
-    render: (services: { id: number; name: string }[]) => (
+    render: (services: { id: number; name: string }) => (
       <div>
-        {services.map((s) => (
-          <div key={s.id}>{s.name}</div>
-        ))}
+        <Link href={`/admin/projects/${services.id}`}>{services.name}</Link>
       </div>
     ),
   },
@@ -119,6 +117,8 @@ export const List: React.FC = () => {
   React.useEffect(() => {
     StorageRequestGET()
   }, [])
+
+  console.log(storageRequestList?.results)
 
   return (
     <div>

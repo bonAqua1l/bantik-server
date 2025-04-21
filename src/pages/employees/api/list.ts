@@ -4,7 +4,7 @@ import { NEXT_PUBLIC_COMPANY_BASE_URL } from '@/shared/utils/consts'
 import { EmployeeTypes } from '../types'
 
 export const getEmployeesList = async () => {
-  return axiosRequest.get('/users', {
+  return axiosRequest.get('/users?is_employee=true', {
     baseURL: NEXT_PUBLIC_COMPANY_BASE_URL,
   })
 }
