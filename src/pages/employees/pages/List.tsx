@@ -3,7 +3,6 @@
 
 import React from 'react'
 
-import { UserDeleteOutlined } from '@ant-design/icons'
 import { Avatar, Button, Flex, Table } from 'antd'
 import { ColumnsType } from 'antd/es/table'
 

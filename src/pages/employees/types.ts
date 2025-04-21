@@ -17,7 +17,16 @@ export namespace EmployeeTypes {
         groups: any[]
         user_permissions: string[]
         is_employee: boolean
-        services: number[]
+        services: Services[]
+        schedule: Schedule[]
+    }
+    export interface Services {
+        id: number,
+        name: string,
+        duration: number,
+        price: string,
+        image: string | null
+        is_long: boolean
     }
     export interface FireEmployeeForm {
         termination_reason: string,
@@ -29,5 +38,18 @@ export namespace EmployeeTypes {
         name: string,
         duration: number,
         price: string
+    }
+
+    export interface Schedule {
+        id: number;
+        weekday: number;
+        start_time: string;
+        end_time: string;
+        weekday_name: 'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturday' | 'sunday';
+    }
+
+    export interface ScheduleForm {
+        start_time: string;
+        end_time: string;
     }
 }
