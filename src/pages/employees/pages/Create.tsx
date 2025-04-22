@@ -1,8 +1,10 @@
 'use client'
+/* eslint-disable react/no-array-index-key */
 
 import React from 'react'
 
-import { Button, Checkbox, Flex, Form } from 'antd'
+import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons'
+import { Button, Checkbox, Flex, Form, Select, TimePicker } from 'antd'
 import FormItem from 'antd/es/form/FormItem'
 
 import { Breadcrumb } from '@/shared/ui/breadcrumb/breadcrumb'
@@ -17,6 +19,7 @@ export const Create = () => {
     submitted,
     contextHolder,
     services,
+    weekdayData,
     actions: {
       CreateEmployee,
       getServices,
@@ -56,6 +59,63 @@ export const Create = () => {
               </Checkbox.Group>
             </FormItem>
             <TextField type="password" name="password" placeholder="Пароль" label="Пароль сотрудника" rules={[{ required: true, message: 'Поле обязательно' }]} />
+            <div>
+              <h3>График работы</h3>
+              <Form.List name="schedule">
+                {(fields, { add, remove }) => (
+                  <>
+                    {fields.map(({ key, name, ...rest }) => (
+                      <Flex key={key} gap={18} align="flex-end" justify="space-between">
+                        <Form.Item
+                          {...rest}
+                          name={[name, 'weekday']}
+                          label="День недели"
+                          className={cls.formItemField}
+                          rules={[{ required: true, message: 'Обязательно' }]}
+                        >
+                          <Select
+                            options={weekdayData.map((d) => ({
+                              value: d.weekday,
+                              label: d.weekday_name,
+                            }))}
+                            placeholder="День"
+                            style={{ width: 150 }}
+                          />
+                        </Form.Item>
+
+                        <Form.Item
+                          {...rest}
+                          name={[name, 'time']}
+                          label="Время"
+                          className={cls.formItemField}
+                          rules={[{ required: true, message: 'Обязательно' }]}
+                        >
+                          <TimePicker.RangePicker format="HH:mm" minuteStep={5} />
+                        </Form.Item>
+
+                        <MinusCircleOutlined
+                          onClick={() => remove(name)}
+                          className={cls.btn_red}
+                          style={{ display: fields.length ? 'initial' : 'none' }}
+                        />
+                      </Flex>
+                    ))}
+
+                    <Flex justify="end">
+                      <Button
+                        type="default"
+                        onClick={() => add()}
+                        disabled={fields.length >= 7}
+                        style={{ marginTop: 25 }}
+                      >
+                        Добавить <PlusOutlined />
+                      </Button>
+                    </Flex>
+                  </>
+                )}
+              </Form.List>
+
+            </div>
             <Button htmlType="submit" type="primary" className={cls.btn} loading={submitted} style={{ marginTop: '15px' }}>Сохранить</Button>
           </Form>
         </Flex>
