@@ -42,7 +42,7 @@ export namespace EmployeeTypes {
 
     export interface Schedule {
         time?: any
-        id: number;
+        id: number | any;
         weekday: number;
         start_time: string;
         end_time: string;
@@ -51,6 +51,16 @@ export namespace EmployeeTypes {
 
     export interface ScheduleForm {
         id: number
+        weekday: number
+        start_time: string;
+        end_time: string;
+    }
+
+    export interface ScheduleFormCreate {
+        schedules: ScheduleFormCreateItem[]
+    }
+
+    export interface ScheduleFormCreateItem {
         weekday: number
         start_time: string;
         end_time: string;

@@ -23,6 +23,16 @@ function useCreate() {
     { title: 'Создать сотрудника' },
   ]
 
+  const weekdayData = [
+    { weekday: 1, weekday_name: 'Понедельник' },
+    { weekday: 2, weekday_name: 'Вторник' },
+    { weekday: 3, weekday_name: 'Среда' },
+    { weekday: 4, weekday_name: 'Четверг' },
+    { weekday: 5, weekday_name: 'Пятница' },
+    { weekday: 6, weekday_name: 'Суббота' },
+    { weekday: 7, weekday_name: 'Воскресенье' },
+  ]
+
   const getServices = React.useCallback(async () => {
     try {
       const response = await Employees.API.Create.getServices()
@@ -39,7 +49,31 @@ function useCreate() {
     setSubmitted(true)
 
     try {
-      const response = await Employees.API.Create.createEmployee({ ...data, role: 'worker', is_employee: true })
+      const formData = {
+        ...data,
+        role: 'worker',
+        is_employee: true,
+      }
+
+      delete (formData as any).schedule
+
+      const response = await Employees.API.Create.createEmployee(formData)
+
+      if (Array.isArray(data.schedule) && data.schedule.length) {
+        const scheduleData: any =
+          {
+            schedules : data.schedule.map((item) => ({
+              weekday : item.weekday,
+              start_time: item.time?.[0].format('HH:mm'),
+              end_time  : item.time?.[1].format('HH:mm'),
+            })),
+          }
+
+        await Employees.API.Create.createEmployeeSchedule(
+          response.data.uuid,
+          scheduleData,
+        )
+      }
 
       if (response.status === 201) {
         router.push('/admin/employees/')
@@ -64,6 +98,7 @@ function useCreate() {
     submitted,
     contextHolder,
     services,
+    weekdayData,
     actions: {
       router,
       CreateEmployee,

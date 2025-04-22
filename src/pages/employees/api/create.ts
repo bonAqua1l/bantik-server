@@ -9,6 +9,12 @@ export const createEmployee = async (data: EmployeeTypes.Item) => {
   })
 }
 
+export const createEmployeeSchedule = async (uuid: string, data: EmployeeTypes.ScheduleFormCreate[]) => {
+  return axiosRequest.post(`/users/${uuid}/add_schedule/`, data, {
+    baseURL: NEXT_PUBLIC_COMPANY_BASE_URL,
+  })
+}
+
 export const getServices = async () => {
   return axiosRequest.get('/services/')
 }

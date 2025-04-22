@@ -4,8 +4,10 @@ import React from 'react'
 
 import { Form } from 'antd'
 import { AxiosError } from 'axios'
+import dayjs from 'dayjs'
 import { useRouter } from 'next/navigation'
 
+import { useDisclosure } from '@/shared/hooks/useDisclosure'
 import useNotification from '@/shared/hooks/useNotifications'
 
 import { Employees } from '..'
@@ -13,12 +15,19 @@ import { EmployeeTypes } from '../types'
 
 function useEdit() {
   const [form] = Form.useForm()
+  const [scheduleForm] = Form.useForm()
+
   const [submitted, setSubmitted] = React.useState(false)
-  const { contextHolder, showError } = useNotification()
+  const [submittedSchedule, setSubmittedSchedule] = React.useState(false)
+
   const [services, setServices] = React.useState<EmployeeTypes.Services[]>([])
   const [employee, setEmployee] = React.useState<EmployeeTypes.Item | null>(null)
   const [isEmployeeLoading, setIsEmployeeLoading] = React.useState(true)
 
+  const [currentDay, setCurrentDay] = React.useState<EmployeeTypes.Schedule | null>(null)
+
+  const scheduleEmployeeModal = useDisclosure()
+  const { contextHolder, showError } = useNotification()
   const router = useRouter()
 
   const breadcrumbData = [
@@ -31,11 +40,9 @@ function useEdit() {
     try {
       const response = await Employees.API.Create.getServices()
 
-      if (response.status === 200) {
-        setServices(response.data.results)
-      }
+      if (response.status === 200) setServices(response.data.results)
     } catch (error) {
-      console.log('error', error)
+      console.error('error get services', error)
     }
   }, [])
 
@@ -43,53 +50,110 @@ function useEdit() {
     try {
       const response = await Employees.API.Edit.getEmployeeId(uuid)
 
-      const data = response.data
-
-      setEmployee(data)
+      setEmployee(response.data)
     } catch (error) {
-      console.log('error employee by uuid', error)
+      console.error('error employee by uuid', error)
     } finally {
       setIsEmployeeLoading(false)
     }
   }, [])
 
-  const EditEmployee = React.useCallback(async (uuid: string, data: EmployeeTypes.Item) => {
-    setSubmitted(true)
+  const EditEmployee = React.useCallback(
+    async (uuid: string, data: EmployeeTypes.Item) => {
+      setSubmitted(true)
+      try {
+        const response = await Employees.API.Edit.editEmployee(uuid, data)
 
-    try {
-      const response = await Employees.API.Edit.editEmployee(uuid, data)
+        if (response.status === 200) {
+          router.push('/admin/employees/')
+        } else {
+          showError('Что-то пошло не так!')
+        }
+      } catch (e) {
+        const error = e as AxiosError<{ email?: string[] }>
 
-      if (response.status === 200) {
-        router.push('/admin/employees/')
-      } else {
-        showError('Что-то пошло не так!')
+        if (
+          error.response?.status === 400 &&
+          error.response.data?.email?.[0] ===
+            'Пользователь with this Электронная почта already exists.'
+        ) {
+          showError('Пользователь с таким email уже существует')
+        }
+        console.error('error edit employee', error)
+      } finally {
+        setSubmitted(false)
       }
-    } catch (e) {
-      const error = e as AxiosError<{ email?: string[] }>
+    },
+    [router, showError],
+  )
 
-      if (error.response?.status === 400 && error.response.data?.email?.[0] === 'Пользователь with this Электронная почта already exists.') {
-        showError('Пользователь с таким email уже существует')
+  const EditEmployeeSchedule = React.useCallback(
+    async (id: number, data: EmployeeTypes.ScheduleForm) => {
+      setSubmittedSchedule(true)
+      try {
+        const response = await Employees.API.Edit.editEmployeeSchedule(id, data)
+
+        if (response.status === 200) {
+          scheduleEmployeeModal.onClose()
+        } else {
+          showError('Что-то пошло не так!')
+        }
+      } catch (error) {
+        console.error('error edit employee schedule', error)
+      } finally {
+        setSubmittedSchedule(false)
+      }
+    },
+    [scheduleEmployeeModal, showError],
+  )
+
+  const openScheduleModal = React.useCallback(
+    (data: EmployeeTypes.Schedule) => {
+      setCurrentDay(data)
+      scheduleForm.setFieldsValue({
+        time: [
+          dayjs(data.start_time, 'HH:mm:ss'),
+          dayjs(data.end_time, 'HH:mm:ss'),
+        ],
+      })
+      scheduleEmployeeModal.onOpen()
+    },
+    [scheduleEmployeeModal, scheduleForm],
+  )
+
+  const onFinishSchedule = React.useCallback(
+    (values: { time: [dayjs.Dayjs, dayjs.Dayjs] }) => {
+      if (!currentDay) return
+      const formData: EmployeeTypes.ScheduleForm = {
+        id: currentDay.id,
+        weekday: currentDay.weekday,
+        start_time: values.time[0].format('HH:mm:ss'),
+        end_time: values.time[1].format('HH:mm:ss'),
       }
 
-      console.log('error create employee', error)
-    } finally {
-      setSubmitted(false)
-    }
-  }, [])
+      EditEmployeeSchedule(currentDay.id, formData)
+    },
+    [currentDay, EditEmployeeSchedule],
+  )
 
   return {
     breadcrumbData,
-    submitted,
     contextHolder,
+    form,
+    scheduleForm,
+    services,
     employee,
     isEmployeeLoading,
-    form,
-    services,
+    currentDay,
+    submitted,
+    submittedSchedule,
+    scheduleEmployeeModal,
     actions: {
-      router,
-      EditEmployee,
-      EmployeeGET,
       getServices,
+      EmployeeGET,
+      EditEmployee,
+      openScheduleModal,
+      onFinishSchedule,
     },
   }
 }
