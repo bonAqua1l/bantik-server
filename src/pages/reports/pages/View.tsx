@@ -41,8 +41,6 @@ export const View = () => {
     })
   }, [])
 
-  //hahahahh
-
   return (
     <div className="main">
       <Flex align="center" className={cls.header}>
