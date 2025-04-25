@@ -1,9 +1,9 @@
-/* eslint-disable react/no-array-index-key */
 'use client'
 
 import React from 'react'
 
-import { Button, Checkbox, Flex, Form, List, Space, Tag, Typography } from 'antd'
+import { PlusOutlined, MinusCircleOutlined } from '@ant-design/icons'
+import { Button, Checkbox, Flex, Form, Input, Select, TimePicker } from 'antd'
 import FormItem from 'antd/es/form/FormItem'
 
 import { Breadcrumb } from '@/shared/ui/breadcrumb/breadcrumb'
@@ -11,7 +11,6 @@ import { LoaderData } from '@/shared/ui/loader/Loader'
 import { TextField } from '@/shared/ui/textfield/textfield'
 
 import { Employees } from '..'
-import EmployeeScheduleEdit from '../modals/EmployeeScheduleEdit/EmployeeScheduleEdit'
 import cls from '../styles/edit.module.css'
 
 interface Props {
@@ -22,34 +21,18 @@ export const Edit: React.FC<Props> = (props) => {
   const {
     breadcrumbData,
     contextHolder,
-
     form,
-    scheduleForm,
-
     employee,
     services,
     isEmployeeLoading,
     submitted,
-    submittedSchedule,
-    currentDay,
-
-    scheduleEmployeeModal,
-
-    actions: {
-      EmployeeGET,
-      EditEmployee,
-      getServices,
-      openScheduleModal,
-      onFinishSchedule,
-    },
+    actions: { EmployeeGET, EditEmployee, getServices, getWeekdayOptions },
   } = Employees.Hooks.Edit.use()
 
   React.useEffect(() => {
-    if (!scheduleEmployeeModal.isOpen) {
-      EmployeeGET(props.employee_id)
-      getServices()
-    }
-  }, [scheduleEmployeeModal.isOpen])
+    EmployeeGET(props.employee_id)
+    getServices()
+  }, [EmployeeGET, getServices, props.employee_id])
 
   return (
     <div className="main">
@@ -66,35 +49,11 @@ export const Edit: React.FC<Props> = (props) => {
           <Flex className={cls.main_form}>
             {contextHolder}
 
-            <Form
-              form={form}
-              className={cls.form}
-              initialValues={{
-                ...employee,
-                services: employee?.services.map((s) => s.id),
-              }}
-              onFinish={(data) => EditEmployee(props.employee_id, data)}
-            >
-              <TextField
-                name="first_name"
-                placeholder="Введите имя пользвотеля"
-                label="Имя сотрудника"
-              />
-              <TextField
-                name="last_name"
-                placeholder="Введите фамилию пользвотеля"
-                label="Фамилия сотрудника"
-              />
-              <TextField
-                name="surname"
-                placeholder="Введите отчество пользвотеля"
-                label="Отчество сотрудника"
-              />
-              <TextField
-                name="email"
-                placeholder="Введите email пользвотеля"
-                label="Email сотрудника"
-              />
+            <Form form={form} className={cls.form} onFinish={(data) => EditEmployee(props.employee_id, data)}>
+              <TextField name="first_name" placeholder="Введите имя пользвотеля" label="Имя сотрудника" />
+              <TextField name="last_name" placeholder="Введите фамилию пользвотеля" label="Фамилия сотрудника" />
+              <TextField name="surname" placeholder="Введите отчество пользвотеля" label="Отчество сотрудника" />
+              <TextField name="email" placeholder="Введите email пользвотеля" label="Email сотрудника" />
 
               <FormItem
                 name="services"
@@ -111,49 +70,63 @@ export const Edit: React.FC<Props> = (props) => {
                 </Checkbox.Group>
               </FormItem>
 
-              <h3>График работы</h3>
-              <List
-                size="small"
-                dataSource={employee?.schedule}
-                renderItem={(item) => (
-                  <List.Item>
-                    <Flex justify="space-between" style={{ width: '100%', maxWidth: 700 }}>
-                      <Space>
-                        <Tag>{item.weekday_name}</Tag>
-                        <Typography.Text>
-                          {item.start_time.slice(0, 5)} – {item.end_time.slice(0, 5)}
-                        </Typography.Text>
-                      </Space>
-                      <Button onClick={() => openScheduleModal(item)}>
-                        Изменить
-                      </Button>
-                    </Flex>
-                  </List.Item>
-                )}
-              />
+              <div>
+                <h3>График работы</h3>
+                <Form.List name="schedule">
+                  {(fields, { add, remove }) => (
+                    <>
+                      {fields.map(({ key, name, ...rest }) => (
+                        <Flex key={key} gap={18} align="flex-end" justify="space-between">
+                          <Form.Item {...rest} name={[name, 'id']} hidden>
+                            <Input />
+                          </Form.Item>
 
-              <Button
-                htmlType="submit"
-                type="primary"
-                className={cls.btn}
-                loading={submitted}
-              >
+                          <Form.Item
+                            {...rest}
+                            name={[name, 'weekday']}
+                            label="День недели"
+                            className={cls.formItemField}
+                            rules={[{ required: true, message: 'Обязательно' }]}
+                          >
+                            <Select options={getWeekdayOptions(name)} placeholder="День" style={{ width: 150 }} />
+                          </Form.Item>
+
+                          <Form.Item
+                            {...rest}
+                            name={[name, 'time']}
+                            label="Время"
+                            className={cls.formItemField}
+                            rules={[{ required: true, message: 'Обязательно' }]}
+                          >
+                            <TimePicker.RangePicker format="HH:mm" minuteStep={5} />
+                          </Form.Item>
+
+                          <MinusCircleOutlined onClick={() => remove(name)} className={cls.btn_red} />
+                        </Flex>
+                      ))}
+
+                      <Flex justify="end">
+                        <Button
+                          type="default"
+                          onClick={() => add()}
+                          disabled={(form.getFieldValue('schedule') || []).length >= 7}
+                          style={{ marginTop: 25 }}
+                        >
+                          Добавить <PlusOutlined />
+                        </Button>
+                      </Flex>
+                    </>
+                  )}
+                </Form.List>
+              </div>
+
+              <Button htmlType="submit" type="primary" className={cls.btn} loading={submitted} style={{ marginTop: 15 }}>
                 Сохранить
               </Button>
             </Form>
           </Flex>
         </LoaderData>
       </Flex>
-
-      <EmployeeScheduleEdit
-        schedule={currentDay}
-        isModalOpen={scheduleEmployeeModal.isOpen}
-        onCloseModal={scheduleEmployeeModal.onClose}
-        form={scheduleForm}
-        onFinish={onFinishSchedule}
-        submitted={submittedSchedule}
-        contextHolder={contextHolder}
-      />
     </div>
   )
 }

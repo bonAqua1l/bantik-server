@@ -7,7 +7,6 @@ import { AxiosError } from 'axios'
 import dayjs from 'dayjs'
 import { useRouter } from 'next/navigation'
 
-import { useDisclosure } from '@/shared/hooks/useDisclosure'
 import useNotification from '@/shared/hooks/useNotifications'
 
 import { Employees } from '..'
@@ -15,18 +14,12 @@ import { EmployeeTypes } from '../types'
 
 function useEdit() {
   const [form] = Form.useForm()
-  const [scheduleForm] = Form.useForm()
-
   const [submitted, setSubmitted] = React.useState(false)
-  const [submittedSchedule, setSubmittedSchedule] = React.useState(false)
-
   const [services, setServices] = React.useState<EmployeeTypes.Services[]>([])
   const [employee, setEmployee] = React.useState<EmployeeTypes.Item | null>(null)
   const [isEmployeeLoading, setIsEmployeeLoading] = React.useState(true)
+  const originalSchedule = React.useRef<EmployeeTypes.Schedule[]>([])
 
-  const [currentDay, setCurrentDay] = React.useState<EmployeeTypes.Schedule | null>(null)
-
-  const scheduleEmployeeModal = useDisclosure()
   const { contextHolder, showError } = useNotification()
   const router = useRouter()
 
@@ -36,33 +29,103 @@ function useEdit() {
     { title: 'Редактировать сотрудника' },
   ]
 
+  const weekdayData = [
+    { weekday: 1, weekday_name: 'Понедельник' },
+    { weekday: 2, weekday_name: 'Вторник' },
+    { weekday: 3, weekday_name: 'Среда' },
+    { weekday: 4, weekday_name: 'Четверг' },
+    { weekday: 5, weekday_name: 'Пятница' },
+    { weekday: 6, weekday_name: 'Суббота' },
+    { weekday: 7, weekday_name: 'Воскресенье' },
+  ]
+
   const getServices = React.useCallback(async () => {
     try {
       const response = await Employees.API.Create.getServices()
 
       if (response.status === 200) setServices(response.data.results)
-    } catch (error) {
-      console.error('error get services', error)
+    } catch (e) {
+      console.error('error get services', e)
     }
   }, [])
 
-  const EmployeeGET = React.useCallback(async (uuid: string) => {
-    try {
-      const response = await Employees.API.Edit.getEmployeeId(uuid)
+  const EmployeeGET = React.useCallback(
+    async (uuid: string) => {
+      try {
+        const response = await Employees.API.Edit.getEmployeeId(uuid)
 
-      setEmployee(response.data)
-    } catch (error) {
-      console.error('error employee by uuid', error)
-    } finally {
-      setIsEmployeeLoading(false)
-    }
-  }, [])
+        setEmployee(response.data)
+        originalSchedule.current = response.data.schedule
+
+        form.setFieldsValue({
+          ...response.data,
+          services: response.data.services.map((s: EmployeeTypes.Services) => s.id),
+          schedule: response.data.schedule.map((s: EmployeeTypes.Schedule) => ({
+            id: s.id,
+            weekday: s.weekday,
+            time: [dayjs(s.start_time, 'HH:mm'), dayjs(s.end_time, 'HH:mm')],
+          })),
+        })
+      } catch (e) {
+        console.error('error employee by uuid', e)
+      } finally {
+        setIsEmployeeLoading(false)
+      }
+    },
+    [form],
+  )
 
   const EditEmployee = React.useCallback(
     async (uuid: string, data: EmployeeTypes.Item) => {
       setSubmitted(true)
       try {
-        const response = await Employees.API.Edit.editEmployee(uuid, data)
+        const { schedule, ...payload } = data
+
+        delete (payload as any).schedule
+
+        const response = await Employees.API.Edit.editEmployee(uuid, payload)
+
+        const currentList = (schedule as any[]) || []
+
+        const newSchedules = currentList
+          .filter((i) => !i?.id)
+          .map((i) => ({
+            weekday: String(i.weekday),
+            start_time: i.time?.[0].format('HH:mm'),
+            end_time: i.time?.[1].format('HH:mm'),
+          }))
+
+        const currentIds = currentList.filter((i) => i?.id).map((i) => i.id)
+        const delete_schedules = originalSchedule.current
+          .filter((o) => !currentIds.includes(o.id))
+          .map((o) => o.id)
+
+        const update_schedules = currentList
+          .filter((i) => i?.id)
+          .filter((i) => {
+            const orig = originalSchedule.current.find((o) => o.id === i.id)
+
+            if (!orig) return false
+            const changedWeekday = i.weekday !== orig.weekday
+            const changedStart = i.time?.[0].format('HH:mm') !== orig.start_time
+            const changedEnd = i.time?.[1].format('HH:mm') !== orig.end_time
+
+            return changedWeekday || changedStart || changedEnd
+          })
+          .map((i) => ({
+            id: i.id,
+            weekday: String(i.weekday),
+            start_time: i.time?.[0].format('HH:mm'),
+            end_time: i.time?.[1].format('HH:mm'),
+          }))
+
+        const schedulePayload: EmployeeTypes.SchedulePayload = {
+          schedules: newSchedules,
+          delete_schedules,
+          update_schedules,
+        }
+
+        await Employees.API.Edit.editEmployeeSchedule(uuid, schedulePayload)
 
         if (response.status === 200) {
           router.push('/admin/employees/')
@@ -87,73 +150,33 @@ function useEdit() {
     [router, showError],
   )
 
-  const EditEmployeeSchedule = React.useCallback(
-    async (id: number, data: EmployeeTypes.ScheduleForm) => {
-      setSubmittedSchedule(true)
-      try {
-        const response = await Employees.API.Edit.editEmployeeSchedule(id, data)
+  const getWeekdayOptions = React.useCallback(
+    (index: number) => {
+      const list = form.getFieldValue('schedule') || []
+      const selected = list
+        .map((s: any) => s?.weekday)
+        .filter((_: number, i: number) => i !== index)
 
-        if (response.status === 200) {
-          scheduleEmployeeModal.onClose()
-        } else {
-          showError('Что-то пошло не так!')
-        }
-      } catch (error) {
-        console.error('error edit employee schedule', error)
-      } finally {
-        setSubmittedSchedule(false)
-      }
+      return weekdayData
+        .filter((d) => !selected.includes(d.weekday))
+        .map((d) => ({ value: d.weekday, label: d.weekday_name }))
     },
-    [scheduleEmployeeModal, showError],
-  )
-
-  const openScheduleModal = React.useCallback(
-    (data: EmployeeTypes.Schedule) => {
-      setCurrentDay(data)
-      scheduleForm.setFieldsValue({
-        time: [
-          dayjs(data.start_time, 'HH:mm:ss'),
-          dayjs(data.end_time, 'HH:mm:ss'),
-        ],
-      })
-      scheduleEmployeeModal.onOpen()
-    },
-    [scheduleEmployeeModal, scheduleForm],
-  )
-
-  const onFinishSchedule = React.useCallback(
-    (values: { time: [dayjs.Dayjs, dayjs.Dayjs] }) => {
-      if (!currentDay) return
-      const formData: EmployeeTypes.ScheduleForm = {
-        id: currentDay.id,
-        weekday: currentDay.weekday,
-        start_time: values.time[0].format('HH:mm:ss'),
-        end_time: values.time[1].format('HH:mm:ss'),
-      }
-
-      EditEmployeeSchedule(currentDay.id, formData)
-    },
-    [currentDay, EditEmployeeSchedule],
+    [form],
   )
 
   return {
     breadcrumbData,
     contextHolder,
     form,
-    scheduleForm,
     services,
     employee,
     isEmployeeLoading,
-    currentDay,
     submitted,
-    submittedSchedule,
-    scheduleEmployeeModal,
     actions: {
       getServices,
       EmployeeGET,
       EditEmployee,
-      openScheduleModal,
-      onFinishSchedule,
+      getWeekdayOptions,
     },
   }
 }

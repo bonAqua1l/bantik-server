@@ -2,6 +2,7 @@
 
 import React from 'react'
 
+import { Form } from 'antd'
 import { AxiosError } from 'axios'
 import { useRouter } from 'next/navigation'
 
@@ -11,11 +12,11 @@ import { Employees } from '..'
 import { EmployeeTypes } from '../types'
 
 function useCreate() {
+  const [form] = Form.useForm()
   const [submitted, setSubmitted] = React.useState(false)
-  const { contextHolder, showError } = useNotification()
   const [services, setServices] = React.useState<EmployeeTypes.Services[]>([])
-
   const router = useRouter()
+  const { contextHolder, showError } = useNotification()
 
   const breadcrumbData = [
     { href: '/', title: 'Главная' },
@@ -37,61 +38,64 @@ function useCreate() {
     try {
       const response = await Employees.API.Create.getServices()
 
-      if (response.status === 200) {
-        setServices(response.data.results)
-      }
-    } catch (error) {
-      console.log('error', error)
+      if (response.status === 200) setServices(response.data.results)
+    } catch (e) {
+      console.error('error get services', e)
     }
   }, [])
 
-  const CreateEmployee = React.useCallback(async (data: EmployeeTypes.Item) => {
-    setSubmitted(true)
+  const getWeekdayOptions = React.useCallback(
+    (currentIndex: number) => {
+      const list = form.getFieldValue('schedule') || []
+      const selected = list.map((s: any) => s?.weekday).filter((_: number, i: number) => i !== currentIndex)
 
-    try {
-      const formData = {
-        ...data,
-        role: 'worker',
-        is_employee: true,
-      }
+      return weekdayData.filter((d) => !selected.includes(d.weekday)).map((d) => ({ value: d.weekday, label: d.weekday_name }))
+    },
+    [form],
+  )
 
-      delete (formData as any).schedule
+  const CreateEmployee = React.useCallback(
+    async (data: EmployeeTypes.Item) => {
+      setSubmitted(true)
+      try {
+        const payload = { ...data, role: 'worker', is_employee: true }
 
-      const response = await Employees.API.Create.createEmployee(formData)
+        delete (payload as any).schedule
 
-      if (Array.isArray(data.schedule) && data.schedule.length) {
-        const scheduleData: any =
-          {
-            schedules : data.schedule.map((item) => ({
-              weekday : item.weekday,
+        const response = await Employees.API.Create.createEmployee(payload)
+
+        if (response.status === 201 && Array.isArray(data.schedule) && data.schedule.length) {
+          const schedulePayload: EmployeeTypes.SchedulePayload = {
+            schedules: data.schedule.map((item) => ({
+              weekday: String(item.weekday),
               start_time: item.time?.[0].format('HH:mm'),
-              end_time  : item.time?.[1].format('HH:mm'),
+              end_time: item.time?.[1].format('HH:mm'),
             })),
+            delete_schedules: [],
+            update_schedules: [],
           }
 
-        await Employees.API.Create.createEmployeeSchedule(
-          response.data.uuid,
-          scheduleData,
-        )
-      }
+          await Employees.API.Create.createEmployeeSchedule(response.data.uuid, schedulePayload)
+        }
 
-      if (response.status === 201) {
-        router.push('/admin/employees/')
-      } else {
-        showError('Что то пошло не так!')
-      }
-    } catch (e) {
-      const error = e as AxiosError<{ email?: string[] }>
+        if (response.status === 201) {
+          router.push('/admin/employees/')
+        } else {
+          showError('Что то пошло не так!')
+        }
+      } catch (e) {
+        const error = e as AxiosError<{ email?: string[] }>
 
-      if (error.response?.status === 400 && error.response.data?.email?.[0] === 'Пользователь with this Электронная почта already exists.') {
-        showError('Пользователь с таким email уже существует')
+        if (error.response?.status === 400 && error.response.data?.email?.[0] === 'Пользователь with this Электронная почта already exists.') {
+          showError('Пользователь с таким email уже существует')
+        }
+        console.log('error create employee', error)
+      } finally {
+        setSubmitted(false)
       }
-
-      console.log('error create employee', error)
-    } finally {
-      setSubmitted(false)
-    }
-  }, [])
+    },
+    [router, showError],
+  )
 
   return {
     breadcrumbData,
@@ -99,8 +103,9 @@ function useCreate() {
     contextHolder,
     services,
     weekdayData,
+    form,
+    getWeekdayOptions,
     actions: {
-      router,
       CreateEmployee,
       getServices,
     },

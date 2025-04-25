@@ -19,46 +19,45 @@ export const Create = () => {
     submitted,
     contextHolder,
     services,
-    weekdayData,
-    actions: {
-      CreateEmployee,
-      getServices,
-    },
+    form,
+    getWeekdayOptions,
+    actions: { CreateEmployee, getServices },
   } = Employees.Hooks.Create.use()
 
   React.useEffect(() => {
     getServices()
-  }, [])
+  }, [getServices])
 
   return (
     <div className="main">
       <Flex className={cls.employee}>
         <div className={cls.navigation__info}>
-          <Breadcrumb items={breadcrumbData}/>
+          <Breadcrumb items={breadcrumbData} />
         </div>
 
-        <Flex className={cls.main_title} style={{ margin: '15px 0px' }}>
+        <Flex className={cls.main_title} style={{ margin: '15px 0' }}>
           <h2>Создать сотрудника</h2>
         </Flex>
 
         <Flex className={cls.main_form}>
           {contextHolder}
-          <Form className={cls.form} onFinish={(data) => CreateEmployee(data)}>
+          <Form form={form} className={cls.form} onFinish={CreateEmployee}>
             <TextField name="first_name" placeholder="Введите имя пользвотеля" label="Имя сотрудника" rules={[{ required: true, message: 'Поле обязательно' }]} />
             <TextField name="last_name" placeholder="Введите фамилию пользвотеля" label="Фамилия сотрудника" rules={[{ required: true, message: 'Поле обязательно' }]} />
             <TextField name="surname" placeholder="Введите отчество пользвотеля" label="Отчество сотрудника" />
             <TextField name="email" placeholder="Введите email пользвотеля" label="Email сотрудника" rules={[{ required: true, message: 'Поле обязательно' }]} />
             <TextField name="about" placeholder="Введите описание" label="О мастере" />
-            <FormItem name={'services'} label="Выберите сервисы" rules={[{ required: true, message: 'Поле обязательно' }]} className={cls.radio_field}>
+            <FormItem name="services" label="Выберите сервисы" rules={[{ required: true, message: 'Поле обязательно' }]} className={cls.radio_field}>
               <Checkbox.Group>
-                {
-                  services.map((service) => (
-                    <Checkbox key={service.id} value={service.id}>{service.name}</Checkbox>
-                  ))
-                }
+                {services.map((service) => (
+                  <Checkbox key={service.id} value={service.id}>
+                    {service.name}
+                  </Checkbox>
+                ))}
               </Checkbox.Group>
             </FormItem>
             <TextField type="password" name="password" placeholder="Пароль" label="Пароль сотрудника" rules={[{ required: true, message: 'Поле обязательно' }]} />
+
             <div>
               <h3>График работы</h3>
               <Form.List name="schedule">
@@ -73,14 +72,7 @@ export const Create = () => {
                           className={cls.formItemField}
                           rules={[{ required: true, message: 'Обязательно' }]}
                         >
-                          <Select
-                            options={weekdayData.map((d) => ({
-                              value: d.weekday,
-                              label: d.weekday_name,
-                            }))}
-                            placeholder="День"
-                            style={{ width: 150 }}
-                          />
+                          <Select options={getWeekdayOptions(name)} placeholder="День" style={{ width: 150 }} />
                         </Form.Item>
 
                         <Form.Item
@@ -93,11 +85,7 @@ export const Create = () => {
                           <TimePicker.RangePicker format="HH:mm" minuteStep={5} />
                         </Form.Item>
 
-                        <MinusCircleOutlined
-                          onClick={() => remove(name)}
-                          className={cls.btn_red}
-                          style={{ display: fields.length ? 'initial' : 'none' }}
-                        />
+                        <MinusCircleOutlined onClick={() => remove(name)} className={cls.btn_red} />
                       </Flex>
                     ))}
 
@@ -105,7 +93,7 @@ export const Create = () => {
                       <Button
                         type="default"
                         onClick={() => add()}
-                        disabled={fields.length >= 7}
+                        disabled={(form.getFieldValue('schedule') || []).length >= 7}
                         style={{ marginTop: 25 }}
                       >
                         Добавить <PlusOutlined />
@@ -114,12 +102,13 @@ export const Create = () => {
                   </>
                 )}
               </Form.List>
-
             </div>
-            <Button htmlType="submit" type="primary" className={cls.btn} loading={submitted} style={{ marginTop: '15px' }}>Сохранить</Button>
+
+            <Button htmlType="submit" type="primary" className={cls.btn} loading={submitted} style={{ marginTop: 15 }}>
+              Сохранить
+            </Button>
           </Form>
         </Flex>
-
       </Flex>
     </div>
   )
