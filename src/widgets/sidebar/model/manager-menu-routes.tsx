@@ -9,11 +9,6 @@ export const ManagerSidebarMenuRoutes: MenuItem[] = [
     label: 'Сервисы',
     icon: <AppstoreOutlined />,
   },
-  // {
-  //   key: '/admin/products/incoming',
-  //   label: 'Заявки',
-  //   icon: <DownloadOutlined />,
-  // },
   {
     key: '/admin/storage-requests',
     label: 'Заявки',
@@ -27,6 +22,11 @@ export const ManagerSidebarMenuRoutes: MenuItem[] = [
   {
     key: '/admin/employees/',
     label: 'Мастера',
+    icon: <UserOutlined />,
+  },
+  {
+    key: '/admin/clients/',
+    label: 'Клиенты',
     icon: <UserOutlined />,
   },
   {
