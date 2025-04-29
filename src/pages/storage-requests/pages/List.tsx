@@ -2,7 +2,7 @@
 
 import React from 'react'
 
-import { Table, Tag, Flex, Button } from 'antd'
+import { Table, Tag, Flex, Button, Pagination } from 'antd'
 import { ColumnsType } from 'antd/es/table'
 import dayjs from 'dayjs'
 import Link from 'next/link'
@@ -104,9 +104,11 @@ export const List: React.FC = () => {
     isStorageRequestLoading,
     selectedRowKeys,
     submitted,
+    currentPage,
     actions: {
       router,
       StorageRequestGET,
+      setCurrentPage,
       setSelectedRowKeys,
       StorageRequestApproveIncomingPOST,
       handlePageChange,
@@ -167,12 +169,19 @@ export const List: React.FC = () => {
               }),
             }
           }
-          pagination={{
-            position: ['bottomRight'],
-            pageSize: 10,
-            onChange: handlePageChange,
-          }}
+          pagination={false}
           rowClassName={(_, index) => (index % 2 !== 0 ? cls.evenRow : cls.oddRow)}
+        />
+
+        <Pagination
+          className={cls.pagination}
+          total={storageRequestList?.count}
+          current={currentPage}
+          pageSize={10}
+          onChange={(page) => {
+            setCurrentPage(page)
+            handlePageChange(page)
+          }}
         />
       </div>
     </div>

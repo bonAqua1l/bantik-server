@@ -1,7 +1,10 @@
 import { axiosRequest } from '@/shared/api/axios'
+import { NEXT_PUBLIC_COMPANY_BASE_URL } from '@/shared/utils/consts'
 
-export const getLeadRequest = async (url?: string) => {
-  return axiosRequest.get(url || '/leads/')
+export const getLeadRequest = async (url?: string, previusURL?: string) => {
+  return axiosRequest.get((previusURL || url) || '/leads/', {
+    baseURL: NEXT_PUBLIC_COMPANY_BASE_URL,
+  })
 }
 
 export const approveLeadStorageRequest = async (lead_ids: React.Key[]) => {

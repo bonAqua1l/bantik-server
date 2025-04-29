@@ -1,4 +1,4 @@
-import { AppstoreOutlined, CalendarOutlined, ClockCircleOutlined, TableOutlined, UserOutlined } from '@ant-design/icons'
+import { AppstoreOutlined, CalendarOutlined, ClockCircleOutlined, TableOutlined, TeamOutlined, UserOutlined } from '@ant-design/icons'
 import { MenuProps } from 'antd'
 
 type MenuItem = Required<MenuProps>['items'][number];
@@ -9,11 +9,6 @@ export const ManagerSidebarMenuRoutes: MenuItem[] = [
     label: 'Сервисы',
     icon: <AppstoreOutlined />,
   },
-  // {
-  //   key: '/admin/products/incoming',
-  //   label: 'Заявки',
-  //   icon: <DownloadOutlined />,
-  // },
   {
     key: '/admin/storage-requests',
     label: 'Заявки',
@@ -28,6 +23,11 @@ export const ManagerSidebarMenuRoutes: MenuItem[] = [
     key: '/admin/employees/',
     label: 'Мастера',
     icon: <UserOutlined />,
+  },
+  {
+    key: '/admin/clients/',
+    label: 'Клиенты',
+    icon: <TeamOutlined />,
   },
   {
     key: '/admin/reports',

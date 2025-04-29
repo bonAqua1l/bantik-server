@@ -21,11 +21,11 @@ function useList() {
 
   const currentWarehouse = useAppSelector((state) => state.user.userData?.current_warehouse)
 
-  const StorageRequestGET = React.useCallback(async (url?: string) => {
+  const StorageRequestGET = React.useCallback(async (url?: string, previusURL?: string) => {
     setIsStorageRequestLoading(true)
 
     try {
-      const response = await ProductsStorageRequest.API.List.getLeadRequest(url)
+      const response = await ProductsStorageRequest.API.List.getLeadRequest(url || '/leads/', previusURL)
 
       setStorageRequestList(response.data)
     } catch (error) {
@@ -67,11 +67,14 @@ function useList() {
     }
   }, [])
 
-  const handlePageChange = () => {
+  const handlePageChange = (page: number) => {
     const nextPageUrl = storageRequestList?.next
+    const prevPageUrl = storageRequestList?.previous
 
-    if (nextPageUrl) {
+    if (page > currentPage && nextPageUrl) {
       StorageRequestGET(nextPageUrl)
+    } else if (page < currentPage && prevPageUrl) {
+      StorageRequestGET(prevPageUrl)
     }
   }
 
