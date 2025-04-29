@@ -42,6 +42,17 @@ function useList() {
     { href: '/employees', title: 'Мастера' },
   ]
 
+  const deleteClient = React.useCallback(async (id: string) => {
+    try {
+      await Clients.API.List.deleteClient(id)
+
+      ClientsGET()
+
+    } catch (error) {
+      console.log('error', error)
+    }
+  }, [])
+
   return {
     breadcrumbData,
     clients,
@@ -52,6 +63,7 @@ function useList() {
       setCurrentPage,
       ClientsGET,
       handlePageChange,
+      deleteClient,
     },
   }
 }

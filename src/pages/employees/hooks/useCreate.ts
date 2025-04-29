@@ -58,11 +58,11 @@ function useCreate() {
     async (data: EmployeeTypes.Item) => {
       setSubmitted(true)
       try {
-        const payload = { ...data, role: 'worker', is_employee: true }
+        const formData = { ...data, role: 'worker', is_employee: true }
 
-        delete (payload as any).schedule
+        delete (formData as any).schedule
 
-        const response = await Employees.API.Create.createEmployee(payload)
+        const response = await Employees.API.Create.createEmployee(formData)
 
         if (response.status === 201 && Array.isArray(data.schedule) && data.schedule.length) {
           const schedulePayload: EmployeeTypes.SchedulePayload = {

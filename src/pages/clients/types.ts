@@ -15,4 +15,9 @@ export namespace ClientsTypes {
     previous: string | null;
     results: Item[];
   }
+
+  export interface ItemForm {
+    name: string
+    phone: string
+  }
 }

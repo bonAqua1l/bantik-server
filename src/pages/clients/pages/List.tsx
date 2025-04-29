@@ -13,7 +13,7 @@ import { Clients } from '..'
 import cls from '../styles/list.module.css'
 import { ClientsTypes } from '../types'
 
-const createColumns = () => {
+const createColumns = (router: any, deleteClient: any) => {
   const columns: ColumnsType<ClientsTypes.Item> = [
     {
       title: 'ФИО',
@@ -49,6 +49,18 @@ const createColumns = () => {
       dataIndex: 'visits_count',
       key: 'visits_count',
     },
+    {
+      title: 'Действие',
+      dataIndex: 'actions',
+      key: 'actions',
+      render: (_, record) => (
+        <Flex gap={15}>
+          <Button onClick={() => router.push(`/admin/clients/edit/${record.id}`)}>Изменить</Button>
+
+          <Button onClick={() => deleteClient(record.id)}>Удалить</Button>
+        </Flex>
+      ),
+    },
   ]
 
   return columns
@@ -65,14 +77,13 @@ export const List = () => {
       ClientsGET,
       handlePageChange,
       setCurrentPage,
+      deleteClient,
     },
   } = Clients.Hooks.List.use()
 
   React.useEffect(() => {
     ClientsGET()
   }, [])
-
-  console.log('clients', clients)
 
   return (
     <div className="main">
@@ -83,12 +94,12 @@ export const List = () => {
       <Flex className={cls.main_title} justify="space-between" align="center" style={{ margin: '15px 0px' }}>
         <h2>Клиенты</h2>
 
-        <Button type="primary" onClick={() => router.push('/admin/employees/create/')}>Создать клиента</Button>
+        <Button type="primary" onClick={() => router.push('/admin/clients/create/')}>Создать клиента</Button>
       </Flex>
 
       <Table
         rowKey={(record) => record.id}
-        columns={createColumns()}
+        columns={createColumns(router, deleteClient)}
         dataSource={clients?.results}
         loading={clientsLoading}
         pagination={false}
