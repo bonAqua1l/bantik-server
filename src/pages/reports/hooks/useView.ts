@@ -2,74 +2,146 @@
 
 import React from 'react'
 
+import dayjs from 'dayjs'
+
 import { Reports } from '..'
 import { ReportsTypes } from '../types'
 
 function useView() {
-  const [totalAmount, setTotalAmount] = React.useState(0)
-  const [clients, setClients] = React.useState(0)
-  const [leads, setLeads] = React.useState<ReportsTypes.Leads>({ average_bookings_per_day: 0, days_in_period: 0, total_bookings: 0 })
-  const [specials, setSpecials] = React.useState<ReportsTypes.Specials>({ approval_rate_percent: 0, approved: 0, rejected: 0, rejection_rate_percent: 0, total: 0 })
-  const [today, setToday] = React.useState(false)
-  const [loading, setLoading] = React.useState(false)
+  const date = Date()
 
-  const getTotalAmount = React.useCallback(async (type?: string, start_date?: string, end_date?: string) => {
+  const [financialReport, setFinancialReport] = React.useState<ReportsTypes.FinancialReportItem | null>(null)
+  const [isFinancialReportLoading, setIsFinancialReportLoading] = React.useState(false)
+  const [selectedFinancialType, setSelectedFinancialType] = React.useState('month')
+  const [selectedFinancialDate, setSelectedFinancialDate] = React.useState(dayjs(date).format('YYYY-MM-DD'))
+
+  const [clients, setClients] = React.useState<ReportsTypes.ClientsItem | null>(null)
+  const [isClientsReportLoading, setIsClientsReportLoading] = React.useState(false)
+  const [selectedClientsType, setSelectedClientsType] = React.useState('week')
+  const [selectedClientsDate, setSelectedClientsDate] = React.useState(dayjs(date).format('YYYY-MM-DD'))
+
+  const [leads, setLeads] = React.useState<ReportsTypes.LeadItem | null>(null)
+  const [isLeadsReportLoading, setIsLeadsReportLoading] = React.useState(false)
+  const [selectedLeadsType, setSelectedLeadsType] = React.useState('week')
+  const [selectedLeadsDate, setSelectedLeadsDate] = React.useState(dayjs(date).format('YYYY-MM-DD'))
+
+  const [total_stats, setTotal] = React.useState<ReportsTypes.TotalStatsItem | null>(null)
+
+  const [masterList, setMasterList] = React.useState<ReportsTypes.MasterList[] | null>(null)
+
+  const getTotalAmount = React.useCallback(async (type?: string, date?: string, group_by?: string) => {
+    setIsFinancialReportLoading(true)
     try {
-      const response = await Reports.API.View.getAmount(type, start_date, end_date)
+      const response = await Reports.API.View.getAmount(type, date, group_by)
 
-      setTotalAmount(response.data.total_amount)
+      setFinancialReport(response.data)
+    } catch (error) {
+      console.log('error', error)
+    } finally {
+      setIsFinancialReportLoading(false)
+    }
+  }, [])
+
+  const getClients = React.useCallback(async (type?: string, date?: string) => {
+    try {
+      const response = await Reports.API.View.getClients(type, date)
+
+      setClients(response.data)
     } catch (error) {
       console.log('error', error)
     }
   }, [])
 
-  const getClients = React.useCallback(async (type?: string, start_date?: string, end_date?: string) => {
+  const getLeads = React.useCallback(async (type?: string, date?: string) => {
+    setIsLeadsReportLoading(true)
     try {
-      const response = await Reports.API.View.getClients(type, start_date, end_date)
-
-      setClients(response.data.new_clients_count)
-    } catch (error) {
-      console.log('error', error)
-    }
-  }, [])
-
-  const getLeads = React.useCallback(async (type?: string, start_date?: string, end_date?: string) => {
-    try {
-      const response = await Reports.API.View.getLeads(type, start_date, end_date)
+      const response = await Reports.API.View.getLeads(type, date)
 
       setLeads(response.data)
     } catch (error) {
       console.log('error', error)
+    } finally {
+      setIsLeadsReportLoading(false)
     }
   }, [])
 
-  const getSpecials = React.useCallback(async (type?: string, start_date?: string, end_date?: string) => {
+  const getTotal = React.useCallback(async () => {
     try {
-      const response = await Reports.API.View.getSpecials(type, start_date, end_date)
+      const response = await Reports.API.View.getTotal()
 
-      setSpecials(response.data)
+      setTotal(response.data)
     } catch (error) {
       console.log('error', error)
     }
   }, [])
 
-  const handleDateChange = (dates: any) => {
-    if (dates) {
-      setLoading(true)
-      const [start, end] = dates
-      const startDate = start.format('YYYY-MM-DD')
-      const endDate = end.format('YYYY-MM-DD')
+  const getMasterList = React.useCallback(async () => {
+    try {
+      const response = await Reports.API.View.getMasterList()
 
-      getTotalAmount(undefined, startDate, endDate)
-      getClients(undefined, startDate, endDate)
-      getLeads(undefined, startDate, endDate)
-      setToday(false)
-      setLoading(false)
+      setMasterList(response.data)
+    } catch (error) {
+      console.log('error', error)
+    }
+  }, [])
+
+  const handleFinancialTypeChange = (value: string) => {
+    if (value) {
+      setIsFinancialReportLoading(true)
+      setSelectedFinancialType(value)
+      getTotalAmount(value, selectedFinancialDate, 'day')
     } else {
-      getTotalAmount()
-      getClients()
-      getLeads()
-      setToday(false)
+      getTotalAmount(selectedFinancialType, selectedFinancialDate, 'day')
+    }
+  }
+
+  const handleFinancialDateChange = (value: string) => {
+    if (value) {
+      setIsFinancialReportLoading(true)
+      setSelectedFinancialDate(dayjs(value).format('YYYY-MM-DD'))
+      getTotalAmount(selectedFinancialType, dayjs(value).format('YYYY-MM-DD'), 'day')
+    } else {
+      getTotalAmount(selectedFinancialType, selectedFinancialDate, 'day')
+    }
+  }
+
+  const handleClientsTypeChange = (value: string) => {
+    if (value) {
+      setIsClientsReportLoading(true)
+      setSelectedClientsType(value)
+      getClients(value, selectedClientsDate)
+    } else {
+      getClients(selectedClientsType, selectedClientsDate)
+    }
+  }
+
+  const handleClientsDateChange = (value: string) => {
+    if (value) {
+      setIsClientsReportLoading(true)
+      setSelectedClientsDate(dayjs(value).format('YYYY-MM-DD'))
+      getClients(selectedClientsType, dayjs(value).format('YYYY-MM-DD'))
+    } else {
+      getClients(selectedClientsType, selectedClientsDate)
+    }
+  }
+
+  const handleLeadsTypeChange = (value: string) => {
+    if (value) {
+      setIsLeadsReportLoading(true)
+      setSelectedLeadsType(value)
+      getLeads(value, selectedLeadsDate)
+    } else {
+      getLeads(selectedLeadsType, selectedLeadsDate)
+    }
+  }
+
+  const handleLeadsDateChange = (value: string) => {
+    if (value) {
+      setIsLeadsReportLoading(true)
+      setSelectedLeadsDate(dayjs(value).format('YYYY-MM-DD'))
+      getLeads(selectedLeadsType, dayjs(value).format('YYYY-MM-DD'))
+    } else {
+      getLeads(selectedLeadsType, selectedLeadsDate)
     }
   }
 
@@ -80,20 +152,32 @@ function useView() {
 
   return {
     breadcrumbData,
-    totalAmount,
-    today,
+    financialReport,
     clients,
     leads,
-    loading,
-    specials,
+    total_stats,
+    masterList,
+    isFinancialReportLoading,
+    isClientsReportLoading,
+    isLeadsReportLoading,
+    selectedFinancialType,
+    selectedFinancialDate,
+    selectedClientsType,
+    selectedClientsDate,
+    selectedLeadsType,
+    selectedLeadsDate,
     actions: {
       getTotalAmount,
-      handleDateChange,
-      setToday,
+      getTotal,
       getClients,
       getLeads,
-      setLoading,
-      getSpecials,
+      getMasterList,
+      handleFinancialTypeChange,
+      handleFinancialDateChange,
+      handleClientsTypeChange,
+      handleClientsDateChange,
+      handleLeadsTypeChange,
+      handleLeadsDateChange,
     },
   }
 }

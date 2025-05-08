@@ -106,16 +106,18 @@ export const List = () => {
         scroll={{ x: 900 }}
       />
 
-      <Pagination
-        className={cls.pagination}
-        total={clients?.count}
-        current={currentPage}
-        pageSize={10}
-        onChange={(page) => {
-          setCurrentPage(page)
-          handlePageChange(page)
-        }}
-      />
+      <Flex justify={'end'}>
+        <Pagination
+          className={cls.pagination}
+          total={clients?.count}
+          current={currentPage}
+          pageSize={10}
+          onChange={(page) => {
+            setCurrentPage(page)
+            handlePageChange(page)
+          }}
+        />
+      </Flex>
 
     </div>
   )
