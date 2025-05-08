@@ -6,12 +6,8 @@ import { MenuOutlined } from '@ant-design/icons'
 import { Layout, Drawer, Button, Flex } from 'antd'
 import dayjs from 'dayjs'
 
-import { axiosRequest } from '@/shared/api/axios'
-import { useAppDispatch } from '@/shared/hooks/redux'
-import { setWarehouse } from '@/store/actions/warehouse'
 import { SideBar } from '@/widgets/sidebar'
 import { EmployeeSidebarMenuRoutes } from '@/widgets/sidebar/model/employee-menu-routes'
-import { SidebarWarehouse } from '@/widgets/sidebar-warehouse/SidebarWarehouse'
 
 import cls from './EmployeeLayout.module.css'
 
@@ -25,7 +21,6 @@ interface Props {
 
 export const EmployeeLayout: React.FC<Props> = ({ children }) => {
   const [drawerVisible, setDrawerVisible] = useState(false)
-  const dispatch = useAppDispatch()
 
   const showDrawer = () => {
     setDrawerVisible(true)
@@ -35,31 +30,9 @@ export const EmployeeLayout: React.FC<Props> = ({ children }) => {
     setDrawerVisible(false)
   }
 
-  React.useEffect(() => {
-    const loadData = async () => {
-      try {
-        const response = await axiosRequest.get('/warehouses/')
-
-        if (response.status === 200) {
-          dispatch(setWarehouse(response.data.results))
-        }
-      } catch (error) {
-        console.log('warehouse get error', error)
-      }
-    }
-
-    loadData()
-  }, [])
-
   return (
     <>
       <Layout className={cls.main_layout}>
-        <Layout.Sider
-          width="75px"
-          className={cls.sidebar_warehouse}
-        >
-          <SidebarWarehouse />
-        </Layout.Sider>
         <Layout.Sider
           width="270px"
           className={cls.sidebar}

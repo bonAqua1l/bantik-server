@@ -1,4 +1,4 @@
-import { Timetable } from '@/pages/time-table'
+import { Timetable } from '@/pages/timetable'
 
 const Page = () => <Timetable.Pages.List/>
 
