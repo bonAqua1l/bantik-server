@@ -1,0 +1,134 @@
+/* master-list.module.css */
+.container {
+  border: 1px solid var(--stroke);
+  border-radius: 0.25rem;
+  background-color: #ffffff;
+  padding: 1.5rem 1.25rem 0.625rem;
+  box-shadow: var(--shadow-default);
+}
+
+@media (prefers-color-scheme: dark) {
+  .container {
+    border-color: var(--stroke-dark);
+    background-color: var(--box-dark);
+  }
+}
+
+.title {
+  margin-bottom: 1.5rem;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-black);
+}
+
+@media (prefers-color-scheme: dark) {
+  .title {
+    color: var(--text-white);
+  }
+}
+
+.table {
+  display: flex;
+  flex-direction: column;
+}
+
+.gridHeader {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  background-color: #f3f4f6;
+  border-radius: 0.25rem;
+}
+
+@media (min-width: 640px) {
+  .gridHeader {
+    grid-template-columns: repeat(5, 1fr);
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .gridHeader {
+    background-color: var(--meta-4);
+  }
+}
+
+.headerCell {
+  padding: 0.625rem;
+  text-transform: uppercase;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  align-items: center;
+  padding: 0.625rem;
+}
+
+@media (min-width: 640px) {
+  .row {
+    grid-template-columns: repeat(5, 1fr);
+  }
+}
+
+.row:not(:last-child) {
+  border-bottom: 1px solid var(--stroke);
+}
+
+@media (prefers-color-scheme: dark) {
+  .row:not(:last-child) {
+    border-bottom-color: var(--stroke-dark);
+  }
+}
+
+.cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.625rem;
+}
+
+.nameCell {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.625rem;
+}
+
+.hideSm {
+  display: none;
+}
+
+@media (min-width: 640px) {
+  .hideSm {
+    display: block;
+  }
+}
+
+.visitors {
+  color: var(--text-black);
+}
+
+@media (prefers-color-scheme: dark) {
+  .visitors {
+    color: var(--text-white);
+  }
+}
+
+.revenues {
+  color: var(--meta-3);
+}
+
+.sales {
+  color: var(--text-black);
+}
+
+@media (prefers-color-scheme: dark) {
+  .sales {
+    color: var(--text-white);
+  }
+}
+
+.conversion {
+  color: var(--meta-5);
+}

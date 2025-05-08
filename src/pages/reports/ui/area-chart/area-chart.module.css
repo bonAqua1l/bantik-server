@@ -1,0 +1,137 @@
+.container {
+    width: 100%;
+    grid-column: span 12;
+    background: #fff;
+    border: 1px solid var(--stroke);
+    border-radius: 0.375rem;
+    padding: 1.875rem 1.25rem 1.25rem;
+    box-shadow: var(--shadow-default);
+}
+  @media (min-width: 640px) {
+    .container {
+      padding: 1.875rem;
+    }
+}
+  @media (min-width: 1280px) {
+    .container {
+      grid-column: span 8;
+    }
+}
+  .dark .container {
+    background: var(--boxdark);
+    border-color: var(--strokedark);
+}
+  
+  .topSection {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+}
+  @media (min-width: 640px) {
+    .topSection {
+      flex-wrap: nowrap;
+    }
+}
+  
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    width: 100%;
+  }
+  @media (min-width: 640px) {
+    .legend {
+      gap: 1.25rem;
+    }
+  }
+  
+  .legendItem {
+    display: flex;
+    min-width: 11.875rem;
+  }
+
+  
+  .details {
+    width: 100%;
+  }
+  
+  .titlePrimary,
+  .titleSecondary {
+    font-weight: 600;
+  }
+  .titlePrimary {
+    color: var(--primary);
+  }
+  .titleSecondary {
+    color: var(--secondary);
+  }
+  
+  .dateRange {
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+  
+  .rangeContainer {
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+    max-width: 11.25rem;
+  }
+  
+  .rangeButtons {
+    display: inline-flex;
+    gap: 15px;
+    align-items: center;
+    padding: 0.375rem;
+    border-radius: 0.375rem;
+    background: #fff;
+  }
+  .dark .rangeButtons {
+    background: var(--meta-4);
+  }
+  
+  .button,
+  .activeButton {
+    border-radius: 0.375rem;
+    padding: 0.25rem 0.75rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+  }
+  .button {
+    background: transparent;
+  }
+  .activeButton {
+    background: #fff;
+    box-shadow: var(--shadow-card);
+  }
+  .button,
+  .activeButton {
+    color: var(--black);
+  }
+  .dark .button,
+  .dark .activeButton {
+    color: var(--white);
+  }
+  .button:hover,
+  .activeButton:hover {
+    box-shadow: var(--shadow-card);
+    background: #fff;
+  }
+  .dark .button:hover,
+  .dark .activeButton:hover {
+    background: var(--boxdark);
+  }
+  
+  .chartWrapper {
+    margin-top: 1rem;
+  }
+  .chart {
+    margin-left: -1.25rem;
+  }
+
+.fields{
+    width: 140px !important;
+    height: 35px !important;
+}
