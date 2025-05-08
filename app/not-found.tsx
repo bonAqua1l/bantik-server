@@ -11,7 +11,7 @@ export default function NotFoundPage() {
       status="404"
       title="Страница не найдена (404)"
       subTitle="Похоже, вы оказались не там где надо!"
-      extra={<Button type="primary" onClick={() => router.push('/admin/storage-requests/')}>Вернуться домой</Button>}
+      extra={<Button type="primary" onClick={() => router.push('/')}>Вернуться домой</Button>}
     />
   )
 }
