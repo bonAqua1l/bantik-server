@@ -42,4 +42,49 @@ export namespace TimetableWorkerTypes {
     services: Service[];
     schedule: Schedule[];
   }
+
+  export interface ItemRecord {
+  id: number;
+  client_name: string;
+  phone: string;
+  date_time: string;
+  prepayment: string;
+  is_confirmed: boolean | null;
+  date: string | null;
+  reminder_minutes: number;
+  created_at: string;
+  client: Client;
+  service: Service;
+  master: Master;
+  weekday: number
+}
+
+export interface Client {
+  id: number;
+  phone: string;
+  name: string;
+  created_at: string;
+  visits_count: number;
+  total_sum: number;
+}
+
+export interface Service {
+  id: number;
+  name: string;
+  duration: number;
+  price: string;
+  image: string | null;
+  is_long: boolean;
+}
+
+export interface Master {
+  uuid: string;
+  avatar: string | null;
+  first_name: string;
+  last_name: string;
+  surname: string | null;
+  email: string;
+  about: string | null;
+}
+
 }

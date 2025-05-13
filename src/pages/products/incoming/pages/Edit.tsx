@@ -68,7 +68,7 @@ export const Edit = ({ lead_id }: Props) => {
                   ...incomingItem,
                   client: incomingItem?.client.id,
                   service: incomingItem?.service.id,
-                  master: incomingItem?.master.uuid,
+                  master: incomingItem?.master.first_name,
                 }
               }
             >
@@ -100,16 +100,12 @@ export const Edit = ({ lead_id }: Props) => {
                   placeholder="Введите предоплату если она есть"
                   className={cls.form__item}
                 />
-                <SelectField
+                <TextField
                   name="master"
+                  type="text"
+                  label="Мастер"
+                  readOnly={true}
                   className={cls.form__item}
-                  placeholder="Выберите мастера"
-                  label="Мастер:"
-                  options={userResponsible?.map(responsible => ({
-                    value: responsible.uuid,
-                    label: `${responsible.first_name} ${responsible.last_name}`,
-                  }))}
-                  rules={[{ required: true }]}
                 />
                 <SelectField
                   name="service"

@@ -79,6 +79,12 @@ export const View: React.FC<Props> = ({ incoming_id }) => {
                   {incomingItem?.service.name}
                 </Link>
               </Flex>
+              <Flex className={cls.docs_item} align="center" justify="space-between">
+                Номер телефон клиента:
+                <Link href={'#'} className={cls.file}>
+                  {incomingItem?.client.phone}
+                </Link>
+              </Flex>
             </Flex>
 
             <Divider className={cls.divider} />
