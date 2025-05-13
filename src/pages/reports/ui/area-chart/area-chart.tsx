@@ -32,7 +32,6 @@ const AreaChart: React.FC<Props> = ({ financialReport, handleFinancialTypeChange
     chart: {
       type: 'area',
       height: 335,
-      fontFamily: 'Satoshi, sans-serif',
       dropShadow: {
         enabled: true,
         color: '#623CEA14',
@@ -117,9 +116,9 @@ const AreaChart: React.FC<Props> = ({ financialReport, handleFinancialTypeChange
         <div className={cls.legend}>
           <div className={cls.legendItem}>
             <div className={cls.details}>
-              <p className={cls.titlePrimary}>Период</p>
+              <p className={cls.titlePrimary}>Отчёт по суммам</p>
               <p className={cls.dateRange}>
-                {financialReport?.period.start_date} - {financialReport?.period.end_date}
+                с {financialReport?.period.start_date} по {financialReport?.period.end_date}
               </p>
             </div>
           </div>

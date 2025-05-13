@@ -31,11 +31,10 @@ const DonutChart: React.FC<Props> = ({ clients, handleClientsDateChange, handleC
     : []
   const options: ApexOptions = {
     chart: {
-      fontFamily: 'Satoshi, sans-serif',
       type: 'donut',
     },
     colors: ['#3C50E0', '#6577F3', '#8FD0EF', '#0FADCF'],
-    labels: ['Новые клиенты', 'Старые клиенты', 'Остальное'],
+    labels: ['Новые клиенты', 'Старые клиенты'],
     legend: { show: false },
     plotOptions: {
       pie: {
@@ -63,7 +62,6 @@ const DonutChart: React.FC<Props> = ({ clients, handleClientsDateChange, handleC
       style: {
         color: '#888',
         fontSize: '14px',
-        fontFamily: 'Satoshi, sans-serif',
       },
     },
 
@@ -73,9 +71,9 @@ const DonutChart: React.FC<Props> = ({ clients, handleClientsDateChange, handleC
     <div className={cls.container}>
       <div className={cls.header}>
         <h5 className={cls.title}>
-          Период
+          Отчёт по клиентам
           <p className={cls.dateRange}>
-            {clients?.period.start_date} - {clients?.period.end_date}
+            с {clients?.period.start_date} по {clients?.period.end_date}
           </p>
         </h5>
         <div className={cls.selectContainer}>
@@ -97,7 +95,7 @@ const DonutChart: React.FC<Props> = ({ clients, handleClientsDateChange, handleC
       </div>
 
       <div className={cls.chartWrapper}>
-        <ReactApexChart options={options} series={hasData ? [newClients, returningClients, 1] : []} type="donut" />
+        <ReactApexChart options={options} series={hasData ? [newClients, returningClients] : []} type="donut" />
       </div>
 
       <div className={cls.legend}>

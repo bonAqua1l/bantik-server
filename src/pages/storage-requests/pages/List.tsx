@@ -120,8 +120,6 @@ export const List: React.FC = () => {
     StorageRequestGET()
   }, [])
 
-  console.log(storageRequestList?.results)
-
   return (
     <div>
       <div className="main">

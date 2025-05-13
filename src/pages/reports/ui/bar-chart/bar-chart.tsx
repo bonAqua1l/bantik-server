@@ -1,5 +1,6 @@
 import React from 'react'
 
+import { Flex } from 'antd'
 import { ApexOptions } from 'apexcharts'
 import dynamic from 'next/dynamic'
 
@@ -42,7 +43,6 @@ const BarChart: React.FC<Props> = ({
   const options: ApexOptions = {
     colors: ['#3C50E0', '#80CAEE'],
     chart: {
-      fontFamily: 'Satoshi, sans-serif',
       type: 'bar',
       height: 335,
       stacked: false,
@@ -63,7 +63,6 @@ const BarChart: React.FC<Props> = ({
     legend: {
       position: 'top',
       horizontalAlign: 'left',
-      fontFamily: 'Satoshi',
       fontWeight: 500,
       fontSize: '14px',
     },
@@ -73,7 +72,10 @@ const BarChart: React.FC<Props> = ({
   return (
     <div className={cls.container}>
       <div className={cls.header}>
-        <h4 className={cls.title}>Отчёт по лидам</h4>
+        <Flex vertical>
+          <h4 className={cls.title}>Отчёт по лидам</h4>
+          <span className={cls.title_sub}>с {leads?.period.start_date} по {leads?.period.end_date}</span>
+        </Flex>
         <div className={cls.controls}>
           <SelectField
             defaultValue="week"
@@ -83,8 +85,8 @@ const BarChart: React.FC<Props> = ({
           />
           <DatePickerField
             placeholder="Выберите дату"
-            className={cls.fields}
             onChange={handleLeadsDateChange}
+            className={cls.fields}
           />
         </div>
       </div>
