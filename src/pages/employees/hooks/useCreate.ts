@@ -2,7 +2,8 @@
 
 import React from 'react'
 
-import { Form } from 'antd'
+import { Form, Upload, UploadFile } from 'antd'
+import { UploadProps } from 'antd/lib'
 import { AxiosError } from 'axios'
 import { useRouter } from 'next/navigation'
 
@@ -58,9 +59,30 @@ function useCreate() {
     async (data: EmployeeTypes.Item) => {
       setSubmitted(true)
       try {
-        const formData = { ...data, role: 'worker', is_employee: true }
+        const { ...rest } = data
 
-        delete (formData as any).schedule
+        const dataToSend = {
+          ...rest,
+          role: 'worker',
+          is_employee: true,
+        }
+
+        const formData = new FormData()
+
+        Object.entries(dataToSend).forEach(([k, v]) => {
+          if (v !== undefined && v !== null) formData.append(k, v as any)
+        })
+
+        if (
+          Array.isArray(rest.avatar) &&
+                  rest.avatar.length &&
+                  typeof rest.avatar[0] !== 'string' &&
+                  (rest.avatar[0] as UploadFile).originFileObj
+        ) {
+          formData.append('avatar', (rest.avatar[0] as UploadFile).originFileObj as File)
+        } else if (!Array.isArray(rest.avatar)) {
+          formData.append('avatar', '')
+        }
 
         const response = await Employees.API.Create.createEmployee(formData)
 
@@ -97,6 +119,18 @@ function useCreate() {
     [router, showError],
   )
 
+  const defaultDraggerProps: UploadProps = {
+    name: 'avatar',
+    multiple: false,
+    accept: 'image/*',
+    maxCount: 1,
+    beforeUpload(file) {
+      if (!file.type.startsWith('image/')) return Upload.LIST_IGNORE
+
+      return false
+    },
+  }
+
   return {
     breadcrumbData,
     submitted,
@@ -104,6 +138,7 @@ function useCreate() {
     services,
     weekdayData,
     form,
+    defaultDraggerProps,
     getWeekdayOptions,
     actions: {
       CreateEmployee,

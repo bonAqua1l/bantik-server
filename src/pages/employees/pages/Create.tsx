@@ -8,6 +8,7 @@ import { Button, Checkbox, Flex, Form, Select, TimePicker } from 'antd'
 import FormItem from 'antd/es/form/FormItem'
 
 import { Breadcrumb } from '@/shared/ui/breadcrumb/breadcrumb'
+import { DraggerFileField } from '@/shared/ui/dragger-file-field/dragger-file-field'
 import { TextField } from '@/shared/ui/textfield/textfield'
 
 import { Employees } from '..'
@@ -16,6 +17,7 @@ import cls from '../styles/create.module.css'
 export const Create = () => {
   const {
     breadcrumbData,
+    defaultDraggerProps,
     submitted,
     contextHolder,
     services,
@@ -46,6 +48,7 @@ export const Create = () => {
             <TextField name="last_name" placeholder="Введите фамилию пользвотеля" label="Фамилия сотрудника" rules={[{ required: true, message: 'Поле обязательно' }]} />
             <TextField name="surname" placeholder="Введите отчество пользвотеля" label="Отчество сотрудника" />
             <TextField name="email" placeholder="Введите email пользвотеля" label="Email сотрудника" rules={[{ required: true, message: 'Поле обязательно' }]} />
+            <TextField type="password" name="password" placeholder="Пароль" label="Пароль сотрудника" rules={[{ required: true, message: 'Поле обязательно' }]} />
             <TextField name="about" placeholder="Введите описание" label="О мастере" />
             <FormItem name="services" label="Выберите сервисы" rules={[{ required: true, message: 'Поле обязательно' }]} className={cls.radio_field}>
               <Checkbox.Group>
@@ -56,7 +59,12 @@ export const Create = () => {
                 ))}
               </Checkbox.Group>
             </FormItem>
-            <TextField type="password" name="password" placeholder="Пароль" label="Пароль сотрудника" rules={[{ required: true, message: 'Поле обязательно' }]} />
+            <DraggerFileField
+              name="avatar"
+              label="Изменить аватар"
+              className={cls.dragger_filed}
+              {...defaultDraggerProps}
+            />
 
             <div>
               <h3>График работы</h3>

@@ -89,8 +89,6 @@ export const ListProductsIncoming: React.FC = () => {
     ProductsIncomingGET()
   }, [currentWarehouse])
 
-  // coment
-
   return (
     <div>
       <div className="main">

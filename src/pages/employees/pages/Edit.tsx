@@ -7,6 +7,7 @@ import { Button, Checkbox, Flex, Form, Input, Select, TimePicker } from 'antd'
 import FormItem from 'antd/es/form/FormItem'
 
 import { Breadcrumb } from '@/shared/ui/breadcrumb/breadcrumb'
+import { DraggerFileField } from '@/shared/ui/dragger-file-field/dragger-file-field'
 import { LoaderData } from '@/shared/ui/loader/Loader'
 import { TextField } from '@/shared/ui/textfield/textfield'
 
@@ -19,6 +20,7 @@ interface Props {
 
 export const Edit: React.FC<Props> = (props) => {
   const {
+    defaultDraggerProps,
     breadcrumbData,
     contextHolder,
     form,
@@ -36,7 +38,7 @@ export const Edit: React.FC<Props> = (props) => {
 
   return (
     <div className="main">
-      <Flex className={cls.employee}>
+      <Flex vertical className={cls.employee}>
         <div className={cls.navigation__info}>
           <Breadcrumb items={breadcrumbData} />
         </div>
@@ -49,11 +51,31 @@ export const Edit: React.FC<Props> = (props) => {
           <Flex className={cls.main_form}>
             {contextHolder}
 
-            <Form form={form} className={cls.form} onFinish={(data) => EditEmployee(props.employee_id, data)}>
-              <TextField name="first_name" placeholder="Введите имя пользвотеля" label="Имя сотрудника" />
-              <TextField name="last_name" placeholder="Введите фамилию пользвотеля" label="Фамилия сотрудника" />
-              <TextField name="surname" placeholder="Введите отчество пользвотеля" label="Отчество сотрудника" />
-              <TextField name="email" placeholder="Введите email пользвотеля" label="Email сотрудника" />
+            <Form
+              form={form}
+              className={cls.form}
+              onFinish={(data) => EditEmployee(props.employee_id, data)}
+            >
+              <TextField
+                name="first_name"
+                placeholder="Введите имя пользвотеля"
+                label="Имя сотрудника"
+              />
+              <TextField
+                name="last_name"
+                placeholder="Введите фамилию пользвотеля"
+                label="Фамилия сотрудника"
+              />
+              <TextField
+                name="surname"
+                placeholder="Введите отчество пользвотеля"
+                label="Отчество сотрудника"
+              />
+              <TextField
+                name="email"
+                placeholder="Введите email пользвотеля"
+                label="Email сотрудника"
+              />
 
               <FormItem
                 name="services"
@@ -70,13 +92,20 @@ export const Edit: React.FC<Props> = (props) => {
                 </Checkbox.Group>
               </FormItem>
 
-              <div>
+              <DraggerFileField
+                name="avatar"
+                label="Изменить аватар"
+                className={cls.dragger_filed}
+                {...defaultDraggerProps}
+              />
+
+              <div className={cls.dynamic}>
                 <h3>График работы</h3>
                 <Form.List name="schedule">
                   {(fields, { add, remove }) => (
                     <>
                       {fields.map(({ key, name, ...rest }) => (
-                        <Flex key={key} gap={18} align="flex-end" justify="space-between">
+                        <Flex key={key} gap={18} align="center" justify="space-between">
                           <Form.Item {...rest} name={[name, 'id']} hidden>
                             <Input />
                           </Form.Item>
@@ -88,7 +117,11 @@ export const Edit: React.FC<Props> = (props) => {
                             className={cls.formItemField}
                             rules={[{ required: true, message: 'Обязательно' }]}
                           >
-                            <Select options={getWeekdayOptions(name)} placeholder="День" style={{ width: 150 }} />
+                            <Select
+                              options={getWeekdayOptions(name)}
+                              placeholder="День"
+                              style={{ width: 150 }}
+                            />
                           </Form.Item>
 
                           <Form.Item
@@ -120,7 +153,13 @@ export const Edit: React.FC<Props> = (props) => {
                 </Form.List>
               </div>
 
-              <Button htmlType="submit" type="primary" className={cls.btn} loading={submitted} style={{ marginTop: 15 }}>
+              <Button
+                htmlType="submit"
+                type="primary"
+                className={cls.btn}
+                loading={submitted}
+                style={{ marginTop: 15 }}
+              >
                 Сохранить
               </Button>
             </Form>

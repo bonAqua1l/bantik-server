@@ -20,7 +20,6 @@ interface Props {
 export const Edit = ({ lead_id }: Props) => {
   const {
     breadcrumbData,
-    userResponsible,
     services,
     submitted,
     form,

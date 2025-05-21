@@ -17,7 +17,6 @@ export const Create = () => {
   const {
     breadcrumbData,
     userResponsible,
-    services,
     submitted,
     form,
     router,
@@ -40,8 +39,6 @@ export const Create = () => {
     ProductsIncomingUsers()
     ClientsGET()
   }, [])
-
-  //commit
 
   return (
     <div>
@@ -128,7 +125,7 @@ export const Create = () => {
                 }}
               />
               <FormItem name={'services'} label="Выберите сервисы" rules={[{ required: true, message: 'Поле обязательно' }]} className={cls.radio_field}>
-                <Checkbox.Group>
+                <Checkbox.Group >
                   {
                     filteredServices?.map((service) => (
                       <Checkbox key={service.id} value={service.id}>{service.name}</Checkbox>

@@ -37,7 +37,7 @@ export const getProductIncomingProject = async () => {
 }
 
 export const getUsers = async () => {
-  return axiosRequest.get('/employees/')
+  return axiosRequest.get('/users/?is_employee=true')
 }
 
 export const createProduct = async (body: ProductsItemsTypes.Item) => {

@@ -17,7 +17,6 @@ function useCreate() {
   const [form] = Form.useForm()
   const createModal = useDisclosure()
 
-  const [services, setServices] = React.useState<ProductsIncomingTypes.Service[] | null>(null)
   const [userResponsible, setUserResponsible] = React.useState<ProductsIncomingTypes.Responsible[] | null>(null)
   const [clients, setClients] = React.useState<ProductsIncomingTypes.Clients[] | null>(null)
   const [submitted, setSubmitted] = React.useState(false)
@@ -50,7 +49,7 @@ function useCreate() {
     try {
       const response = await ProductsIncoming.API.List.getServices()
 
-      setServices(response.data.results)
+      setFilteredServices(response.data.results)
     } catch (error) {
       console.log('products incoming project error', error)
     }
@@ -110,7 +109,6 @@ function useCreate() {
 
   return {
     breadcrumbData,
-    services,
     userResponsible,
     submitted,
     form,
