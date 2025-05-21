@@ -4,6 +4,8 @@ import React from 'react'
 
 import { Empty, Flex } from 'antd'
 
+//idi nax
+
 import cls from '../styles/view.module.css'
 
 export const View = () => {
