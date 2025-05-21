@@ -134,7 +134,6 @@ export const ListProductsIncoming: React.FC = () => {
             </Button>
           </Flex>
           <Flex gap={10} className={cls.filter_and_btn}>
-            {/* <FilterPanel defaultValue={'all_products'} options={[{ value: 'all_products', label: 'Все товары' }, { value: 'not_all_products', label: 'Не все товары' }]}/> */}
             <Button type="primary" onClick={() => router.push('/products/outgoing/create')} className={cls.btn}>Добавить уход</Button>
           </Flex>
         </div>

@@ -1,24 +1,10 @@
 import { axiosRequest } from '@/shared/api/axios'
 import { NEXT_PUBLIC_COMPANY_BASE_URL } from '@/shared/utils/consts'
 
-import { ProductsItemsTypes } from '../../items/types'
-
 export const getProductsIncomingList = async (page: number = 1) => {
   return axiosRequest.get(`/incomings/?page=${page}`, {
     baseURL: NEXT_PUBLIC_COMPANY_BASE_URL,
   })
-}
-
-export const getProductSearchedList = async (search?: string | undefined, url?: string) => {
-  if (search) {
-    return axiosRequest.get(`/products/?search=${search}`, {
-      baseURL: NEXT_PUBLIC_COMPANY_BASE_URL,
-    })
-  } else {
-    return axiosRequest.get(url || '/products/', {
-      baseURL: NEXT_PUBLIC_COMPANY_BASE_URL,
-    })
-  }
 }
 
 export const createProductIncoming = async (body: FormData) => {
@@ -36,20 +22,29 @@ export const getProductIncomingProject = async () => {
   })
 }
 
+export const getProductIncomingAvailableDates = async (service_id: string, year: string, month: string) => {
+  return axiosRequest.get('/available-dates/', {
+    baseURL: NEXT_PUBLIC_COMPANY_BASE_URL,
+    params: {
+      service_id,
+      year,
+      month,
+    },
+  })
+}
+
+export const getProductIncomingEmployeeAvailableSlots = async (service_id: string, date: string) => {
+  return axiosRequest.get('/employees/available-slots/', {
+    baseURL: NEXT_PUBLIC_COMPANY_BASE_URL,
+    params: {
+      service_id,
+      date,
+    },
+  })
+}
+
 export const getUsers = async () => {
   return axiosRequest.get('/users/?is_employee=true')
-}
-
-export const createProduct = async (body: ProductsItemsTypes.Item) => {
-  return axiosRequest.post('/products/', body, {
-    baseURL: NEXT_PUBLIC_COMPANY_BASE_URL,
-  })
-}
-
-export const getProductsColors = async () => {
-  return axiosRequest.get('/products/colors/', {
-    baseURL: NEXT_PUBLIC_COMPANY_BASE_URL,
-  })
 }
 
 export const getClients = async () => {

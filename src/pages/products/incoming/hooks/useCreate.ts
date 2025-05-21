@@ -4,102 +4,192 @@ import React from 'react'
 
 import { Form } from 'antd'
 import { AxiosError } from 'axios'
+import dayjs from 'dayjs'
 import { useRouter } from 'next/navigation'
 
-import { useAppSelector } from '@/shared/hooks/redux'
-import { useDisclosure } from '@/shared/hooks/useDisclosure'
 import useNotification from '@/shared/hooks/useNotifications'
 
 import { ProductsIncoming } from '..'
+import {
+  getProductIncomingAvailableDates,
+  getProductIncomingEmployeeAvailableSlots,
+} from '../api/create'
 import { ProductsIncomingTypes } from '../types'
 
 function useCreate() {
   const [form] = Form.useForm()
-  const createModal = useDisclosure()
 
-  const [userResponsible, setUserResponsible] = React.useState<ProductsIncomingTypes.Responsible[] | null>(null)
-  const [clients, setClients] = React.useState<ProductsIncomingTypes.Clients[] | null>(null)
+  const [services, setServices] = React.useState<ProductsIncomingTypes.Service[]>([])
+  const [selectedServiceId, setSelectedServiceId] = React.useState<number | null>(null)
+
+  const [availableDates, setAvailableDates] = React.useState<string[]>([])
+  const [selectedDate, setSelectedDate] = React.useState<string | null>(null)
+
+  const [slots, setSlots] = React.useState<ProductsIncomingTypes.EmployeeSlotsResponse | null>(null)
+  const [selectedMaster, setSelectedMaster] = React.useState<string | null>(null)
+  const [selectedTime, setSelectedTime] = React.useState<string | null>(null)
+
+  const [clients, setClients] = React.useState<ProductsIncomingTypes.Clients[]>([])
   const [submitted, setSubmitted] = React.useState(false)
   const [isNotUser, setIsNotUser] = React.useState(true)
-  const [incomingItem, setIncomingItem] = React.useState<ProductsIncomingTypes.Item | null>(null)
-  const [incomingItemLoading, setIncomingItemLoading] = React.useState(true)
-  const [filteredServices, setFilteredServices] = React.useState<ProductsIncomingTypes.Service[] | null>(null)
 
   const router = useRouter()
-  const user = useAppSelector((state) => state.user.userData)
   const { contextHolder, showError } = useNotification()
 
-  const getIncomingDetails = React.useCallback(async (id: number) => {
-    setIncomingItemLoading(true)
-
-    try {
-      const response = await ProductsIncoming.API.View.getProductsIncomingList(id)
-
-      if (response.status === 200) {
-        setIncomingItem(response.data)
-      }
-    } catch (error) {
-      console.log('get incoming details error', error)
-    } finally {
-      setIncomingItemLoading(false)
-    }
-  }, [])
+  const today = React.useMemo(() => dayjs(), [])
+  const currentMonth = today.month() + 1
+  const currentYear = today.year()
 
   const ServiceGET = React.useCallback(async () => {
     try {
-      const response = await ProductsIncoming.API.List.getServices()
+      const res = await ProductsIncoming.API.List.getServices()
 
-      setFilteredServices(response.data.results)
-    } catch (error) {
-      console.log('products incoming project error', error)
-    }
-  }, [])
-
-  const ProductsIncomingUsers = React.useCallback(async () => {
-    try {
-      const response = await ProductsIncoming.API.Create.getUsers()
-
-      setUserResponsible(response.data.results)
-    } catch (error) {
-      console.log('products incoming project error', error)
+      setServices(res.data.results)
+    } catch {
+      /* empty */
     }
   }, [])
 
   const ClientsGET = React.useCallback(async () => {
     try {
-      const response = await ProductsIncoming.API.Create.getClients()
+      const res = await ProductsIncoming.API.Create.getClients()
 
-      setClients(response.data.results)
-    } catch (error) {
-      console.log('products incoming project error', error)
+      setClients(res.data.results)
+    } catch {
+      /* empty */
     }
   }, [])
 
-  const createIncoming = async (formValue: ProductsIncomingTypes.Form) => {
-    setSubmitted(true)
-    try {
-      const response = await ProductsIncoming.API.List.createProductIncoming(formValue)
+  const fetchAvailableDates = React.useCallback(
+    async (serviceId: number) => {
+      try {
+        const res = await getProductIncomingAvailableDates(
+          String(serviceId),
+          String(currentYear),
+          String(currentMonth),
+        )
 
-      if (response.status !== 201) {
-        throw new Error(`Submission failed: ${response.statusText}`)
+        setAvailableDates(res.data.available_dates)
+        if (res.data.available_dates.length) {
+          setSelectedDate(res.data.available_dates[0])
+        } else {
+          setSelectedDate(null)
+        }
+      } catch {
+        setAvailableDates([])
+        setSelectedDate(null)
       }
+    },
+    [currentMonth, currentYear],
+  )
 
-      router.push('/admin/storage-requests/')
+  const fetchSlots = React.useCallback(
+    async (serviceId: number, date: string) => {
+      try {
+        const res = await getProductIncomingEmployeeAvailableSlots(String(serviceId), date)
 
-    } catch (e) {
-      const error = e as AxiosError
+        setSlots(res.data)
+      } catch {
+        setSlots(null)
+      }
+    },
+    [],
+  )
 
-      if (error.response && Array.isArray(error.response.data) && error.response.data[0] === 'Этот мастер не оказывает данную услугу.') {
-        showError('Этот мастер не оказывает данную услугу.')
+  React.useEffect(() => {
+    ServiceGET()
+    ClientsGET()
+  }, [ServiceGET, ClientsGET])
+
+  React.useEffect(() => {
+    if (selectedServiceId) fetchAvailableDates(selectedServiceId)
+    setSelectedMaster(null)
+    setSelectedTime(null)
+  }, [selectedServiceId, fetchAvailableDates])
+
+  React.useEffect(() => {
+    if (selectedServiceId && selectedDate) fetchSlots(selectedServiceId, selectedDate)
+    setSelectedMaster(null)
+    setSelectedTime(null)
+    form.setFieldsValue({ date: selectedDate ? dayjs(selectedDate) : null })
+  }, [selectedServiceId, selectedDate, fetchSlots, form])
+
+  const masterOptions = React.useMemo(
+    () =>
+      slots?.masters.map((m) => ({
+        value: m.uuid,
+        label: m.name,
+      })) || [],
+    [slots],
+  )
+
+  const timeOptions = React.useMemo(() => {
+    if (!selectedMaster || !slots) return []
+    const master = slots.masters.find((m) => m.uuid === selectedMaster)
+
+    return master?.available_slots.map((t) => ({ value: t, label: t })) || []
+  }, [selectedMaster, slots])
+
+  const createIncoming = React.useCallback(
+    async (values: any) => {
+      if (!selectedDate) {
+        showError('Выберите дату')
+
+        return
+      }
+      if (!selectedTime || !timeOptions.length) {
+        showError('На выбранный день нет свободного времени')
 
         return
       }
 
-      console.error('Ошибка создания прихода:', error)
-    } finally {
-      setSubmitted(false)
-    }
-  }
+      const payload = {
+        client: isNotUser ? null : values.client,
+        phone: values.phone,
+        client_name: values.client_name,
+        date_time: `${selectedDate}T${selectedTime}`,
+        prepayment: values.prepayment,
+        service: selectedServiceId,
+        master: selectedMaster,
+      } as ProductsIncomingTypes.Form
+
+      const body = new FormData()
+
+      Object.entries(payload).forEach(([k, v]) =>
+        v !== undefined && v !== null && body.append(k, v as any),
+      )
+
+      setSubmitted(true)
+      try {
+        const res = await ProductsIncoming.API.List.createProductIncoming(body)
+
+        if (res.status !== 201) throw new Error()
+        router.push('/admin/storage-requests/')
+      } catch (e) {
+        const err = e as AxiosError
+
+        if (
+          err.response &&
+          Array.isArray(err.response.data) &&
+          err.response.data[0] === 'Этот мастер не оказывает данную услугу.'
+        ) {
+          showError('Этот мастер не оказывает данную услугу.')
+        }
+      } finally {
+        setSubmitted(false)
+      }
+    },
+    [
+      isNotUser,
+      selectedDate,
+      selectedTime,
+      selectedServiceId,
+      selectedMaster,
+      router,
+      showError,
+      timeOptions.length,
+    ],
+  )
 
   const breadcrumbData = [
     { href: '/', title: 'Главная' },
@@ -109,27 +199,26 @@ function useCreate() {
 
   return {
     breadcrumbData,
-    userResponsible,
+    services,
+    selectedServiceId,
+    setSelectedServiceId,
+    availableDates,
+    selectedDate,
+    setSelectedDate,
     submitted,
     form,
-    createModal,
-    user,
     router,
     clients,
     isNotUser,
-    incomingItem,
-    incomingItemLoading,
+    setIsNotUser,
+    masterOptions,
+    selectedMaster,
+    setSelectedMaster,
+    timeOptions,
+    selectedTime,
+    setSelectedTime,
     contextHolder,
-    filteredServices,
-    actions: {
-      ServiceGET,
-      ProductsIncomingUsers,
-      createIncoming,
-      ClientsGET,
-      setIsNotUser,
-      getIncomingDetails,
-      setFilteredServices,
-    },
+    createIncoming,
   }
 }
 

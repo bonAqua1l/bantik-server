@@ -2,7 +2,8 @@
 
 import React from 'react'
 
-import { Button, Flex, Form } from 'antd'
+import { Button, Checkbox, Flex, Form } from 'antd'
+import dayjs from 'dayjs'
 
 import { Breadcrumb } from '@/shared/ui/breadcrumb/breadcrumb'
 import { DatePickerField } from '@/shared/ui/date-picker-field/date-picker-field'
@@ -17,116 +18,154 @@ interface Props {
   lead_id: number
 }
 
-export const Edit = ({ lead_id }: Props) => {
+export const Edit: React.FC<Props> = ({ lead_id }) => {
   const {
     breadcrumbData,
     services,
+    setSelectedServiceId,
+    availableDates,
+    selectedDate,
+    setSelectedDate,
+    masterOptions,
+    setSelectedMaster,
+    timeOptions,
+    selectedTime,
+    setSelectedTime,
     submitted,
     form,
     router,
     clients,
     isNotUser,
-    incomingItem,
+    setIsNotUser,
+    contextHolder,
+    updateIncoming,
     incomingItemLoading,
-    actions: {
-      ProductsIncomingUsers,
-      createIncoming,
-      ServiceGET,
-      ClientsGET,
-      setIsNotUser,
-      getIncomingDetails,
-    },
+    incomingItem,
+    getIncomingDetails,
   } = ProductsIncoming.Hooks.Edit.use()
 
   React.useEffect(() => {
-    if (lead_id) {
-      ServiceGET()
-      ProductsIncomingUsers()
-      ClientsGET()
-      getIncomingDetails(lead_id)
-    }
-  }, [lead_id])
+    if (lead_id) getIncomingDetails(lead_id)
+  }, [lead_id, getIncomingDetails])
 
   return (
-    <div>
-      <div className={cls.create}>
-        <div className={cls.navigation__info}>
-          <Breadcrumb items={breadcrumbData}/>
-        </div>
-
-        <h1 className={cls.main__title}>Редактировать заявку</h1>
-
-        <LoaderData isLoading={incomingItemLoading} data={incomingItem}>
-          <Flex vertical className={cls.form}>
-            <Form
-              id="createIncoming"
-              form={form}
-              onFinish={(data) => createIncoming(data, lead_id)}
-              initialValues={
-                {
-                  ...incomingItem,
-                  client: incomingItem?.client.id,
-                  service: incomingItem?.service.id,
-                  master: incomingItem?.master.first_name,
-                }
-              }
-            >
-              <Flex vertical gap={10} className={cls.inputs}>
-                <SelectField
-                  name="client"
-                  placeholder="Выберите клиента"
-                  options={clients?.map(item => ({
-                    label: item.name,
-                    value: item.id,
-                  }))}
-                  rules={[{ required: isNotUser ? false : true }]}
-                  label="Клиент"
-                  onChange={() => {
-                    setIsNotUser(false)
-                  }}
-                />
-                <DatePickerField
-                  name="date_time"
-                  placeholder="Введите дату"
-                  label="Дата"
-                  showTime={true}
-                  rules={[{ required: true }]}
-                />
-                <TextField
-                  name="prepayment"
-                  type="text"
-                  label="Предоплата"
-                  placeholder="Введите предоплату если она есть"
-                  className={cls.form__item}
-                />
-                <TextField
-                  name="master"
-                  type="text"
-                  label="Мастер"
-                  readOnly={true}
-                  className={cls.form__item}
-                />
-                <SelectField
-                  name="service"
-                  className={cls.form__item}
-                  placeholder="Выберите сервис"
-                  label="Сервис:"
-                  options={services?.map(service => ({
-                    value: service.id,
-                    label: service.name,
-                  }))}
-                  rules={[{ required: true }]}
-                />
-              </Flex>
-
-              <Flex gap={10} style={{ marginTop: '20px' }}>
-                <Button type="primary" style={{ width: '150px' }} disabled={submitted} htmlType="submit" form="createIncoming">Изменить</Button>
-                <Button style={{ width: '150px' }} disabled={submitted} onClick={() => router.push('/admin/products/incoming')}>Отмена</Button>
-              </Flex>
-            </Form>
-          </Flex>
-        </LoaderData>
+    <div className={cls.create}>
+      <div className={cls.navigation__info}>
+        <Breadcrumb items={breadcrumbData} />
       </div>
+
+      <h1 className={cls.main__title}>Редактировать заявку</h1>
+
+      <LoaderData isLoading={incomingItemLoading} data={incomingItem}>
+        <Flex vertical className={cls.form}>
+          {contextHolder}
+          <Form id="editIncoming" form={form} onFinish={updateIncoming}>
+            <Flex vertical gap={10} className={cls.inputs}>
+              <SelectField
+                name="service"
+                placeholder="Выберите услугу"
+                options={services.map((s) => ({ value: s.id, label: s.name }))}
+                label="Услуга"
+                rules={[{ required: true }]}
+                onChange={(v) => setSelectedServiceId(v)}
+              />
+
+              <SelectField
+                name="client"
+                placeholder="Выберите клиента"
+                options={clients.map((c) => ({ label: c.name, value: c.id }))}
+                rules={[{ required: !isNotUser }]}
+                label="Клиент"
+                onChange={() => setIsNotUser(false)}
+              />
+
+              {isNotUser && (
+                <>
+                  <TextField
+                    name="phone"
+                    type="text"
+                    label="Номер телефона клиента"
+                    placeholder="Введите номер телефона: 9 цифр (без нуля)"
+                    className={cls.form__item}
+                    rules={[
+                      { required: true, message: 'Введите номер телефона' },
+                      { pattern: /^\d{9}$/, message: 'Номер должен содержать ровно 9 цифр' },
+                    ]}
+                  />
+                  <TextField
+                    name="client_name"
+                    type="text"
+                    label="Имя клиента"
+                    placeholder="Введите имя клиента"
+                    className={cls.form__item}
+                    rules={[{ required: true }]}
+                  />
+                </>
+              )}
+
+              <DatePickerField
+                name="date"
+                placeholder="Выберите дату"
+                label="Дата"
+                showTime={false}
+                allowedDates={availableDates}
+                disabled={!availableDates.length}
+                rules={[{ required: true }]}
+                onChange={(d) => setSelectedDate(d ? d.format('YYYY-MM-DD') : null)}
+                initialValue={selectedDate ? dayjs(selectedDate) : undefined}
+              />
+
+              <SelectField
+                name="master"
+                placeholder="Выберите мастера"
+                label="Мастер"
+                className={cls.form__item}
+                options={masterOptions}
+                rules={[{ required: true }]}
+                disabled={!masterOptions.length}
+                onChange={(v) => setSelectedMaster(v)}
+              />
+
+              <Form.Item
+                name="time"
+                label="Время"
+                rules={[{ required: true, message: 'Выберите время' }]}
+                help={!timeOptions.length && selectedDate ? 'На выбранный день нет свободного времени' : undefined}
+                validateStatus={!timeOptions.length && selectedDate ? 'error' : undefined}
+              >
+                <Checkbox.Group
+                  options={timeOptions}
+                  disabled={!timeOptions.length}
+                  value={selectedTime ? [selectedTime] : []}
+                  onChange={(arr) => setSelectedTime(arr[0] as string)}
+                  className={cls.radio_field}
+                />
+              </Form.Item>
+
+              <TextField
+                name="prepayment"
+                type="text"
+                label="Предоплата"
+                placeholder="Введите предоплату если она есть"
+                className={cls.form__item}
+              />
+            </Flex>
+
+            <Flex gap={10} style={{ marginTop: 20 }}>
+              <Button type="primary" style={{ width: 150 }} disabled={submitted} htmlType="submit">
+                Изменить
+              </Button>
+              <Button
+                style={{ width: 150 }}
+                disabled={submitted}
+                onClick={() => router.push('/admin/products/incoming')}
+              >
+                Отмена
+              </Button>
+            </Flex>
+          </Form>
+        </Flex>
+      </LoaderData>
     </div>
   )
 }
