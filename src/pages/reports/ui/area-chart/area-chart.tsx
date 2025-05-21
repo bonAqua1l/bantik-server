@@ -118,12 +118,14 @@ const AreaChart: React.FC<Props> = ({ financialReport, handleFinancialTypeChange
             <div className={cls.details}>
               <p className={cls.titlePrimary}>Отчёт по суммам</p>
               <p className={cls.dateRange}>
-                с {financialReport?.period.start_date} по {financialReport?.period.end_date}
+                {financialReport?.period.start_date || financialReport?.period.end_date ? (
+                  `с ${financialReport?.period.start_date} по ${financialReport?.period.end_date}`
+                ) : null}
               </p>
             </div>
           </div>
         </div>
-        <div className={cls.rangeContainer}>
+        <div>
           <div className={cls.rangeButtons}>
             <SelectField
               defaultValue={'month'}

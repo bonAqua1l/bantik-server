@@ -61,13 +61,6 @@
     font-weight: 500;
   }
   
-  .rangeContainer {
-    display: flex;
-    justify-content: flex-end;
-    width: 100%;
-    max-width: 11.25rem;
-  }
-  
   .rangeButtons {
     display: inline-flex;
     gap: 15px;
@@ -102,3 +95,26 @@
     width: 140px !important;
     height: 35px !important;
 }
+
+  @media (max-width: 640px) {
+    .rangeButtons{
+      padding: initial !important;
+    }
+    .fields{
+      width: 120px !important;
+      height: 30px !important;
+      font-size: 12px !important;
+    }
+
+    .fields :global(.ant-picker-input>input::placeholder) {
+      font-size: 10px !important;
+    }
+
+    .fields :global(.ant-select-selection-item){
+        font-size: 10px !important;
+    }
+
+    .fields :global(.ant-select-open){
+        font-size: 10px !important;
+    }
+  }

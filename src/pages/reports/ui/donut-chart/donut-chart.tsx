@@ -73,7 +73,9 @@ const DonutChart: React.FC<Props> = ({ clients, handleClientsDateChange, handleC
         <h5 className={cls.title}>
           Отчёт по клиентам
           <p className={cls.dateRange}>
-            с {clients?.period.start_date} по {clients?.period.end_date}
+            {clients?.period.start_date || clients?.period.end_date ? (
+              `с ${clients?.period.start_date} по ${clients?.period.end_date}`
+            ) : null}
           </p>
         </h5>
         <div className={cls.selectContainer}>

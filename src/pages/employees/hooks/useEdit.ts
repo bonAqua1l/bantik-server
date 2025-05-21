@@ -2,7 +2,9 @@
 
 import React from 'react'
 
-import { Form } from 'antd'
+import { Form, Upload } from 'antd'
+import { UploadProps } from 'antd/lib'
+import { UploadFile } from 'antd/lib/upload/interface'
 import { AxiosError } from 'axios'
 import dayjs from 'dayjs'
 import { useRouter } from 'next/navigation'
@@ -19,9 +21,19 @@ function useEdit() {
   const [employee, setEmployee] = React.useState<EmployeeTypes.Item | null>(null)
   const [isEmployeeLoading, setIsEmployeeLoading] = React.useState(true)
   const originalSchedule = React.useRef<EmployeeTypes.Schedule[]>([])
-
   const { contextHolder, showError } = useNotification()
   const router = useRouter()
+
+  const makeFileFromUrl = React.useCallback(
+    (url: string): UploadFile => ({
+      uid: '-1',
+      name: url.split('/').pop() || 'avatar',
+      status: 'done',
+      url,
+      thumbUrl: url,
+    }),
+    [],
+  )
 
   const breadcrumbData = [
     { href: '/', title: 'Главная' },
@@ -56,11 +68,15 @@ function useEdit() {
 
         setEmployee(response.data)
         originalSchedule.current = response.data.schedule
+        const scheduleArr = Array.isArray(response.data.schedule)
+          ? response.data.schedule
+          : []
 
         form.setFieldsValue({
           ...response.data,
-          services: response.data.services.map((s: EmployeeTypes.Services) => s.id),
-          schedule: response.data.schedule.map((s: EmployeeTypes.Schedule) => ({
+          services: (response.data.services || []).map((s: any) => s.id),
+          avatar: response.data.avatar ? [makeFileFromUrl(response.data.avatar)] : null,
+          schedule: scheduleArr.map((s: any) => ({
             id: s.id,
             weekday: s.weekday,
             time: [dayjs(s.start_time, 'HH:mm'), dayjs(s.end_time, 'HH:mm')],
@@ -72,18 +88,34 @@ function useEdit() {
         setIsEmployeeLoading(false)
       }
     },
-    [form],
+    [form, makeFileFromUrl],
   )
 
   const EditEmployee = React.useCallback(
     async (uuid: string, data: EmployeeTypes.Item) => {
       setSubmitted(true)
       try {
-        const { schedule, ...payload } = data
+        const { schedule, avatar, services = [], ...rest } = data
+        const formData = new FormData()
 
-        delete (payload as any).schedule
+        Object.entries(rest).forEach(([k, v]) => {
+          if (v !== undefined && v !== null) formData.append(k, v as any)
+        })
 
-        const response = await Employees.API.Edit.editEmployee(uuid, payload)
+        if (
+          Array.isArray(avatar) &&
+          avatar.length &&
+          typeof avatar[0] !== 'string' &&
+          (avatar[0] as UploadFile).originFileObj
+        ) {
+          formData.append('avatar', (avatar[0] as UploadFile).originFileObj as File)
+        } else if (!Array.isArray(avatar)) {
+          formData.append('avatar', '')
+        }
+
+        services.forEach((id: any) => formData.append('services', id.toString()))
+
+        const response = await Employees.API.Edit.editEmployee(uuid, formData)
 
         const currentList = (schedule as any[]) || []
 
@@ -164,7 +196,22 @@ function useEdit() {
     [form],
   )
 
+  const defaultDraggerProps: UploadProps = {
+    name: 'avatar',
+    multiple: false,
+    accept: 'image/*',
+    maxCount: 1,
+    beforeUpload(file) {
+      if (!file.type.startsWith('image/')) return Upload.LIST_IGNORE
+
+      return false
+    },
+  }
+
+  console.log(employee)
+
   return {
+    defaultDraggerProps,
     breadcrumbData,
     contextHolder,
     form,

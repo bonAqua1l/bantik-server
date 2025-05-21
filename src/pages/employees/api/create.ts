@@ -3,7 +3,7 @@ import { NEXT_PUBLIC_COMPANY_BASE_URL } from '@/shared/utils/consts'
 
 import { EmployeeTypes } from '../types'
 
-export const createEmployee = (data: EmployeeTypes.Item) => {
+export const createEmployee = (data: FormData) => {
   return axiosRequest.post('/users/', data, { baseURL: NEXT_PUBLIC_COMPANY_BASE_URL })
 }
 

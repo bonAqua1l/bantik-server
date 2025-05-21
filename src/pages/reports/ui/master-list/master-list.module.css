@@ -5,6 +5,7 @@
   padding: 1.5rem 1.25rem 0.625rem;
   box-shadow: var(--shadow-default);
   width: 100%;
+  margin-top: 40px;
 }
 
 .title {

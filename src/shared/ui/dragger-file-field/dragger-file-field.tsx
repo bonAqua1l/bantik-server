@@ -14,6 +14,7 @@ function normFile(e: any) {
 
   return fileList && fileList.length > 0 ? fileList : null
 }
+
 interface Props extends UploadProps {
   rules?: any[]
   initialValue?: string
@@ -25,14 +26,13 @@ interface Props extends UploadProps {
 }
 
 export const DraggerFileField: React.FC<Props> = (props) => {
-  const { deleteFunc ,onChange, ...uploadProps } = props
+  const { deleteFunc, onChange, ...uploadProps } = props
 
   const handleRemove = async (file: UploadFile) => {
     try {
       if (file.status === 'done' && file.url) {
         deleteFunc?.(parseInt(file.uid))
       }
-
     } catch (error) {
       console.error('Error deleting file:', error)
       message.error('Ошибка при удалении файла')
@@ -40,9 +40,7 @@ export const DraggerFileField: React.FC<Props> = (props) => {
   }
 
   const handleChange = (info: any) => {
-    if (onChange) {
-      onChange(info)
-    }
+    if (onChange) onChange(info)
   }
 
   return (
@@ -55,15 +53,16 @@ export const DraggerFileField: React.FC<Props> = (props) => {
     >
       <Dragger
         {...uploadProps}
-        // fileList={fileList}
-        onChange={(info) => handleChange(info)}
+        onChange={handleChange}
         onRemove={handleRemove}
       >
         <p className="ant-upload-drag-icon">
           <InboxOutlined />
         </p>
         <p className="ant-upload-text">Выберите файл</p>
-        <p className="ant-upload-hint">Тут можно загрузить один или несколько файлов</p>
+        <p className="ant-upload-hint">
+          Тут можно загрузить один или несколько файлов
+        </p>
       </Dragger>
     </Form.Item>
   )

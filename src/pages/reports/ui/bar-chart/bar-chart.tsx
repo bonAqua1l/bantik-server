@@ -74,7 +74,11 @@ const BarChart: React.FC<Props> = ({
       <div className={cls.header}>
         <Flex vertical>
           <h4 className={cls.title}>Отчёт по лидам</h4>
-          <span className={cls.title_sub}>с {leads?.period.start_date} по {leads?.period.end_date}</span>
+          <span className={cls.title_sub}>
+            {leads?.period.start_date || leads?.period.end_date ? (
+              `с ${leads?.period.start_date} по ${leads?.period.end_date}`
+            ) : null}
+          </span>
         </Flex>
         <div className={cls.controls}>
           <SelectField
