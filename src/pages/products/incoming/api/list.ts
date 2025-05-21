@@ -2,7 +2,6 @@ import { axiosRequest } from '@/shared/api/axios'
 import { NEXT_PUBLIC_COMPANY_BASE_URL } from '@/shared/utils/consts'
 
 import { ProductsItemsTypes } from '../../items/types'
-import { ProductsIncomingTypes } from '../types'
 
 export const getProductsIncomingList = async (url?: string, previusURL?: string) => {
   return axiosRequest.get((previusURL || url) || '/leads/', {
@@ -16,7 +15,7 @@ export const getProductSearchedList = async (search: string | undefined) => {
   })
 }
 //TODO: переписать names
-export const createProductIncoming = async (body: ProductsIncomingTypes.Form) => {
+export const createProductIncoming = async (body: FormData) => {
   return axiosRequest.post('/leads/', body)
 }
 

@@ -38,12 +38,34 @@ export namespace ProductsIncomingTypes {
     name: string
   }
   export interface Form {
-    client: any
+    client: any,
+    client_name?: string
     phone: string
     date_time: string
     prepayment?: string
     service: number
     master: string
+  }
+
+  export interface AvailableDatesResponse {
+  month: number
+  year: number
+  service_id: number
+  available_dates: string[]
+}
+
+  export interface EmployeeSlotMaster {
+    uuid: string
+    name: string
+    avatar: string | null
+    available_slots: string[]
+  }
+
+  export interface EmployeeSlotsResponse {
+    date: string
+    service_id: string
+    is_long_service: boolean
+    masters: EmployeeSlotMaster[]
   }
 
   export interface  FormProduct {

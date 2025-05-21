@@ -49,7 +49,7 @@ function useCreateProduct() {
         })
       }
 
-      const response = await ProductsIncoming.API.Create.createProduct(formData)
+      const response = await ProductsIncoming.API.CreateProduct.createProduct(formData)
 
       if (response.status === 201 || response.status === 200) {
         api.success({
@@ -76,7 +76,7 @@ function useCreateProduct() {
 
   const ProductsColorsGET = React.useCallback(async () => {
     try {
-      const response = await ProductsIncoming.API.Create.getProductsColors()
+      const response = await ProductsIncoming.API.CreateProduct.getProductsColors()
 
       setProductsColorsList(response.data)
     } catch (error) {

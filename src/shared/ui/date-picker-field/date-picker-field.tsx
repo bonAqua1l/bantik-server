@@ -1,46 +1,55 @@
+/* eslint-disable no-unused-vars */
+'use client'
+
 import React from 'react'
 
 import { DatePicker } from 'antd'
-import { Rule } from 'antd/es/form'
 import FormItem from 'antd/es/form/FormItem'
 import dayjs, { Dayjs } from 'dayjs'
 
 import cls from './date-picker-field.module.css'
 
 import type { DatePickerProps } from 'antd'
+import type { Rule } from 'antd/es/form'
 
 interface Props extends DatePickerProps {
   label?: string
   rules?: Rule[]
-  initialValue?: string
-  pickerMode?: 'year' | 'month' | 'date'
-  // eslint-disable-next-line no-unused-vars
+  allowedDates?: string[]
+  initialValue?: string | Dayjs
   onChange?: (value: Dayjs | null) => void
   showTime?: boolean
 }
 
 export const DatePickerField: React.FC<Props> = (props) => {
-  const handleChange: DatePickerProps['onChange'] = (dateValue) => {
-    props.onChange?.(dateValue)
+  const disabledDate = (current: Dayjs) => {
+    if (current && current < dayjs().startOf('day')) return true
+    if (props.allowedDates?.length) {
+      return !props.allowedDates.includes(current.format('YYYY-MM-DD'))
+    }
+
+    return false
   }
+
+  const handleChange: DatePickerProps['onChange'] = (v) => props.onChange?.(v)
 
   return (
     <FormItem
       label={props.label}
-      className={cls.dateField}
       name={props.name}
+      className={cls.dateField}
       rules={props.rules}
-      getValueProps={(value) => ({
-        value: value ? (dayjs.isDayjs(value) ? value : dayjs(value)) : value,
+      initialValue={props.initialValue ? dayjs(props.initialValue) : undefined}
+      getValueProps={(v) => ({
+        value: v ? (dayjs.isDayjs(v) ? v : dayjs(v)) : v,
       })}
     >
       <DatePicker
-        picker={props.pickerMode}
         placeholder={props.placeholder}
         onChange={handleChange}
         className={`${cls.datepicker} ${props.className}`}
         showTime={props.showTime ? { format: 'HH:mm' } : false}
-        disabledDate={(current) => current && current < dayjs().startOf('day')}
+        disabledDate={disabledDate}
       />
     </FormItem>
   )

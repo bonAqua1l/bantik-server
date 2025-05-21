@@ -3,92 +3,202 @@
 import React from 'react'
 
 import { Form } from 'antd'
+import { AxiosError } from 'axios'
+import dayjs from 'dayjs'
 import { useRouter } from 'next/navigation'
 
-import { useAppSelector } from '@/shared/hooks/redux'
-import { useDisclosure } from '@/shared/hooks/useDisclosure'
+import useNotification from '@/shared/hooks/useNotifications'
 
 import { ProductsIncoming } from '..'
+import {
+  getProductIncomingAvailableDates,
+  getProductIncomingEmployeeAvailableSlots,
+  editIncoming,
+} from '../api/edit'
 import { ProductsIncomingTypes } from '../types'
 
 function useEdit() {
   const [form] = Form.useForm()
-  const createModal = useDisclosure()
 
-  const [services, setServices] = React.useState<ProductsIncomingTypes.Service[] | null>(null)
-  const [userResponsible, setUserResponsible] = React.useState<ProductsIncomingTypes.Responsible[] | null>(null)
-  const [clients, setClients] = React.useState<ProductsIncomingTypes.Clients[] | null>(null)
+  const [services, setServices] = React.useState<ProductsIncomingTypes.Service[]>([])
+  const [selectedServiceId, setSelectedServiceId] = React.useState<number | null>(null)
+
+  const [availableDates, setAvailableDates] = React.useState<string[]>([])
+  const [selectedDate, setSelectedDate] = React.useState<string | null>(null)
+
+  const [slots, setSlots] = React.useState<ProductsIncomingTypes.EmployeeSlotsResponse | null>(null)
+  const [selectedMaster, setSelectedMaster] = React.useState<string | null>(null)
+  const [selectedTime, setSelectedTime] = React.useState<string | null>(null)
+
+  const [clients, setClients] = React.useState<ProductsIncomingTypes.Clients[]>([])
   const [submitted, setSubmitted] = React.useState(false)
   const [isNotUser, setIsNotUser] = React.useState(true)
+
   const [incomingItem, setIncomingItem] = React.useState<ProductsIncomingTypes.Item | null>(null)
   const [incomingItemLoading, setIncomingItemLoading] = React.useState(true)
 
   const router = useRouter()
-  const user = useAppSelector((state) => state.user.userData)
+  const { contextHolder, showError } = useNotification()
+
+  const yearFromDate = React.useCallback((d: string) => +d.split('-')[0], [])
+  const monthFromDate = React.useCallback((d: string) => +d.split('-')[1], [])
+
+  const ServiceGET = React.useCallback(async () => {
+    const { data } = await ProductsIncoming.API.List.getServices()
+
+    setServices(data.results)
+  }, [])
+
+  const ClientsGET = React.useCallback(async () => {
+    const { data } = await ProductsIncoming.API.Create.getClients()
+
+    setClients(data.results)
+  }, [])
 
   const getIncomingDetails = React.useCallback(async (id: number) => {
     setIncomingItemLoading(true)
-
     try {
-      const response = await ProductsIncoming.API.View.getProductsIncomingList(id)
+      const { data } = await ProductsIncoming.API.View.getProductsIncomingList(id)
 
-      if (response.status === 200) {
-        setIncomingItem(response.data)
-      }
-    } catch (error) {
-      console.log('get incoming details error', error)
+      setIncomingItem(data)
     } finally {
       setIncomingItemLoading(false)
     }
   }, [])
 
-  const ServiceGET = React.useCallback(async () => {
-    try {
-      const response = await ProductsIncoming.API.List.getServices()
+  const fetchAvailableDates = React.useCallback(
+    async (serviceId: number, y: number, m: number) => {
+      try {
+        const { data } = await getProductIncomingAvailableDates(String(serviceId), String(y), String(m))
 
-      setServices(response.data.results)
-    } catch (error) {
-      console.log('products incoming project error', error)
+        setAvailableDates(data.available_dates)
+        setSelectedDate((prev) =>
+          prev && data.available_dates.includes(prev) ? prev : data.available_dates[0] ?? null,
+        )
+      } catch {
+        setAvailableDates([])
+        setSelectedDate(null)
+      }
+    },
+    [],
+  )
+
+  const fetchSlots = React.useCallback(
+    async (serviceId: number, date: string) => {
+      try {
+        const { data } = await getProductIncomingEmployeeAvailableSlots(String(serviceId), date)
+
+        setSlots(data)
+      } catch {
+        setSlots(null)
+      }
+    },
+    [],
+  )
+
+  React.useEffect(() => {
+    ServiceGET()
+    ClientsGET()
+  }, [ServiceGET, ClientsGET])
+
+  React.useEffect(() => {
+    if (!incomingItem || !clients.length) return
+
+    const date = dayjs(incomingItem.date_time).format('YYYY-MM-DD')
+    const time = dayjs(incomingItem.date_time).format('HH:mm')
+    const isKnownClient =
+      !!incomingItem.client && clients.some((c) => c.id === incomingItem.client.id)
+
+    setIsNotUser(!isKnownClient)
+
+    setSelectedServiceId(incomingItem.service.id)
+    setSelectedDate(date)
+    setSelectedTime(time)
+    setSelectedMaster(incomingItem.master.uuid)
+
+    form.setFieldsValue({
+      client: incomingItem.client?.id,
+      phone: isKnownClient ? undefined : incomingItem.phone,
+      client_name: isKnownClient ? undefined : incomingItem.client_name,
+      prepayment: incomingItem.prepayment,
+      service: incomingItem.service.id,
+      date: dayjs(date),
+      master: incomingItem.master.uuid,
+      time,
+    })
+
+    fetchAvailableDates(incomingItem.service.id, yearFromDate(date), monthFromDate(date))
+    fetchSlots(incomingItem.service.id, date)
+  }, [incomingItem, clients, form, fetchAvailableDates, fetchSlots, monthFromDate, yearFromDate])
+
+  React.useEffect(() => {
+    if (selectedServiceId && selectedDate) {
+      fetchAvailableDates(selectedServiceId, yearFromDate(selectedDate), monthFromDate(selectedDate))
     }
-  }, [])
+  }, [selectedServiceId, selectedDate, fetchAvailableDates, monthFromDate, yearFromDate])
 
-  const ProductsIncomingUsers = React.useCallback(async () => {
-    try {
-      const response = await ProductsIncoming.API.Create.getUsers()
+  React.useEffect(() => {
+    if (selectedServiceId && selectedDate) fetchSlots(selectedServiceId, selectedDate)
+  }, [selectedServiceId, selectedDate, fetchSlots])
 
-      setUserResponsible(response.data.results)
-    } catch (error) {
-      console.log('products incoming project error', error)
-    }
-  }, [])
+  const masterOptions = React.useMemo(
+    () => slots?.masters.map((m) => ({ value: m.uuid, label: m.name })) ?? [],
+    [slots],
+  )
 
-  const ClientsGET = React.useCallback(async () => {
-    try {
-      const response = await ProductsIncoming.API.Create.getClients()
+  const timeOptions = React.useMemo(() => {
+    if (!selectedMaster || !slots) return []
+    const master = slots.masters.find((m) => m.uuid === selectedMaster)
 
-      setClients(response.data.results)
-    } catch (error) {
-      console.log('products incoming project error', error)
-    }
-  }, [])
+    return master?.available_slots.map((t) => ({ value: t, label: t })) ?? []
+  }, [selectedMaster, slots])
 
-  const createIncoming = async (formValue: ProductsIncomingTypes.Form, id: number) => {
-    setSubmitted(true)
-    try {
-      const response = await ProductsIncoming.API.Edit.editIncoming(formValue, id).finally(() => {
-        router.push('/admin/storage-requests/')
-      })
+  const updateIncoming = React.useCallback(
+    async (values: any) => {
+      if (!incomingItem) return
+      if (!selectedDate) return showError('Выберите дату')
+      if (!selectedTime || !timeOptions.length) return showError('На выбранный день нет свободного времени')
 
-      if (response.status !== 201) {
-        throw new Error(`Submission failed: ${response.statusText}`)
+      const payload: ProductsIncomingTypes.Form = {
+        client: isNotUser ? null : values.client,
+        client_name: values.client_name,
+        phone: values.phone,
+        date_time: `${selectedDate}T${selectedTime}`,
+        prepayment: values.prepayment,
+        service: selectedServiceId!,
+        master: selectedMaster!,
       }
 
-    } catch (error) {
-      console.error('Ошибка создания прихода:', error)
-    } finally {
-      setSubmitted(false)
-    }
-  }
+      setSubmitted(true)
+      try {
+        await editIncoming(payload, incomingItem.id)
+        router.back()
+      } catch (e) {
+        const err = e as AxiosError
+
+        if (
+          err.response &&
+          Array.isArray(err.response.data) &&
+          err.response.data[0] === 'Этот мастер не оказывает данную услугу.'
+        ) {
+          showError('Этот мастер не оказывает данную услугу.')
+        }
+      } finally {
+        setSubmitted(false)
+      }
+    },
+    [
+      incomingItem,
+      isNotUser,
+      selectedDate,
+      selectedTime,
+      selectedServiceId,
+      selectedMaster,
+      showError,
+      timeOptions.length,
+      router,
+    ],
+  )
 
   const breadcrumbData = [
     { href: '/admin/storage-requests/', title: 'Заявки' },
@@ -98,24 +208,28 @@ function useEdit() {
   return {
     breadcrumbData,
     services,
-    userResponsible,
+    selectedServiceId,
+    setSelectedServiceId,
+    availableDates,
+    selectedDate,
+    setSelectedDate,
     submitted,
     form,
-    createModal,
-    user,
     router,
     clients,
     isNotUser,
-    incomingItem,
+    setIsNotUser,
+    masterOptions,
+    selectedMaster,
+    setSelectedMaster,
+    timeOptions,
+    selectedTime,
+    setSelectedTime,
+    contextHolder,
+    updateIncoming,
     incomingItemLoading,
-    actions: {
-      ServiceGET,
-      ProductsIncomingUsers,
-      createIncoming,
-      ClientsGET,
-      setIsNotUser,
-      getIncomingDetails,
-    },
+    incomingItem,
+    getIncomingDetails,
   }
 }
 
