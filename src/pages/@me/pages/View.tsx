@@ -6,6 +6,8 @@ import { Empty, Flex } from 'antd'
 
 import cls from '../styles/view.module.css'
 
+//sdfsdf
+
 export const View = () => {
   return (
     <div>
