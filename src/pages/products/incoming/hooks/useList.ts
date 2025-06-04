@@ -11,6 +11,7 @@ import { ProductsIncomingTypes } from '../types'
 
 function useList() {
   const router = useRouter()
+
   const [currentPage, setCurrentPage] = React.useState(1)
   const [products, setProducts] = React.useState<ProductsIncomingTypes.Product[] | null>(null)
   const [selectedProduct, setSelectedProduct] = React.useState<ProductsIncomingTypes.Product | null>(null)
