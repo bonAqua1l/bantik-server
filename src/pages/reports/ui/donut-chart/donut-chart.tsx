@@ -92,6 +92,7 @@ const DonutChart: React.FC<Props> = ({ clients, handleClientsDateChange, handleC
             placeholder="Выберите дату"
             className={cls.fields}
             onChange={(date) => handleClientsDateChange(date)}
+            disablePast={false}
           />
         </div>
       </div>
