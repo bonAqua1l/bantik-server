@@ -18,12 +18,15 @@ interface Props extends DatePickerProps {
   allowedDates?: string[]
   initialValue?: string | Dayjs
   onChange?: (value: Dayjs | null) => void
+  disablePast?: boolean
   showTime?: boolean
 }
 
 export const DatePickerField: React.FC<Props> = (props) => {
   const disabledDate = (current: Dayjs) => {
-    if (current && current < dayjs().startOf('day')) return true
+    if (props.disablePast && current && current < dayjs().startOf('day')) {
+      return true
+    }
     if (props.allowedDates?.length) {
       return !props.allowedDates.includes(current.format('YYYY-MM-DD'))
     }

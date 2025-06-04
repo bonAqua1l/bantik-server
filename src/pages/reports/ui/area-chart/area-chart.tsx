@@ -140,6 +140,7 @@ const AreaChart: React.FC<Props> = ({ financialReport, handleFinancialTypeChange
               placeholder="Выберите дату"
               className={cls.fields}
               onChange={(date) => handleFinancialDateChange(date)}
+              disablePast={false}
             />
           </div>
         </div>

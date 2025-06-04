@@ -91,6 +91,7 @@ const BarChart: React.FC<Props> = ({
             placeholder="Выберите дату"
             onChange={handleLeadsDateChange}
             className={cls.fields}
+            disablePast={false}
           />
         </div>
       </div>

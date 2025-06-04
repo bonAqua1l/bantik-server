@@ -5,7 +5,6 @@ import React from 'react'
 import { Button, Flex, Form } from 'antd'
 import Image from 'next/image'
 
-import { QStorageLogoLight } from '@/shared/assets/icons'
 import { AuthHeroImage } from '@/shared/assets/images'
 import { TextField } from '@/shared/ui/textfield/textfield'
 import { TextFieldPassword } from '@/shared/ui/textfield-password/textfield-password'
@@ -34,10 +33,6 @@ export const View = () => {
       <Flex className={cls.auth} justify="center" align="center">
 
         <Flex align="center" gap={90} className={cls.main_flex}>
-          <Flex justify="flex-start" align="flex-start" gap={10} className={cls.logo}>
-            <QStorageLogoLight/>
-            <p className={cls.text}>Включаем бизнес на максимум!</p>
-          </Flex>
           <Form className={cls.form} onFinish={onFinish} name="loginForm" form={form}>
             <h1>Вход</h1>
             {contextHolder}
