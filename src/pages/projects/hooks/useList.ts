@@ -13,12 +13,14 @@ import { ProjectsType } from '../types'
 
 function useList() {
   const [form] = Form.useForm()
+  const [currentPage, setCurrentPage] = React.useState(1)
   const createModal = useDisclosure()
   const router = useRouter()
   const [submitted, setSubmitted] = React.useState(false)
-  const [isCreated, setIsCreated] = React.useState(false)
-  const [services, setServices] = React.useState<ProjectsType.Service[] | undefined>(undefined)
+  const [services, setServices] = React.useState<ProjectsType.ServiceResponse | undefined>(undefined)
+  const [isServiceLoading, setServiceLoading] = React.useState(false)
   const [api, contextHolder] = notification.useNotification()
+  const PAGE_SIZE = 10
 
   const createService = (async (data: ProjectsType.Form) => {
     setSubmitted(true)
@@ -41,10 +43,18 @@ function useList() {
 
       const response = await Projects.API.List.createServices(formData)
 
-      if (response.status === 201 || response.status === 200) {
+      if (response.status === 201) {
+        form.resetFields()
+        await ServicesGET()
         api.success({
           message: 'Сервис успешно создан',
           placement: 'top',
+        })
+      } else if (response.status === 400 && response?.data?.name?.[0] === 'Услуга with this Название услуги already exists.') {
+        api.error({
+          message: 'Мындай аталыштагы товар бар',
+          placement: 'top',
+          duration: 1.5,
         })
       } else {
         api.error({
@@ -52,10 +62,8 @@ function useList() {
           placement: 'top',
         })
       }
-      await ServicesGET()
       router.refresh()
 
-      setIsCreated(true)
     } catch (error) {
       console.log('project create error', error)
     } finally {
@@ -63,15 +71,29 @@ function useList() {
     }
   })
 
-  const ServicesGET = React.useCallback(async () => {
+  const ServicesGET = React.useCallback(async (url?: string, previusURL?: string) => {
+    setServiceLoading(true)
     try {
-      const response = await Projects.API.List.getServices()
+      const response = await Projects.API.List.getServices(url || '/services/', previusURL)
 
-      setServices(response.data.results)
+      setServices(response.data)
     } catch (error) {
       console.error('project error', error)
+    } finally {
+      setServiceLoading(false)
     }
   }, [])
+
+  const handlePageChange = (page: number) => {
+    if (isServiceLoading || page === currentPage) return
+
+    const offset = (page - 1) * PAGE_SIZE
+
+    const url = `/services/?limit=${PAGE_SIZE}&offset=${offset}`
+
+    ServicesGET(url, undefined)
+    setCurrentPage(page)
+  }
 
   const breadcrumbData = [
     { href: '/', title: 'Главная' },
@@ -94,18 +116,22 @@ function useList() {
   }
 
   return {
-    isCreated,
     contextHolder,
     submitted,
     form,
     breadcrumbData,
     services,
     defaultDraggerProps,
+    PAGE_SIZE,
+    isServiceLoading,
+    currentPage,
     actions: {
       createModal,
       router,
       ServicesGET,
       createService,
+      handlePageChange,
+      setCurrentPage,
     },
   }
 }

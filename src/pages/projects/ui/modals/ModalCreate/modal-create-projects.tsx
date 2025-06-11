@@ -2,9 +2,10 @@
 
 import React from 'react'
 
-import { Button, Divider, Form, Modal } from 'antd'
+import { Button, Divider, Form, Modal, UploadProps } from 'antd'
+import { FormInstance } from 'antd/lib'
 
-import { Projects } from '@/pages/projects'
+import { ProjectsType } from '@/pages/projects/types'
 import { ProjectsRules } from '@/pages/projects/validate'
 import { DraggerFileField } from '@/shared/ui/dragger-file-field/dragger-file-field'
 import { TextField } from '@/shared/ui/textfield/textfield'
@@ -14,24 +15,15 @@ import cls from './modal-create-projects.module.css'
 interface Props {
   isModalOpen: boolean
   onCloseModal: () => void
+  contextHolder: any,
+  submitted: boolean
+  form: FormInstance
+  defaultDraggerProps: UploadProps
+  // eslint-disable-next-line no-unused-vars
+  createService: (data: ProjectsType.Form) => Promise<any>
 }
 
-const ModalCreateProjects: React.FC<Props> = ({ isModalOpen, onCloseModal }) => {
-  const {
-    isCreated,
-    contextHolder,
-    submitted,
-    form,
-    defaultDraggerProps,
-    actions: { createService },
-  } = Projects.Hooks.List.use()
-
-  React.useEffect(() => {
-    if (isCreated) {
-      onCloseModal()
-    }
-  }, [isCreated, onCloseModal])
-
+const ModalCreateProjects: React.FC<Props> = ({ isModalOpen, onCloseModal, contextHolder, submitted, form, defaultDraggerProps, createService }) => {
   return (
     <Modal
       className={cls.modal}
@@ -65,7 +57,9 @@ const ModalCreateProjects: React.FC<Props> = ({ isModalOpen, onCloseModal }) => 
         id="createProducts"
         className={cls.form}
         form={form}
-        onFinish={createService}
+        onFinish={(data) => createService(data).finally(() => {
+          onCloseModal()
+        })}
       >
         <TextField
           name="name"

@@ -3,7 +3,7 @@
 import React from 'react'
 
 import { BorderlessTableOutlined } from '@ant-design/icons'
-import {  Button, Flex, List as ListAntd } from 'antd'
+import {  Button, Flex, List as ListAntd, Pagination } from 'antd'
 import Image from 'next/image'
 
 import { BantikPhoto } from '@/shared/assets/images/'
@@ -14,13 +14,29 @@ import cls from '../styles/list.module.css'
 import ModalCreateProjects from '../ui/modals/ModalCreate/modal-create-projects'
 
 export const List = () => {
-  const { breadcrumbData, services, actions:{ createModal, ServicesGET, router } } = Projects.Hooks.List.use()
+  const {
+    breadcrumbData,
+    services,
+    PAGE_SIZE,
+    contextHolder,
+    defaultDraggerProps,
+    form,
+    submitted,
+    isServiceLoading,
+    currentPage,
+    actions:{
+      createModal,
+      ServicesGET,
+      router,
+      createService,
+      handlePageChange,
+      setCurrentPage,
+    },
+  } = Projects.Hooks.List.use()
 
   React.useEffect(() => {
-    if (!createModal.isOpen) {
-      ServicesGET()
-    }
-  }, [createModal.isOpen])
+    ServicesGET()
+  }, [])
 
   return (
     <div>
@@ -48,8 +64,8 @@ export const List = () => {
             sm: 2,
             xs: 2,
           }}
-          loading={!services}
-          dataSource={services}
+          loading={!services?.results}
+          dataSource={services?.results}
           renderItem={(item) => (
             <ListAntd.Item
               key={item.id}
@@ -83,10 +99,27 @@ export const List = () => {
             </ListAntd.Item>
           )}
         />
+        <Pagination
+          className={cls.pagination}
+          total={services?.count}
+          current={currentPage}
+          pageSize={PAGE_SIZE}
+          disabled={isServiceLoading}
+          showSizeChanger={false}
+          onChange={(page) => {
+            setCurrentPage(page)
+            handlePageChange(page)
+          }}
+        />
       </div>
       <ModalCreateProjects
         onCloseModal={createModal.onClose}
         isModalOpen={createModal.isOpen}
+        contextHolder={contextHolder}
+        createService={createService}
+        defaultDraggerProps={defaultDraggerProps}
+        form={form}
+        submitted={submitted}
       />
     </div>
   )
