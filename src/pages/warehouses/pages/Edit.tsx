@@ -17,7 +17,6 @@ export const Edit = ({ warehouse_id }: Props) => {
   const {
     breadcrumbData,
     form,
-    contextHolder,
     submitted,
     isWarehouseLoading,
     warehouse,
@@ -35,7 +34,6 @@ export const Edit = ({ warehouse_id }: Props) => {
 
   return (
     <div className={'main'}>
-      {contextHolder}
       <div className={cls.navigation__info}>
         <Breadcrumb items={breadcrumbData}/>
         <h1 className={cls.warehouses_title}>Редактировать склад</h1>

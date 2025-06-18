@@ -6,6 +6,8 @@ import ruRU from 'antd/locale/ru_RU'
 
 import ThemeConfig from '@/shared/assets/theme'
 
+import { NotificationProvider } from './NotificationProvider'
+
 interface Props {
   children: React.ReactNode
 }
@@ -15,7 +17,11 @@ const AntdProvider: React.FC<Props> = ({
 }) => {
   return (
     <ConfigProvider theme={ThemeConfig} locale={ruRU}>
-      <AntdRegistry>{children}</AntdRegistry>
+      <AntdRegistry>
+        <NotificationProvider>
+          {children}
+        </NotificationProvider>
+      </AntdRegistry>
     </ConfigProvider>
   )
 }

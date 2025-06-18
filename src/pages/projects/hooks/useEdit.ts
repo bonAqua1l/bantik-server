@@ -2,9 +2,11 @@
 
 import React from 'react'
 
-import { Form, notification, Upload } from 'antd'
+import { Form, Upload } from 'antd'
 import { UploadProps } from 'antd/lib'
 import { useRouter } from 'next/navigation'
+
+import { useNotificationApi } from '@/shared/providers/NotificationProvider'
 
 import { Projects } from '..'
 import { ProjectsType } from '../types'
@@ -15,7 +17,7 @@ function useEdit() {
   const [submitted, setSubmitted] = React.useState(false)
   const [items, setItems] = React.useState<ProjectsType.ServiceDetail | undefined>(undefined)
   const [isProjectsLoading, setIsProjectsLoading] = React.useState(true)
-  const [api, contextHolder] = notification.useNotification()
+  const api = useNotificationApi()
 
   const breadcrumbData = [
     { href: '/', title: 'Главная' },
@@ -104,7 +106,6 @@ function useEdit() {
     items,
     isProjectsLoading,
     form,
-    contextHolder,
     submitted,
     defaultDraggerProps,
     actions: {

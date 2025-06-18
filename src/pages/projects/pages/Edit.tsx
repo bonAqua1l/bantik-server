@@ -22,7 +22,6 @@ export const Edit: React.FC<Props> = (props) => {
     submitted,
     form,
     isProjectsLoading,
-    contextHolder,
     defaultDraggerProps,
     actions: { ServiceIDGET, EditService },
   } = Projects.Hooks.Edit.use()
@@ -33,7 +32,6 @@ export const Edit: React.FC<Props> = (props) => {
 
   return (
     <div className="main">
-      {contextHolder}
       <Flex className={cls.header}>
         <Breadcrumb items={breadcrumbData} />
       </Flex>

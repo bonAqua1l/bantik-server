@@ -14,7 +14,6 @@ export const Create = () => {
   const {
     breadcrumbData,
     form,
-    contextHolder,
     submitted,
     actions: {
       createWarehouse,
@@ -23,7 +22,6 @@ export const Create = () => {
 
   return (
     <div className={'main'}>
-      {contextHolder}
       <div className={cls.navigation__info}>
         <Breadcrumb items={breadcrumbData}/>
         <h1 className={cls.warehouses_title}>Создать новый склад</h1>

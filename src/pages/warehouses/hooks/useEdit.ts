@@ -2,8 +2,10 @@
 
 import React from 'react'
 
-import { Form, notification } from 'antd'
+import { Form } from 'antd'
 import { useRouter } from 'next/navigation'
+
+import { useNotificationApi } from '@/shared/providers/NotificationProvider'
 
 import { Warehouses } from '..'
 import { WarehouseTypes } from '../types'
@@ -14,7 +16,7 @@ function useEdit() {
   const [warehouse, setWarehouse] = React.useState<WarehouseTypes.Item | null>(null)
   const [isWarehouseLoading, setIsWarehouseLoading] = React.useState(true)
 
-  const [api, contextHolder] = notification.useNotification()
+  const api = useNotificationApi()
 
   const router = useRouter()
 
@@ -66,7 +68,6 @@ function useEdit() {
   return {
     form,
     breadcrumbData,
-    contextHolder,
     submitted,
     isWarehouseLoading,
     warehouse,
