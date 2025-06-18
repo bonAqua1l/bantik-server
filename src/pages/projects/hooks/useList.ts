@@ -2,11 +2,12 @@
 
 import React from 'react'
 
-import { Form, notification, Upload } from 'antd'
+import { Form, Upload } from 'antd'
 import { UploadProps } from 'antd/lib'
 import { useRouter } from 'next/navigation'
 
 import { useDisclosure } from '@/shared/hooks/useDisclosure'
+import { useNotificationApi } from '@/shared/providers/NotificationProvider'
 
 import { Projects } from '..'
 import { ProjectsType } from '../types'
@@ -19,7 +20,7 @@ function useList() {
   const [submitted, setSubmitted] = React.useState(false)
   const [services, setServices] = React.useState<ProjectsType.ServiceResponse | undefined>(undefined)
   const [isServiceLoading, setServiceLoading] = React.useState(false)
-  const [api, contextHolder] = notification.useNotification()
+  const api = useNotificationApi()
   const PAGE_SIZE = 10
 
   const createService = (async (data: ProjectsType.Form) => {
@@ -116,7 +117,6 @@ function useList() {
   }
 
   return {
-    contextHolder,
     submitted,
     form,
     breadcrumbData,

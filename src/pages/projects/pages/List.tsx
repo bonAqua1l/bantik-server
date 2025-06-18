@@ -18,7 +18,6 @@ export const List = () => {
     breadcrumbData,
     services,
     PAGE_SIZE,
-    contextHolder,
     defaultDraggerProps,
     form,
     submitted,
@@ -115,7 +114,6 @@ export const List = () => {
       <ModalCreateProjects
         onCloseModal={createModal.onClose}
         isModalOpen={createModal.isOpen}
-        contextHolder={contextHolder}
         createService={createService}
         defaultDraggerProps={defaultDraggerProps}
         form={form}

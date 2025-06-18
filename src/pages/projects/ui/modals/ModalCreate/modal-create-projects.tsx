@@ -15,7 +15,6 @@ import cls from './modal-create-projects.module.css'
 interface Props {
   isModalOpen: boolean
   onCloseModal: () => void
-  contextHolder: any,
   submitted: boolean
   form: FormInstance
   defaultDraggerProps: UploadProps
@@ -23,7 +22,7 @@ interface Props {
   createService: (data: ProjectsType.Form) => Promise<any>
 }
 
-const ModalCreateProjects: React.FC<Props> = ({ isModalOpen, onCloseModal, contextHolder, submitted, form, defaultDraggerProps, createService }) => {
+const ModalCreateProjects: React.FC<Props> = ({ isModalOpen, onCloseModal, submitted, form, defaultDraggerProps, createService }) => {
   return (
     <Modal
       className={cls.modal}
@@ -51,7 +50,6 @@ const ModalCreateProjects: React.FC<Props> = ({ isModalOpen, onCloseModal, conte
         </Button>,
       ]}
     >
-      {contextHolder}
       <Divider className={cls.divider} />
       <Form
         id="createProducts"
