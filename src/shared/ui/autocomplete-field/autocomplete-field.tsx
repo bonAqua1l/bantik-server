@@ -19,8 +19,8 @@ interface Props extends AutoCompleteProps {
 export const AutoCompleteField:React.FC<Props> = (props) => {
   return (
     <FormItem
-      label={props.label}
       className={cls.autoCompleteField}
+      label={props.label}
       name={props.name}
       rules={props.rules}
       initialValue={props.initialValue}
