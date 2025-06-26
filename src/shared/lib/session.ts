@@ -48,7 +48,8 @@ export async function loginSession(loginData: LoginTypes.Form) {
       }
     }
 
-    const user = data.user
+    // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
+    const { services, ...user } = data.user ?? {}
     const session = await encrypt({ user })
     const expires = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
     const cookieStore = await cookies()
