@@ -3,7 +3,7 @@
 import React from 'react'
 
 import { BorderlessTableOutlined } from '@ant-design/icons'
-import {  Button, Flex, List as ListAntd, Pagination } from 'antd'
+import {  Badge, Button, Flex, List as ListAntd, Pagination } from 'antd'
 import Image from 'next/image'
 
 import { BantikPhoto } from '@/shared/assets/images/'
@@ -77,24 +77,29 @@ export const List = () => {
                 padding: 0,
               }}
             >
-              <div onClick={() => router.push(`/admin/projects/${item.id}`)} style={{ borderColor: '#001529' }} className={cls.card}>
-                <Flex justify={'center'}>
-                  <Image
-                    width={0}
-                    height={0}
-                    sizes="100vw"
-                    style={{ width: '100%', height: '120px' }}
-                    className={cls.card_image}
-                    src={item.image || BantikPhoto.src}
-                    alt={item.name ||  'image'}
-                    priority={true}
-                  />
-                </Flex>
-                <div className={cls.card__info}>
-                  <h2><BorderlessTableOutlined/> {item.name}</h2>
-                  <p>{item.price} сом</p>
+              <Badge
+                dot={item.additional_services.length! > 0}
+                offset={[ -2, 2 ]}
+              >
+                <div onClick={() => router.push(`/admin/projects/${item.id}`)} style={{ borderColor: '#001529' }} className={cls.card}>
+                  <Flex justify={'center'}>
+                    <Image
+                      width={0}
+                      height={0}
+                      sizes="100vw"
+                      style={{ width: '100%', height: '120px' }}
+                      className={cls.card_image}
+                      src={item.image || BantikPhoto.src}
+                      alt={item.name ||  'image'}
+                      priority={true}
+                    />
+                  </Flex>
+                  <div className={cls.card__info}>
+                    <h2><BorderlessTableOutlined/> {item.name}</h2>
+                    <p>{item.price} сом</p>
+                  </div>
                 </div>
-              </div>
+              </Badge>
             </ListAntd.Item>
           )}
         />
@@ -118,6 +123,7 @@ export const List = () => {
         defaultDraggerProps={defaultDraggerProps}
         form={form}
         submitted={submitted}
+        services={services}
       />
     </div>
   )

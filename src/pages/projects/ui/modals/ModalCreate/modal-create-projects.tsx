@@ -2,12 +2,13 @@
 
 import React from 'react'
 
-import { Button, Divider, Form, Modal, UploadProps } from 'antd'
+import { Button, Checkbox, Divider, Form, Modal, UploadProps } from 'antd'
 import { FormInstance } from 'antd/lib'
 
 import { ProjectsType } from '@/pages/projects/types'
 import { ProjectsRules } from '@/pages/projects/validate'
 import { DraggerFileField } from '@/shared/ui/dragger-file-field/dragger-file-field'
+import { SelectField } from '@/shared/ui/select-field/select-field'
 import { TextField } from '@/shared/ui/textfield/textfield'
 
 import cls from './modal-create-projects.module.css'
@@ -20,9 +21,18 @@ interface Props {
   defaultDraggerProps: UploadProps
   // eslint-disable-next-line no-unused-vars
   createService: (data: ProjectsType.Form) => Promise<any>
+  services: ProjectsType.ServiceResponse | undefined
 }
 
-const ModalCreateProjects: React.FC<Props> = ({ isModalOpen, onCloseModal, submitted, form, defaultDraggerProps, createService }) => {
+const ModalCreateProjects: React.FC<Props> = ({
+  isModalOpen,
+  onCloseModal,
+  submitted,
+  form,
+  defaultDraggerProps,
+  createService,
+  services,
+}) => {
   return (
     <Modal
       className={cls.modal}
@@ -38,7 +48,9 @@ const ModalCreateProjects: React.FC<Props> = ({ isModalOpen, onCloseModal, submi
       onCancel={onCloseModal}
       okButtonProps={{ style: { display: 'none' } }}
       footer={[
-        <Button disabled={submitted} onClick={onCloseModal} key="back">Отмена</Button>,
+        <Button disabled={submitted} onClick={onCloseModal} key="back">
+          Отмена
+        </Button>,
         <Button
           form="createProducts"
           htmlType="submit"
@@ -55,9 +67,10 @@ const ModalCreateProjects: React.FC<Props> = ({ isModalOpen, onCloseModal, submi
         id="createProducts"
         className={cls.form}
         form={form}
-        onFinish={(data) => createService(data).finally(() => {
-          onCloseModal()
-        })}
+        onFinish={(data) =>
+          createService(data).finally(() => {
+            onCloseModal()
+          })}
       >
         <TextField
           name="name"
@@ -65,6 +78,7 @@ const ModalCreateProjects: React.FC<Props> = ({ isModalOpen, onCloseModal, submi
           label="Название сервиса"
           rules={ProjectsRules.InputRules}
         />
+
         <TextField
           name="duration"
           placeholder="Введите длительность сервиса"
@@ -78,6 +92,23 @@ const ModalCreateProjects: React.FC<Props> = ({ isModalOpen, onCloseModal, submi
           label="Цена сервиса"
           type="number"
         />
+
+        <SelectField
+          name="parent_service"
+          label="Родительский сервис"
+          placeholder="Выберите сервис"
+          allowClear
+          options={
+            services?.results.map((s) => ({
+              label: s.name,
+              value: s.id,
+            })) || []
+          }
+        />
+
+        <Form.Item name="is_additional" valuePropName="checked">
+          <Checkbox>Дополнительная услуга</Checkbox>
+        </Form.Item>
 
         <DraggerFileField
           label="Выберите картинку"

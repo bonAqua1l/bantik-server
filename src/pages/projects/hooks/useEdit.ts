@@ -16,6 +16,8 @@ function useEdit() {
   const router = useRouter()
   const [submitted, setSubmitted] = React.useState(false)
   const [items, setItems] = React.useState<ProjectsType.ServiceDetail | undefined>(undefined)
+  const [services, setServices] = React.useState<ProjectsType.ServiceResponse | undefined>(undefined)
+  const [isServiceLoading, setServiceLoading] = React.useState(false)
   const [isProjectsLoading, setIsProjectsLoading] = React.useState(true)
   const api = useNotificationApi()
 
@@ -35,6 +37,19 @@ function useEdit() {
       console.log('products by id projects', error)
     } finally {
       setIsProjectsLoading(false)
+    }
+  }, [])
+
+  const ServicesGET = React.useCallback(async (url?: string, previusURL?: string) => {
+    setServiceLoading(true)
+    try {
+      const response = await Projects.API.List.getServices(url || '/services/?include_additional=true', previusURL)
+
+      setServices(response.data)
+    } catch (error) {
+      console.error('project error', error)
+    } finally {
+      setServiceLoading(false)
     }
   }, [])
 
@@ -108,10 +123,13 @@ function useEdit() {
     form,
     submitted,
     defaultDraggerProps,
+    services,
+    isServiceLoading,
     actions: {
       router,
       ServiceIDGET,
       EditService,
+      ServicesGET,
     },
   }
 }

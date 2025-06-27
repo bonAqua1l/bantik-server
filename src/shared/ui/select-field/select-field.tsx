@@ -13,25 +13,23 @@ interface Props extends SelectProps {
   height?: number
 }
 
-export const SelectField: React.FC<Props> = (props) => {
-
+export const SelectField: React.FC<Props> = ({
+  label,
+  name,
+  initialValue,
+  rules,
+  className,
+  ...selectProps
+}) => {
   return (
     <FormItem
       className={cls.selectField}
-      label={props.label}
-      initialValue={props.initialValue}
-      rules={props.rules}
-      name={props.name}
+      label={label}
+      initialValue={initialValue}
+      rules={rules}
+      name={name}
     >
-      <Select
-        defaultValue={props.defaultValue}
-        disabled={props.disabled}
-        style={props.style}
-        onChange={props.onChange}
-        options={props.options}
-        placeholder={props.placeholder}
-        className={props.className}
-      />
+      <Select {...selectProps} className={className} />
     </FormItem>
   )
 }

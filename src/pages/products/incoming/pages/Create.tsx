@@ -1,8 +1,9 @@
+// src/pages/products/incoming/pages/Create.tsx
 'use client'
 
 import React from 'react'
 
-import { Button, Checkbox, Flex, Form } from 'antd'
+import { Button, Flex, Form, Radio } from 'antd'
 
 import { Breadcrumb } from '@/shared/ui/breadcrumb/breadcrumb'
 import { DatePickerField } from '@/shared/ui/date-picker-field/date-picker-field'
@@ -16,7 +17,8 @@ export const Create: React.FC = () => {
   const {
     breadcrumbData,
     services,
-    setSelectedServiceId,
+    setSelectedServiceIds,
+    selectedServiceIds,
     availableDates,
     selectedDate,
     setSelectedDate,
@@ -49,11 +51,13 @@ export const Create: React.FC = () => {
           <Flex vertical gap={10} className={cls.inputs}>
             <SelectField
               name="service"
-              placeholder="Выберите услугу"
+              placeholder="Выберите услуги"
+              mode="multiple"
+              value={selectedServiceIds}
               options={services.map((s) => ({ value: s.id, label: s.name }))}
-              label="Услуга"
+              label="Услуги"
               rules={[{ required: true }]}
-              onChange={(v) => setSelectedServiceId(v)}
+              onChange={(v) => setSelectedServiceIds(v)}
             />
 
             <SelectField
@@ -116,14 +120,20 @@ export const Create: React.FC = () => {
               name="time"
               label="Время"
               rules={[{ required: true, message: 'Выберите время' }]}
-              help={!timeOptions.length && selectedDate ? 'На выбранный день нет свободного времени. Выберите другого мастера или дату' : undefined}
+              help={
+                !timeOptions.length && selectedDate
+                  ? 'На выбранный день нет свободного времени. Выберите другого мастера или дату'
+                  : undefined
+              }
               validateStatus={!timeOptions.length && selectedDate ? 'error' : undefined}
             >
-              <Checkbox.Group
+              <Radio.Group
                 options={timeOptions}
+                optionType="button"
+                buttonStyle="solid"
                 disabled={!timeOptions.length}
-                value={selectedTime ? [selectedTime] : []}
-                onChange={(arr) => setSelectedTime(arr[0] as string)}
+                value={selectedTime ?? undefined}
+                onChange={(e) => setSelectedTime(e.target.value)}
                 className={cls.radio_field}
               />
             </Form.Item>

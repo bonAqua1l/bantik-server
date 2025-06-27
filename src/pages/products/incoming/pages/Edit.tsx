@@ -2,7 +2,7 @@
 
 import React from 'react'
 
-import { Button, Checkbox, Flex, Form } from 'antd'
+import { Button, Flex, Form, Radio } from 'antd'
 import dayjs from 'dayjs'
 
 import { Breadcrumb } from '@/shared/ui/breadcrumb/breadcrumb'
@@ -22,7 +22,7 @@ export const Edit: React.FC<Props> = ({ lead_id }) => {
   const {
     breadcrumbData,
     services,
-    setSelectedServiceId,
+    setSelectedServiceIds,
     availableDates,
     selectedDate,
     setSelectedDate,
@@ -63,11 +63,12 @@ export const Edit: React.FC<Props> = ({ lead_id }) => {
             <Flex vertical gap={10} className={cls.inputs}>
               <SelectField
                 name="service"
-                placeholder="Выберите услугу"
+                placeholder="Выберите услуги"
+                mode="multiple"
                 options={services.map((s) => ({ value: s.id, label: s.name }))}
-                label="Услуга"
+                label="Услуги"
                 rules={[{ required: true }]}
-                onChange={(v) => setSelectedServiceId(v)}
+                onChange={(v) => setSelectedServiceIds(v)}
               />
 
               <SelectField
@@ -133,12 +134,14 @@ export const Edit: React.FC<Props> = ({ lead_id }) => {
                 help={!timeOptions.length && selectedDate ? 'На выбранный день нет свободного времени' : undefined}
                 validateStatus={!timeOptions.length && selectedDate ? 'error' : undefined}
               >
-                <Checkbox.Group
-                  options={timeOptions}
-                  disabled={!timeOptions.length}
-                  value={selectedTime ? [selectedTime] : []}
-                  onChange={(arr) => setSelectedTime(arr[0] as string)}
+                <Radio.Group
                   className={cls.radio_field}
+                  options={timeOptions}
+                  optionType="button"
+                  buttonStyle="solid"
+                  disabled={!timeOptions.length}
+                  value={selectedTime ?? undefined}
+                  onChange={(e) => setSelectedTime(e.target.value)}
                 />
               </Form.Item>
 

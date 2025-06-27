@@ -11,6 +11,17 @@ export namespace ProductsStorageRequestTypes {
     name: string;
     duration: number;
     price: string;
+    additional_services: AdditionService[];
+    is_additional: boolean
+  }
+
+  export interface AdditionService{
+    id: number;
+    name: string;
+    duration: number;
+    price: string;
+    is_additional: boolean
+    parent_service: number
   }
 
   export interface Master {
@@ -31,7 +42,7 @@ export namespace ProductsStorageRequestTypes {
     is_confirmed: boolean;
     created_at: string;
     client: Client;
-    service: Service;
+    services: Service[];
     master: Master;
   }
 

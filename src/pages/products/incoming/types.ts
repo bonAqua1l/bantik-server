@@ -42,7 +42,7 @@ export namespace ProductsIncomingTypes {
     phone: string
     date_time: string
     prepayment?: string
-    service: number
+    services: number[]
     master: string
   }
 
@@ -120,12 +120,20 @@ export namespace ProductsIncomingTypes {
     schedule_end: string,
     services: any[]
   }
-  export interface Service {
-    id: number,
-    name: string,
-    duration: number,
-    price: string
-  }
+    export interface AdditionalService {
+        id: number;
+        name: string;
+        duration: number;
+        price: string;
+        image: string | null;
+        is_long: boolean;
+        is_additional: boolean;
+        parent_service: number | null
+    }
+
+    export interface Service extends AdditionalService {
+        additional_services: AdditionalService[]
+    }
 
   export interface Item {
       id: number,
@@ -140,12 +148,7 @@ export namespace ProductsIncomingTypes {
           phone: string,
           name: string
       },
-      service: {
-          id: number,
-          name: string,
-          duration: number,
-          price: string
-      },
+      services: Service[]
       master: {
           uuid: string,
           avatar: string | null,

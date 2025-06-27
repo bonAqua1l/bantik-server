@@ -1,36 +1,41 @@
 export namespace ProjectsType {
-    export interface Service {
+    export interface AdditionalService {
         id: number;
         name: string;
         duration: number;
         price: string;
-        image: string
-      }
+        image: string | null;
+        is_long: boolean;
+        is_additional: boolean;
+        parent_service: number | null
+    }
+
+    export interface Service extends AdditionalService {
+        additional_services: AdditionalService[]
+    }
 
     export interface ServiceResponse {
         count: number;
         next: string | null;
         previous: string | null;
-        results: Service[];
+        results: Service[]
     }
+
     export interface Form {
         name: string;
         duration: number;
         price: string;
-        image: string
+        image: File
+        parent_service: number | null
+        is_additional: boolean
     }
 
     export interface FormEdit {
         name: string;
         duration: number;
         price: string;
-        image: string
+        image: File
     }
-    export interface ServiceDetail {
-        id: number;
-        name: string;
-        duration: number;
-        price: string;
-        image: string
-    }
+
+    export type ServiceDetail = Service
 }

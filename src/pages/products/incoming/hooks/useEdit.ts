@@ -21,7 +21,7 @@ function useEdit() {
   const [form] = Form.useForm()
 
   const [services, setServices] = React.useState<ProductsIncomingTypes.Service[]>([])
-  const [selectedServiceId, setSelectedServiceId] = React.useState<number | null>(null)
+  const [selectedServiceIds, setSelectedServiceIds] = React.useState<number[]>([])
 
   const [availableDates, setAvailableDates] = React.useState<string[]>([])
   const [selectedDate, setSelectedDate] = React.useState<string | null>(null)
@@ -67,9 +67,15 @@ function useEdit() {
   }, [])
 
   const fetchAvailableDates = React.useCallback(
-    async (serviceId: number, y: number, m: number) => {
+    async (serviceIds: number[], y: number, m: number) => {
+      if (!serviceIds.length) {
+        setAvailableDates([])
+        setSelectedDate(null)
+
+        return
+      }
       try {
-        const { data } = await getProductIncomingAvailableDates(String(serviceId), String(y), String(m))
+        const { data } = await getProductIncomingAvailableDates(serviceIds.join(','), String(y), String(m))
 
         setAvailableDates(data.available_dates)
         setSelectedDate((prev) =>
@@ -84,9 +90,14 @@ function useEdit() {
   )
 
   const fetchSlots = React.useCallback(
-    async (serviceId: number, date: string) => {
+    async (serviceIds: number[], date: string) => {
+      if (!serviceIds.length) {
+        setSlots(null)
+
+        return
+      }
       try {
-        const { data } = await getProductIncomingEmployeeAvailableSlots(String(serviceId), date)
+        const { data } = await getProductIncomingEmployeeAvailableSlots(serviceIds.join(','), date)
 
         setSlots(data)
       } catch {
@@ -111,7 +122,9 @@ function useEdit() {
 
     setIsNotUser(!isKnownClient)
 
-    setSelectedServiceId(incomingItem.service.id)
+    const serviceIds = incomingItem.services.map((s) => s.id)
+
+    setSelectedServiceIds(serviceIds)
     setSelectedDate(date)
     setSelectedTime(time)
     setSelectedMaster(incomingItem.master.uuid)
@@ -121,25 +134,25 @@ function useEdit() {
       phone: isKnownClient ? undefined : incomingItem.phone,
       client_name: isKnownClient ? undefined : incomingItem.client_name,
       prepayment: incomingItem.prepayment,
-      service: incomingItem.service.id,
+      service: serviceIds,
       date: dayjs(date),
       master: incomingItem.master.uuid,
       time,
     })
 
-    fetchAvailableDates(incomingItem.service.id, yearFromDate(date), monthFromDate(date))
-    fetchSlots(incomingItem.service.id, date)
+    fetchAvailableDates(serviceIds, yearFromDate(date), monthFromDate(date))
+    fetchSlots(serviceIds, date)
   }, [incomingItem, clients, form, fetchAvailableDates, fetchSlots, monthFromDate, yearFromDate])
 
   React.useEffect(() => {
-    if (selectedServiceId && selectedDate) {
-      fetchAvailableDates(selectedServiceId, yearFromDate(selectedDate), monthFromDate(selectedDate))
+    if (selectedServiceIds.length && selectedDate) {
+      fetchAvailableDates(selectedServiceIds, yearFromDate(selectedDate), monthFromDate(selectedDate))
     }
-  }, [selectedServiceId, selectedDate, fetchAvailableDates, monthFromDate, yearFromDate])
+  }, [selectedServiceIds, selectedDate, fetchAvailableDates, monthFromDate, yearFromDate])
 
   React.useEffect(() => {
-    if (selectedServiceId && selectedDate) fetchSlots(selectedServiceId, selectedDate)
-  }, [selectedServiceId, selectedDate, fetchSlots])
+    if (selectedServiceIds.length && selectedDate) fetchSlots(selectedServiceIds, selectedDate)
+  }, [selectedServiceIds, selectedDate, fetchSlots])
 
   const masterOptions = React.useMemo(
     () => slots?.masters.map((m) => ({ value: m.uuid, label: m.name })) ?? [],
@@ -149,9 +162,13 @@ function useEdit() {
   const timeOptions = React.useMemo(() => {
     if (!selectedMaster || !slots) return []
     const master = slots.masters.find((m) => m.uuid === selectedMaster)
+    const base = master?.available_slots ?? []
+    const set = new Set(base)
 
-    return master?.available_slots.map((t) => ({ value: t, label: t })) ?? []
-  }, [selectedMaster, slots])
+    if (selectedTime && !set.has(selectedTime)) set.add(selectedTime)
+
+    return Array.from(set).map((t) => ({ value: t, label: t }))
+  }, [selectedMaster, slots, selectedTime])
 
   const updateIncoming = React.useCallback(
     async (values: any) => {
@@ -165,7 +182,7 @@ function useEdit() {
         phone: values.phone,
         date_time: `${selectedDate}T${selectedTime}`,
         prepayment: values.prepayment,
-        service: selectedServiceId!,
+        services: selectedServiceIds,
         master: selectedMaster!,
       }
 
@@ -192,7 +209,7 @@ function useEdit() {
       isNotUser,
       selectedDate,
       selectedTime,
-      selectedServiceId,
+      selectedServiceIds,
       selectedMaster,
       showError,
       timeOptions.length,
@@ -208,8 +225,8 @@ function useEdit() {
   return {
     breadcrumbData,
     services,
-    selectedServiceId,
-    setSelectedServiceId,
+    selectedServiceIds,
+    setSelectedServiceIds,
     availableDates,
     selectedDate,
     setSelectedDate,

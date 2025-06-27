@@ -73,18 +73,19 @@ export const View: React.FC<Props> = ({ incoming_id }) => {
                 </Link>
               </Flex>
 
-              <Flex className={cls.docs_item} align="center" justify="space-between">
-                Сервис:
-                <Link href={'#'} className={cls.file}>
-                  {incomingItem?.service.name}
-                </Link>
+              <Flex className={cls.docs_item} align="flex-start" gap={10}>
+                Сервисы:
+                <Flex vertical gap={4}>
+                  {incomingItem?.services.map((srv) => (
+                    <Link key={srv.id} href={`/admin/projects/${srv.id}`} className={cls.file}>
+                      {srv.name}
+                      {srv.additional_services.length > 0 &&
+          ` · ${srv.additional_services.map((add) => add.name).join(', ')}`}
+                    </Link>
+                  ))}
+                </Flex>
               </Flex>
-              <Flex className={cls.docs_item} align="center" justify="space-between">
-                Номер телефон клиента:
-                <Link href={'#'} className={cls.file}>
-                  {incomingItem?.client.phone}
-                </Link>
-              </Flex>
+
             </Flex>
 
             <Divider className={cls.divider} />

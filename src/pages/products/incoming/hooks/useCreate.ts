@@ -20,7 +20,7 @@ function useCreate() {
   const [form] = Form.useForm()
 
   const [services, setServices] = React.useState<ProductsIncomingTypes.Service[]>([])
-  const [selectedServiceId, setSelectedServiceId] = React.useState<number | null>(null)
+  const [selectedServiceIds, setSelectedServiceIds] = React.useState<number[]>([])
 
   const [availableDates, setAvailableDates] = React.useState<string[]>([])
   const [selectedDate, setSelectedDate] = React.useState<string | null>(null)
@@ -45,9 +45,7 @@ function useCreate() {
       const res = await ProductsIncoming.API.List.getServices()
 
       setServices(res.data.results)
-    } catch {
-      /* empty */
-    }
+    } catch {}
   }, [])
 
   const ClientsGET = React.useCallback(async () => {
@@ -55,16 +53,20 @@ function useCreate() {
       const res = await ProductsIncoming.API.Create.getClients()
 
       setClients(res.data.results)
-    } catch {
-      /* empty */
-    }
+    } catch {}
   }, [])
 
   const fetchAvailableDates = React.useCallback(
-    async (serviceId: number) => {
+    async (serviceIds: number[]) => {
+      if (!serviceIds.length) {
+        setAvailableDates([])
+        setSelectedDate(null)
+
+        return
+      }
       try {
         const res = await getProductIncomingAvailableDates(
-          String(serviceId),
+          serviceIds.join(','),
           String(currentYear),
           String(currentMonth),
         )
@@ -84,9 +86,14 @@ function useCreate() {
   )
 
   const fetchSlots = React.useCallback(
-    async (serviceId: number, date: string) => {
+    async (serviceIds: number[], date: string) => {
+      if (!serviceIds.length) {
+        setSlots(null)
+
+        return
+      }
       try {
-        const res = await getProductIncomingEmployeeAvailableSlots(String(serviceId), date)
+        const res = await getProductIncomingEmployeeAvailableSlots(serviceIds.join(','), date)
 
         setSlots(res.data)
       } catch {
@@ -102,17 +109,17 @@ function useCreate() {
   }, [ServiceGET, ClientsGET])
 
   React.useEffect(() => {
-    if (selectedServiceId) fetchAvailableDates(selectedServiceId)
+    fetchAvailableDates(selectedServiceIds)
     setSelectedMaster(null)
     setSelectedTime(null)
-  }, [selectedServiceId, fetchAvailableDates])
+  }, [selectedServiceIds, fetchAvailableDates])
 
   React.useEffect(() => {
-    if (selectedServiceId && selectedDate) fetchSlots(selectedServiceId, selectedDate)
+    if (selectedDate) fetchSlots(selectedServiceIds, selectedDate)
     setSelectedMaster(null)
     setSelectedTime(null)
     form.setFieldsValue({ date: selectedDate ? dayjs(selectedDate) : null })
-  }, [selectedServiceId, selectedDate, fetchSlots, form])
+  }, [selectedServiceIds, selectedDate, fetchSlots, form])
 
   const masterOptions = React.useMemo(
     () =>
@@ -142,26 +149,21 @@ function useCreate() {
 
         return
       }
-
       const payload = {
         client: isNotUser ? null : values.client,
         phone: values.phone,
         client_name: values.client_name,
         date_time: `${selectedDate}T${selectedTime}`,
         prepayment: values.prepayment,
-        service: selectedServiceId,
+        services: selectedServiceIds,
         master: selectedMaster,
       } as ProductsIncomingTypes.Form
 
-      const body = new FormData()
-
-      Object.entries(payload).forEach(([k, v]) =>
-        v !== undefined && v !== null && body.append(k, v as any),
-      )
+      console.log(payload)
 
       setSubmitted(true)
       try {
-        const res = await ProductsIncoming.API.List.createProductIncoming(body)
+        const res = await ProductsIncoming.API.List.createProductIncoming(payload)
 
         if (res.status !== 201) throw new Error()
         router.push('/admin/storage-requests/')
@@ -183,7 +185,7 @@ function useCreate() {
       isNotUser,
       selectedDate,
       selectedTime,
-      selectedServiceId,
+      selectedServiceIds,
       selectedMaster,
       router,
       showError,
@@ -200,8 +202,8 @@ function useCreate() {
   return {
     breadcrumbData,
     services,
-    selectedServiceId,
-    setSelectedServiceId,
+    selectedServiceIds,
+    setSelectedServiceIds,
     availableDates,
     selectedDate,
     setSelectedDate,

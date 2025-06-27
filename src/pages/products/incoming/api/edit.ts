@@ -13,22 +13,22 @@ export const editIncoming = async (body: ProductsIncomingTypes.Form, id: number)
   return axiosRequest.patch(`/leads/${id}/`, body)
 }
 
-export const getProductIncomingAvailableDates = async (service_id: string, year: string, month: string) => {
+export const getProductIncomingAvailableDates = async (service_ids: string, year: string, month: string) => {
   return axiosRequest.get('/available-dates/', {
     baseURL: NEXT_PUBLIC_COMPANY_BASE_URL,
     params: {
-      service_id,
+      service_ids,
       year,
       month,
     },
   })
 }
 
-export const getProductIncomingEmployeeAvailableSlots = async (service_id: string, date: string) => {
+export const getProductIncomingEmployeeAvailableSlots = async (service_ids: string, date: string) => {
   return axiosRequest.get('/employees/available-slots/', {
     baseURL: NEXT_PUBLIC_COMPANY_BASE_URL,
     params: {
-      service_id,
+      service_ids,
       date,
     },
   })

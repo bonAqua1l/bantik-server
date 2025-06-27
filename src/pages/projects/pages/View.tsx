@@ -13,7 +13,7 @@ import Loader from '../../../../app/loading'
 import cls from '../styles/view.module.css'
 
 interface Props {
-  service_id: number;
+  service_id: number
 }
 
 export const View: React.FC<Props> = (props) => {
@@ -28,7 +28,7 @@ export const View: React.FC<Props> = (props) => {
   }, [props.service_id, ServiceIDGET])
 
   if (!items) {
-    return <Loader/>
+    return <Loader />
   }
 
   return (
@@ -47,15 +47,12 @@ export const View: React.FC<Props> = (props) => {
       </Flex>
 
       <div className={cls.main_title}>
-        <h2>Сервис “{items.name}”</h2>
+        <h2>{items.is_additional ? 'Дополнительный сервис' : 'Сервис'} “{items.name}”</h2>
       </div>
 
-      <Card
-        style={{ marginTop: 16 }}
-      >
+      <Card style={{ marginTop: 16 }}>
         <Flex className={cls.card_container} align="start" gap={24}>
           <Image
-            // eslint-disable-next-line react/no-array-index-key
             src={items.image || BantikPhoto.src}
             alt={items.name}
             width={0}
@@ -88,6 +85,38 @@ export const View: React.FC<Props> = (props) => {
           </div>
         </Flex>
       </Card>
+
+      {items.additional_services.length !== 0 ? (
+        <>
+          <div className={cls.main_title}>
+            <h2>Дополнительные услуги</h2>
+          </div>
+          <Flex wrap="wrap" gap={16} className={cls.additional_list}>
+            {items.additional_services.map((service) => (
+              <Card
+                key={service.id}
+                hoverable
+                className={cls.additional_card}
+                onClick={() => router.push(`/admin/projects/${service.id}`)}
+              >
+                <Image
+                  src={service.image || BantikPhoto.src}
+                  alt={service.name}
+                  width={0}
+                  height={0}
+                  sizes="100vw"
+                  className={cls.additional_card_image}
+                  priority
+                />
+                <div className={cls.additional_info}>
+                  <h3>{service.name}</h3>
+                  <p>{parseInt(service.price)} сом</p>
+                </div>
+              </Card>
+            ))}
+          </Flex>
+        </>
+      ) : null}
     </div>
   )
 }

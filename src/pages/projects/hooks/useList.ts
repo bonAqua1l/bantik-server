@@ -75,7 +75,7 @@ function useList() {
   const ServicesGET = React.useCallback(async (url?: string, previusURL?: string) => {
     setServiceLoading(true)
     try {
-      const response = await Projects.API.List.getServices(url || '/services/', previusURL)
+      const response = await Projects.API.List.getServices(url || '/services/?include_additional=true', previusURL)
 
       setServices(response.data)
     } catch (error) {
@@ -90,7 +90,7 @@ function useList() {
 
     const offset = (page - 1) * PAGE_SIZE
 
-    const url = `/services/?limit=${PAGE_SIZE}&offset=${offset}`
+    const url = `/services/?limit=${PAGE_SIZE}&offset=${offset}&include_additional=true`
 
     ServicesGET(url, undefined)
     setCurrentPage(page)

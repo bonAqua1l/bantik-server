@@ -2,10 +2,11 @@
 
 import React from 'react'
 
-import { Breadcrumb, Button, Flex, Form } from 'antd'
+import { Breadcrumb, Button, Checkbox, Flex, Form } from 'antd'
 
 import { DraggerFileField } from '@/shared/ui/dragger-file-field/dragger-file-field'
 import { LoaderData } from '@/shared/ui/loader/Loader'
+import { SelectField } from '@/shared/ui/select-field/select-field'
 import { TextField } from '@/shared/ui/textfield/textfield'
 
 import { Projects } from '..'
@@ -19,14 +20,16 @@ export const Edit: React.FC<Props> = (props) => {
   const {
     breadcrumbData,
     items,
+    services,
     submitted,
     form,
     isProjectsLoading,
     defaultDraggerProps,
-    actions: { ServiceIDGET, EditService },
+    actions: { ServiceIDGET, EditService, ServicesGET },
   } = Projects.Hooks.Edit.use()
 
   React.useEffect(() => {
+    ServicesGET()
     ServiceIDGET(Number(props.service_id))
   }, [props.service_id, ServiceIDGET])
 
@@ -47,12 +50,16 @@ export const Edit: React.FC<Props> = (props) => {
             className={cls.Form}
             initialValues={{
               ...items,
+              parent_service: items?.parent_service,
+              is_additional: items?.is_additional,
               image: items?.image
-                ? [{
-                  uid: '-1',
-                  name: 'current_image',
-                  url: items.image,
-                }]
+                ? [
+                  {
+                    uid: '-1',
+                    name: 'current_image',
+                    url: items.image,
+                  },
+                ]
                 : [],
             }}
             onFinish={(data) => EditService(props.service_id, data)}
@@ -68,13 +75,28 @@ export const Edit: React.FC<Props> = (props) => {
               label="Длительность сервиса"
               type="number"
             />
-
             <TextField
               name="price"
               placeholder="Введите цену сервиса"
               label="Цена сервиса"
               type="number"
             />
+
+            <SelectField
+              name="parent_service"
+              label="Родительский сервис"
+              placeholder="Выберите сервис"
+              allowClear
+              options={
+                services?.results
+                  .filter((s) => s.id !== items?.id)
+                  .map((s) => ({ label: s.name, value: s.id })) || []
+              }
+            />
+
+            <Form.Item name="is_additional" valuePropName="checked">
+              <Checkbox>Дополнительная услуга</Checkbox>
+            </Form.Item>
 
             <DraggerFileField
               label="Выберите картинку"

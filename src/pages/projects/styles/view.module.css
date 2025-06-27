@@ -12,7 +12,6 @@
     background-color: red !important;
     color: #fff !important;
     border: 1px solid #fff !important;
-    
 }
 
 .main_title{
@@ -24,8 +23,8 @@
     font-size: 24px;
 }
 
-.description{
-    max-width: 400px;
+.card_container{
+    width: 100%;
 }
 
 .card_image {
@@ -34,6 +33,41 @@
     width: auto !important;
     height: auto !important;
     max-width: 180px !important;
+}
+
+.additional_list{
+    margin-top: 16px;
+}
+
+.additional_card{
+    width: 145px;
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.additional_card_image{
+    border-radius: 6px !important;
+    object-fit: cover !important;
+    width: 100% !important;
+    height: 120px !important;
+    margin-bottom: 8px;
+}
+
+.additional_info h3{
+    font-size: 12px;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 120px;
+}
+
+.additional_info p{
+    font-size: 10px;
+    color: #6C6C6C;
 }
 
 @media screen and (max-width: 835px) {
