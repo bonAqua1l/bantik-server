@@ -2,8 +2,8 @@
 export namespace ClientsTypes {
   export interface Item {
     id: number;
-    phone: string;
     name: string;
+    phone: string;
     created_at: string;
     visits_count: number;
     total_sum: number;
