@@ -1,4 +1,5 @@
 'use client'
+/* eslint-disable react/no-array-index-key */
 
 import React from 'react'
 
@@ -59,17 +60,21 @@ export const View = ({ timetable_date }: Props) => {
                     <div className={cls.leadInfo}>
                       <span style={{ fontWeight: 'bold' }}>Телефон:</span> <span>{lead.phone}</span>
                     </div>
-                    <div className={cls.leadInfo}>
-                      <span style={{ fontWeight: 'bold' }}>Услуга:</span> <Link href={`/admin/projects/${lead.service.id}`}><span>{lead.service.name}</span></Link>
-                    </div>
-                    <div className={cls.leadInfo}>
-                      <span style={{ fontWeight: 'bold' }}>Цена:</span> <span>{parseInt(lead.service.price)} сом</span>
-                    </div>
+                    {lead.services.map((item, index) => (
+                      <React.Fragment key={index}>
+                        <div className={`${cls.leadInfo} ${cls.leadInfoService}`}>
+                          <span style={{ fontWeight: 'bold' }}>{index + 1}. Услуга:</span> <Link href={`/admin/projects/${item.id}`}><span>{item.name}</span></Link>
+                        </div>
+                        <div className={`${cls.leadInfo} ${cls.leadInfoService}`}>
+                          <span style={{ fontWeight: 'bold' }}>{index + 1}. Цена:</span> <span>{parseInt(item.price)} сом</span>
+                        </div>
+                        <div className={`${cls.leadInfo} ${cls.leadInfoService}`}>
+                          <span style={{ fontWeight: 'bold' }}>{index + 1}. Длительность:</span> <span>{item.duration} мин</span>
+                        </div>
+                      </React.Fragment>
+                    ))}
                     <div className={cls.leadInfo}>
                       <span style={{ fontWeight: 'bold' }}>Время:</span> <span>{time}</span>
-                    </div>
-                    <div className={cls.leadInfo}>
-                      <span style={{ fontWeight: 'bold' }}>Длительность:</span> <span>{lead.service.duration} мин</span>
                     </div>
                     <div className={cls.leadInfo}>
                       <span style={{ fontWeight: 'bold' }}>Мастер:</span>{' '}

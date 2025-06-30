@@ -34,4 +34,10 @@
     gap: 4px;
     align-items: center;
 }
+
+.leadInfoService{
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: initial !important;
+}
   
