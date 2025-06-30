@@ -1,6 +1,6 @@
 'use client'
 
-import React from 'react'
+import React, { ChangeEvent } from 'react'
 
 import { Form, Upload } from 'antd'
 import { UploadProps } from 'antd/lib'
@@ -8,6 +8,7 @@ import { useRouter } from 'next/navigation'
 
 import { useDisclosure } from '@/shared/hooks/useDisclosure'
 import { useNotificationApi } from '@/shared/providers/NotificationProvider'
+import { debounce } from '@/shared/tools/debounce'
 
 import { Projects } from '..'
 import { ProjectsType } from '../types'
@@ -72,10 +73,10 @@ function useList() {
     }
   })
 
-  const ServicesGET = React.useCallback(async (url?: string, previusURL?: string) => {
+  const ServicesGET = React.useCallback(async (search?: string | undefined, url?: string, previusURL?: string) => {
     setServiceLoading(true)
     try {
-      const response = await Projects.API.List.getServices(url || '/services/?include_additional=true', previusURL)
+      const response = await Projects.API.List.getServices(search ,url || '/services/?include_additional=true', previusURL)
 
       setServices(response.data)
     } catch (error) {
@@ -85,6 +86,15 @@ function useList() {
     }
   }, [])
 
+  const debounceSearch = debounce((search: string) => {
+    ServicesGET(search)
+  }, 1500)
+
+  const handleServiceSearch = (e: ChangeEvent<HTMLInputElement>) => {
+    setServiceLoading(true)
+    debounceSearch(e.target.value)
+  }
+
   const handlePageChange = (page: number) => {
     if (isServiceLoading || page === currentPage) return
 
@@ -92,7 +102,7 @@ function useList() {
 
     const url = `/services/?limit=${PAGE_SIZE}&offset=${offset}&include_additional=true`
 
-    ServicesGET(url, undefined)
+    ServicesGET(undefined ,url, undefined)
     setCurrentPage(page)
   }
 
@@ -132,6 +142,7 @@ function useList() {
       createService,
       handlePageChange,
       setCurrentPage,
+      handleServiceSearch,
     },
   }
 }

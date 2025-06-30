@@ -5,13 +5,20 @@ export namespace TimetableTypes {
         name: string;
       }
 
-    export interface Service {
+    export interface AdditionalService {
         id: number;
         name: string;
         duration: number;
         price: string;
-        image: string
-      }
+        image: string | null;
+        is_long: boolean;
+        is_additional: boolean;
+        parent_service: number | null
+    }
+
+    export interface Service extends AdditionalService {
+        additional_services: AdditionalService[]
+    }
 
     export interface Master {
         uuid: string;
@@ -31,7 +38,7 @@ export namespace TimetableTypes {
         is_confirmed: boolean;
         created_at: string;
         client: Client;
-        service: Service;
+        services: Service[];
         master: Master;
       }
 

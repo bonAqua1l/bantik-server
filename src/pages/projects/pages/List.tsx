@@ -8,6 +8,7 @@ import Image from 'next/image'
 
 import { BantikPhoto } from '@/shared/assets/images/'
 import { Breadcrumb } from '@/shared/ui/breadcrumb/breadcrumb'
+import { SearchField } from '@/shared/ui/search-field/search-field'
 
 import { Projects } from '..'
 import cls from '../styles/list.module.css'
@@ -30,6 +31,7 @@ export const List = () => {
       createService,
       handlePageChange,
       setCurrentPage,
+      handleServiceSearch,
     },
   } = Projects.Hooks.List.use()
 
@@ -50,6 +52,9 @@ export const List = () => {
         </Flex>
         <div className={cls.main_title}>
           <h2>Сервисы</h2>
+          <div>
+            <SearchField onChange={(e) => handleServiceSearch(e)}/>
+          </div>
         </div>
         <ListAntd
           size={'small'}
@@ -63,7 +68,7 @@ export const List = () => {
             sm: 2,
             xs: 2,
           }}
-          loading={!services?.results}
+          loading={isServiceLoading}
           dataSource={services?.results}
           renderItem={(item) => (
             <ListAntd.Item

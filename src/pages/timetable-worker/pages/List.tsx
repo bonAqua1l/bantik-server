@@ -86,8 +86,12 @@ export const List = () => {
                             <div>Время: {new Date(lead.date_time).toLocaleString()}</div>
                             <div>Клиент: {lead.client_name}</div>
                             <div>Номер телефона: {lead.client.phone}</div>
-                            <div>Услуга: {lead.service.name}</div>
-                            <div>Цена: {lead.service.price} сом</div>
+                            {lead.services.map((item, index) => (
+                              <React.Fragment key={index}>
+                                <div>{index + 1}. Услуга: {item.name}</div>
+                                <div>{index + 1}. Цена: {item.price} сом</div>
+                              </React.Fragment>
+                            ))}
                             <div>Время: {dayjs(lead.date_time).format('DD.MM.YYYY HH:mm')}</div>
                           </Flex>
                         </Timeline.Item>

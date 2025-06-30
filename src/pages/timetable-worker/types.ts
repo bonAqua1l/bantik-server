@@ -54,7 +54,7 @@ export namespace TimetableWorkerTypes {
   reminder_minutes: number;
   created_at: string;
   client: Client;
-  service: Service;
+  services: Service[];
   master: Master;
   weekday: number
 }
@@ -68,14 +68,20 @@ export interface Client {
   total_sum: number;
 }
 
-export interface Service {
-  id: number;
-  name: string;
-  duration: number;
-  price: string;
-  image: string | null;
-  is_long: boolean;
-}
+    export interface AdditionalService {
+        id: number;
+        name: string;
+        duration: number;
+        price: string;
+        image: string | null;
+        is_long: boolean;
+        is_additional: boolean;
+        parent_service: number | null
+    }
+
+    export interface Service extends AdditionalService {
+        additional_services: AdditionalService[]
+    }
 
 export interface Master {
   uuid: string;

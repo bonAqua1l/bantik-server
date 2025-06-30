@@ -1,4 +1,5 @@
 'use client'
+/* eslint-disable react/no-array-index-key */
 
 import React, { useEffect } from 'react'
 
@@ -110,10 +111,14 @@ export const List = () => {
                                   <strong>Мастер:</strong>
                                   <Link href={'/admin/employees/'}> {lead.master.first_name}{' '}{lead.master.last_name}</Link>
                                 </div>
-                                <div>
-                                  <strong>Услуга:</strong>
-                                  <Link href={`/admin/projects/${lead.service.id}`}> {lead.service.name}</Link>
-                                </div>
+                                <Flex vertical>
+                                  <strong>{lead.services.length > 1 ? 'Услуги:' : 'Услуга:'}</strong>
+                                  <Flex vertical={lead.services.length > 1 ? true : false}>
+                                    {lead.services.map((item, index) => (
+                                      <Link key={index} href={`/admin/projects/${item.id}`}> {item.name}</Link>
+                                    ))}
+                                  </Flex>
+                                </Flex>
                                 <div>
                                   <strong>Подтв.:</strong> {confirmed}
                                 </div>
