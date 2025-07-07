@@ -14,3 +14,7 @@ export const editService = async (id: string, data: ProjectsType.FormEdit) => {
     baseURL: NEXT_PUBLIC_COMPANY_BASE_URL,
   })
 }
+
+export const getServicesPaginated = async (params: { limit?: number; offset?: number; search?: string }) => {
+  return axiosRequest.get('/services/', { params })
+}

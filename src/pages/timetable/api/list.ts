@@ -14,6 +14,10 @@ export const getServices = async () => {
   })
 }
 
+export const getServicesPaginated = async (params: { limit?: number; offset?: number; search?: string }) => {
+  return axiosRequest.get('/services/', { params })
+}
+
 export const getEmployeesList = async () => {
   return axiosRequest.get('/users', {
   })

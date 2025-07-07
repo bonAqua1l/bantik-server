@@ -21,7 +21,7 @@ function useCreate() {
 
   const breadcrumbData = [
     { href: '/', title: 'Главная' },
-    { href: '/employees', title: 'Персонал' },
+    { href: '/admin/employees', title: 'Персонал' },
     { title: 'Создать сотрудника' },
   ]
 

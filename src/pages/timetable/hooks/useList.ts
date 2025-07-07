@@ -13,11 +13,15 @@ function useList() {
   const router = useRouter()
   const [timetable, setTimetable] = React.useState<TimetableTypes.Item | null>(null)
   const [currentDate, setCurrentDate] = React.useState(dayjs(date))
-  const [services, setServices] = React.useState<TimetableTypes.Service[] | undefined>(undefined)
+  const [services, setServices] = React.useState<TimetableTypes.Service[]>([])
   const [employee, setEmployees] = React.useState<TimetableTypes.Employee[] | null>(null)
   const [loading, setLoading] = React.useState(false)
+  const [servicesLoading, setServicesLoading] = React.useState(false)
   const [selectedService, setSelectedService] = React.useState<string | undefined>(undefined)
   const [selectedMaster, setSelectedMaster] = React.useState<string | undefined>(undefined)
+  const [servicesPage, setServicesPage] = React.useState(0)
+  const [servicesHasMore, setServicesHasMore] = React.useState(true)
+  const [servicesSearch, setServicesSearch] = React.useState('')
 
   const breadcrumbData = [
     { href: '/', title: 'Главная' },
@@ -37,23 +41,32 @@ function useList() {
     }
   }
 
-  const ServicesGET = React.useCallback(async () => {
+  const ServicesGET = async (page = 0, search = '') => {
     try {
-      const response = await Timetable.API.List.getServices()
+      setServicesLoading(true)
+      const limit = 20
+      const offset = page * limit
+      const response = await Timetable.API.List.getServicesPaginated({ limit, offset, search })
+      const data = response.data.results
 
-      setServices(response.data.results)
+      if (page === 0) {
+        setServices(data)
+      } else {
+        setServices(prev => [...prev, ...data])
+      }
+      setServicesHasMore(Boolean(response.data.next))
     } catch (error) {
-      console.error('project error', error)
+      console.error('services error', error)
+    } finally {
+      setServicesLoading(false)
     }
-  }, [])
+  }
 
   const getEmployeesList = React.useCallback(async () => {
     try {
       const response = await Timetable.API.List.getEmployeesList()
 
-      const data = response.data.results
-
-      setEmployees(data)
+      setEmployees(response.data.results)
     } catch (error) {
       console.log(error)
     }
@@ -73,15 +86,32 @@ function useList() {
     const newDate = currentDate.subtract(7, 'day')
 
     setCurrentDate(newDate)
-    TimetableGET(newDate.format('YYYY-MM-DD'))
-  }, [currentDate])
+    TimetableGET(newDate.format('YYYY-MM-DD'), selectedMaster, selectedService)
+  }, [currentDate, selectedMaster, selectedService])
 
   const handleNext = React.useCallback(() => {
     const newDate = currentDate.add(7, 'day')
 
     setCurrentDate(newDate)
-    TimetableGET(newDate.format('YYYY-MM-DD'))
-  }, [currentDate])
+    TimetableGET(newDate.format('YYYY-MM-DD'), selectedMaster, selectedService)
+  }, [currentDate, selectedMaster, selectedService])
+
+  const handleServiceSearch = React.useCallback((value: string) => {
+    setServicesSearch(value)
+    setServicesPage(0)
+    ServicesGET(0, value)
+  }, [])
+
+  const handleServiceScroll = React.useCallback((e: React.UIEvent<HTMLDivElement>) => {
+    const target = e.target as HTMLDivElement
+
+    if (target.scrollTop + target.offsetHeight + 10 >= target.scrollHeight && servicesHasMore && !servicesLoading) {
+      const nextPage = servicesPage + 1
+
+      setServicesPage(nextPage)
+      ServicesGET(nextPage, servicesSearch)
+    }
+  }, [servicesPage, servicesHasMore, servicesLoading, servicesSearch])
 
   const days = timetable?.days || []
 
@@ -93,6 +123,7 @@ function useList() {
     loading,
     days,
     services,
+    servicesLoading,
     actions: {
       router,
       TimetableGET,
@@ -102,6 +133,8 @@ function useList() {
       handleNext,
       handleServiceChange,
       handleMasterChange,
+      handleServiceSearch,
+      handleServiceScroll,
     },
   }
 }

@@ -16,10 +16,13 @@ function useEdit() {
   const router = useRouter()
   const [submitted, setSubmitted] = React.useState(false)
   const [items, setItems] = React.useState<ProjectsType.ServiceDetail | undefined>(undefined)
-  const [services, setServices] = React.useState<ProjectsType.ServiceResponse | undefined>(undefined)
-  const [isServiceLoading, setServiceLoading] = React.useState(false)
+  const [services, setServices] = React.useState<ProjectsType.Service[]>([])
   const [isProjectsLoading, setIsProjectsLoading] = React.useState(true)
   const api = useNotificationApi()
+  const [servicesPage, setServicesPage] = React.useState(0)
+  const [servicesHasMore, setServicesHasMore] = React.useState(true)
+  const [servicesSearch, setServicesSearch] = React.useState('')
+  const [servicesLoading, setServicesLoading] = React.useState(false)
 
   const breadcrumbData = [
     { href: '/', title: 'Главная' },
@@ -40,18 +43,26 @@ function useEdit() {
     }
   }, [])
 
-  const ServicesGET = React.useCallback(async (url?: string, previusURL?: string) => {
-    setServiceLoading(true)
+  const ServicesGET = async (page = 0, search = '') => {
     try {
-      const response = await Projects.API.List.getServices(url || '/services/?include_additional=true', previusURL)
+      setServicesLoading(true)
+      const limit = 20
+      const offset = page * limit
+      const response = await Projects.API.Edit.getServicesPaginated({ limit, offset, search })
+      const data = response.data.results
 
-      setServices(response.data)
+      if (page === 0) {
+        setServices(data)
+      } else {
+        setServices(prev => [...prev, ...data])
+      }
+      setServicesHasMore(Boolean(response.data.next))
     } catch (error) {
-      console.error('project error', error)
+      console.error('services error', error)
     } finally {
-      setServiceLoading(false)
+      setServicesLoading(false)
     }
-  }, [])
+  }
 
   const EditService = React.useCallback(async (id: string, data: ProjectsType.FormEdit) => {
     setSubmitted(true)
@@ -101,6 +112,23 @@ function useEdit() {
     }
   }, [])
 
+  const handleServiceSearch = React.useCallback((value: string) => {
+    setServicesSearch(value)
+    setServicesPage(0)
+    ServicesGET(0, value)
+  }, [])
+
+  const handleServiceScroll = React.useCallback((e: React.UIEvent<HTMLDivElement>) => {
+    const target = e.target as HTMLDivElement
+
+    if (target.scrollTop + target.offsetHeight + 10 >= target.scrollHeight && servicesHasMore && !servicesLoading) {
+      const nextPage = servicesPage + 1
+
+      setServicesPage(nextPage)
+      ServicesGET(nextPage, servicesSearch)
+    }
+  }, [servicesPage, servicesHasMore, servicesLoading, servicesSearch])
+
   const defaultDraggerProps: UploadProps = {
     name: 'image',
     accept: 'image/*',
@@ -124,12 +152,14 @@ function useEdit() {
     submitted,
     defaultDraggerProps,
     services,
-    isServiceLoading,
+    servicesLoading,
     actions: {
       router,
       ServiceIDGET,
       EditService,
       ServicesGET,
+      handleServiceSearch,
+      handleServiceScroll,
     },
   }
 }

@@ -25,7 +25,8 @@ export const Edit: React.FC<Props> = (props) => {
     form,
     isProjectsLoading,
     defaultDraggerProps,
-    actions: { ServiceIDGET, EditService, ServicesGET },
+    servicesLoading,
+    actions: { ServiceIDGET, EditService, ServicesGET, handleServiceScroll, handleServiceSearch },
   } = Projects.Hooks.Edit.use()
 
   React.useEffect(() => {
@@ -50,7 +51,7 @@ export const Edit: React.FC<Props> = (props) => {
             className={cls.Form}
             initialValues={{
               ...items,
-              parent_service: items?.parent_service,
+              parent_service: items?.parent_service.name,
               is_additional: items?.is_additional,
               image: items?.image
                 ? [
@@ -81,17 +82,20 @@ export const Edit: React.FC<Props> = (props) => {
               label="Цена сервиса"
               type="number"
             />
-
             <SelectField
               name="parent_service"
               label="Родительский сервис"
-              placeholder="Выберите сервис"
+              placeholder="Выбрать сервис"
+              showSearch
+              filterOption={false}
               allowClear
-              options={
-                services?.results
-                  .filter((s) => s.id !== items?.id)
-                  .map((s) => ({ label: s.name, value: s.id })) || []
-              }
+              options={services?.map(item => ({
+                label: item.name,
+                value: item.id,
+              }))}
+              loading={servicesLoading}
+              onSearch={handleServiceSearch}
+              onPopupScroll={handleServiceScroll}
             />
 
             <Form.Item name="is_additional" valuePropName="checked">

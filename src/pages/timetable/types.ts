@@ -20,6 +20,13 @@ export namespace TimetableTypes {
         additional_services: AdditionalService[]
     }
 
+      export interface ServiceApiResponse {
+        count: number;
+        next: string | null;
+        previous: string | null;
+        results: Service[];
+      }
+
     export interface Master {
         uuid: string;
         avatar: string | null;

@@ -20,6 +20,7 @@ export const List = () => {
     currentDate,
     loading,
     services,
+    servicesLoading,
     employee,
     days,
     actions: {
@@ -30,6 +31,8 @@ export const List = () => {
       getEmployeesList,
       handleServiceChange,
       handleMasterChange,
+      handleServiceSearch,
+      handleServiceScroll,
     },
   } = Timetable.Hooks.List.use()
 
@@ -52,6 +55,11 @@ export const List = () => {
                 label: item.name,
                 value: item.id,
               }))}
+              showSearch
+              filterOption={false}
+              loading={servicesLoading}
+              onSearch={handleServiceSearch}
+              onPopupScroll={handleServiceScroll}
               onChange={handleServiceChange}
             />
             <SelectField
@@ -113,7 +121,7 @@ export const List = () => {
                                 </div>
                                 <Flex vertical>
                                   <strong>{lead.services.length > 1 ? 'Услуги:' : 'Услуга:'}</strong>
-                                  <Flex vertical={lead.services.length > 1 ? true : false}>
+                                  <Flex vertical={lead.services.length > 1}>
                                     {lead.services.map((item, index) => (
                                       <Link key={index} href={`/admin/projects/${item.id}`}> {item.name}</Link>
                                     ))}
