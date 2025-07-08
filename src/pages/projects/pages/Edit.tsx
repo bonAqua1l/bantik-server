@@ -51,7 +51,7 @@ export const Edit: React.FC<Props> = (props) => {
             className={cls.Form}
             initialValues={{
               ...items,
-              parent_service: items?.parent_service.name,
+              parent_service: items?.parent_service === null ? '' : items?.parent_service.name,
               is_additional: items?.is_additional,
               image: items?.image
                 ? [
