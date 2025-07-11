@@ -105,19 +105,14 @@ function useEdit() {
 
         if (
           Array.isArray(avatar) &&
-          avatar.length &&
-          typeof avatar[0] !== 'string' &&
-          (avatar[0] as UploadFile).originFileObj
+        avatar.length &&
+        (avatar[0] as UploadFile).originFileObj
         ) {
           formData.append('avatar', (avatar[0] as UploadFile).originFileObj as File)
-        } else if (!Array.isArray(avatar)) {
-          formData.append('avatar', '')
         }
 
         if (Array.isArray(services) && services.length) {
           formData.append('services', services.join(','))
-        } else {
-          formData.append('services', '')
         }
 
         const response = await Employees.API.Edit.editEmployee(uuid, formData)
