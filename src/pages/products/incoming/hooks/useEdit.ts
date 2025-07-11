@@ -219,6 +219,7 @@ function useEdit() {
 
   const breadcrumbData = [
     { href: '/admin/storage-requests/', title: 'Заявки' },
+    { href: `/admin/products/incoming/${incomingItem?.id}`, title: `#${incomingItem?.id ? incomingItem.id : ''}` },
     { title: 'Редактировать' },
   ]
 

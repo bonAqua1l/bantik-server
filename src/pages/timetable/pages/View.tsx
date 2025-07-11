@@ -28,8 +28,6 @@ export const View = ({ timetable_date }: Props) => {
     },
   } = Timetable.Hooks.View.use()
 
-  console.log(timetable_date)
-
   React.useEffect(() => {
     TimetableGET(timetable_date)
   }, [timetable_date])

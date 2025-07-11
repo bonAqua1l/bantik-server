@@ -95,6 +95,7 @@ function useEdit() {
     async (uuid: string, data: EmployeeTypes.Item) => {
       setSubmitted(true)
       try {
+        console.log('data', data)
         const { schedule, avatar, services = [], ...rest } = data
         const formData = new FormData()
 
@@ -113,7 +114,11 @@ function useEdit() {
           formData.append('avatar', '')
         }
 
-        services.forEach((id: any) => formData.append('services', id.toString()))
+        if (Array.isArray(services) && services.length) {
+          formData.append('services', services.join(','))
+        } else {
+          formData.append('services', '')
+        }
 
         const response = await Employees.API.Edit.editEmployee(uuid, formData)
 
@@ -207,8 +212,6 @@ function useEdit() {
       return false
     },
   }
-
-  console.log(employee)
 
   return {
     defaultDraggerProps,

@@ -1,10 +1,9 @@
 'use client'
-/* eslint-disable react/no-array-index-key */
 
 import React, { useEffect } from 'react'
 
-import { LeftOutlined, RightOutlined } from '@ant-design/icons'
-import { Card, Button, Spin, Timeline, Flex } from 'antd'
+import { LeftOutlined, RightOutlined, CheckCircleFilled, CloseCircleFilled } from '@ant-design/icons'
+import { Button, Card, Flex, Spin } from 'antd'
 import dayjs from 'dayjs'
 import Link from 'next/link'
 
@@ -33,6 +32,7 @@ export const List = () => {
       handleMasterChange,
       handleServiceSearch,
       handleServiceScroll,
+      router,
     },
   } = Timetable.Hooks.List.use()
 
@@ -46,15 +46,12 @@ export const List = () => {
     <div className={cls.container}>
       <div className={cls.header}>
         <Breadcrumb items={breadcrumbData} />
-        <Flex align={'center'} justify={'space-between'}>
+        <Flex style={{ marginTop: 18 }} align="center" justify="space-between" wrap="wrap" gap={16}>
           <h1 className={cls.title}>Расписание</h1>
-          <Flex gap={8}>
+          <Flex gap={8} wrap="wrap">
             <SelectField
               placeholder="Выбрать сервис"
-              options={services?.map(item => ({
-                label: item.name,
-                value: item.id,
-              }))}
+              options={services.map(item => ({ label: item.name, value: item.id }))}
               showSearch
               filterOption={false}
               loading={servicesLoading}
@@ -75,9 +72,7 @@ export const List = () => {
 
         <div className={cls.controls}>
           <Button icon={<LeftOutlined />} onClick={handlePrev} />
-          <span className={cls.dateDisplay}>
-            {currentDate.format('DD MMMM YYYY')}
-          </span>
+          <span className={cls.dateDisplay}>{currentDate.format('DD MMMM YYYY')}</span>
           <Button icon={<RightOutlined />} onClick={handleNext} />
         </div>
       </div>
@@ -85,64 +80,61 @@ export const List = () => {
       <Spin spinning={loading}>
         <div className={cls.scrollWrapper}>
           <div className={cls.daysRow}>
-            {days.map((dayItem) => {
-              const { day, date, leads } = dayItem
-              const formattedDate = dayjs(date).format('DD MMM YYYY')
+            {days.map(({ day, date, leads }) => (
+              <div key={date} className={cls.dayColumn}>
+                <h3 className={cls.dayHeader}>
+                  <span className={cls.dayHeaderSpan} onClick={() => router.push(`/admin/timetable/${date}`)}>{day}</span>
+                  <span className={cls.dayDate}>{dayjs(date).format('DD MMM YYYY')}</span>
+                </h3>
 
-              return (
-                <div key={date} className={cls.dayColumn}>
-                  <Card
-                    className={cls.dayCard}
-                    title={(
-                      <div className={cls.dayCardHeader}>
-                        <Link href={`/admin/timetable/${dayItem.date}`}>{day}</Link>
-                        <div className={cls.dayDate}>{formattedDate}</div>
-                      </div>
-                    )}
-                  >
-                    {!leads?.length && (
-                      <div className={cls.noRecords}>
-                        Нет записей на этот день
-                      </div>
-                    )}
+                {!leads.length && <div className={cls.noRecords}>Нет записей</div>}
 
-                    {leads?.length > 0 && (
-                      <Timeline className={cls.leadsTimeline}>
-                        {leads.map((lead) => {
-                          const time = dayjs(lead.date_time).format('HH:mm')
-                          const confirmed = lead.is_confirmed ? 'Да' : 'Нет'
+                {leads.map(lead => {
+                  const time = dayjs(lead.date_time).format('HH:mm')
+                  const confirmed = lead.is_confirmed
+                  const icon = confirmed ? (
+                    <CheckCircleFilled className={cls.successIcon} />
+                  ) : (
+                    <CloseCircleFilled className={cls.errorIcon} />
+                  )
 
-                          return (
-                            <Timeline.Item key={lead.id}>
-                              <div className={cls.leadInfo}>
-                                <div>
-                                  <strong>Мастер:</strong>
-                                  <Link href={'/admin/employees/'}> {lead.master.first_name}{' '}{lead.master.last_name}</Link>
-                                </div>
-                                <Flex vertical>
-                                  <strong>{lead.services.length > 1 ? 'Услуги:' : 'Услуга:'}</strong>
-                                  <Flex vertical={lead.services.length > 1}>
-                                    {lead.services.map((item, index) => (
-                                      <Link key={index} href={`/admin/projects/${item.id}`}> {item.name}</Link>
-                                    ))}
-                                  </Flex>
-                                </Flex>
-                                <div>
-                                  <strong>Подтв.:</strong> {confirmed}
-                                </div>
-                                <div>
-                                  <strong>Время:</strong> {time}
-                                </div>
-                              </div>
-                            </Timeline.Item>
-                          )
-                        })}
-                      </Timeline>
-                    )}
-                  </Card>
-                </div>
-              )
-            })}
+                  return (
+                    <Card key={lead.id} className={cls.leadCard}>
+                      <Flex gap={8} align="flex-start">
+                        {icon}
+                        <Flex vertical gap={4} className={cls.leadBody}>
+                          <Flex justify="space-between" align="center">
+                            <Link
+                              href="/admin/employees/"
+                              className={cls.masterLink}
+                            >
+                              {lead.master.first_name} {lead.master.last_name}
+                            </Link>
+                            {/* <Tag color={confirmed ? 'green' : 'volcano'}>
+                              {confirmed ? 'Подтверждено' : 'Не подтверждено'}
+                            </Tag> */}
+                          </Flex>
+
+                          <Flex vertical gap={2}>
+                            {lead.services.map(item => (
+                              <Link
+                                key={item.id}
+                                href={`/admin/projects/${item.id}`}
+                                className={cls.serviceLink}
+                              >
+                                {item.name}
+                              </Link>
+                            ))}
+                          </Flex>
+
+                          <div className={cls.time}>{time}</div>
+                        </Flex>
+                      </Flex>
+                    </Card>
+                  )
+                })}
+              </div>
+            ))}
           </div>
         </div>
       </Spin>

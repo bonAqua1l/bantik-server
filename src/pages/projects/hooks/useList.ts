@@ -21,8 +21,11 @@ function useList() {
   const [submitted, setSubmitted] = React.useState(false)
   const [services, setServices] = React.useState<ProjectsType.ServiceResponse | undefined>(undefined)
   const [isServiceLoading, setServiceLoading] = React.useState(false)
+  const [isAlphabetical, setIsAlphabetical] = React.useState(false)
   const api = useNotificationApi()
   const PAGE_SIZE = 10
+
+  const toggleAlphabetical = () => setIsAlphabetical((prev) => !prev)
 
   const createService = (async (data: ProjectsType.Form) => {
     setSubmitted(true)
@@ -135,6 +138,7 @@ function useList() {
     PAGE_SIZE,
     isServiceLoading,
     currentPage,
+    isAlphabetical,
     actions: {
       createModal,
       router,
@@ -143,6 +147,7 @@ function useList() {
       handlePageChange,
       setCurrentPage,
       handleServiceSearch,
+      toggleAlphabetical,
     },
   }
 }
