@@ -76,6 +76,13 @@
   color: #6c63ff;
 }
 
+.btn_red{
+    background-color: red !important;
+    border: none !important;
+    color: #fff !important;
+}
+
+
 @media screen and (max-width: 767px) {
   .actionBtn {
     width: 100%;

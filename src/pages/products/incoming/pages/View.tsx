@@ -22,7 +22,7 @@ export const View: React.FC<Props> = ({ incoming_id }) => {
     breadcrumbData,
     incomingItem,
     incomingItemLoading,
-    actions: { getIncomingDetails },
+    actions: { getIncomingDetails, deleteLead },
   } = ProductsIncoming.Hooks.View.use()
 
   React.useEffect(() => {
@@ -70,9 +70,12 @@ export const View: React.FC<Props> = ({ incoming_id }) => {
           </Card>
 
           <Card className={cls.detailsCard} bodyStyle={{ padding: 24 }}>
-            <Typography.Title level={5} className={cls.detailsTitle}>
-              Детали заявки
-            </Typography.Title>
+            <Flex style={{ marginBottom: 25 }} justify={'space-between'}>
+              <Typography.Title level={5} className={cls.detailsTitle}>
+                Детали заявки
+              </Typography.Title>
+              <Button className={cls.btn_red} onClick={() => deleteLead(String(incomingItem?.id))}>Удалить</Button>
+            </Flex>
 
             <Descriptions column={{ xs: 1, sm: 1, md: 2, lg: 3 }} className={cls.descriptions}>
               <Descriptions.Item label="Клиент">

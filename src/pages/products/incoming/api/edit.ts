@@ -13,6 +13,10 @@ export const editIncoming = async (body: ProductsIncomingTypes.Form, id: number)
   return axiosRequest.patch(`/leads/${id}/`, body)
 }
 
+export const deleteLead = async (id: string) => {
+  return axiosRequest.delete(`/leads/${id}`)
+}
+
 export const getProductIncomingAvailableDates = async (service_ids: string, year: string, month: string) => {
   return axiosRequest.get('/available-dates/', {
     baseURL: NEXT_PUBLIC_COMPANY_BASE_URL,

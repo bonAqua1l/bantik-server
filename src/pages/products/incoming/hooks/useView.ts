@@ -2,16 +2,22 @@
 
 import React from 'react'
 
+import { useRouter } from 'next/navigation'
+
+import { useNotificationApi } from '@/shared/providers/NotificationProvider'
+
 import { ProductsIncoming } from '..'
 import { ProductsIncomingTypes } from '../types'
 
 function useView() {
+  const router = useRouter()
   const [incomingItem, setIncomingItem] = React.useState<ProductsIncomingTypes.Item | null>(null)
   const [incomingItemLoading, setIncomingItemLoading] = React.useState(true)
   const breadcrumbData = [
     { href: '/admin/storage-requests/', title: 'Заявки' },
     { title: `#${incomingItem?.id}` },
   ]
+  const api = useNotificationApi()
 
   const getIncomingDetails = React.useCallback(async (id: number) => {
     setIncomingItemLoading(true)
@@ -26,6 +32,27 @@ function useView() {
       console.log('get incoming details error', error)
     } finally {
       setIncomingItemLoading(false)
+    }
+  }, [])
+
+  const deleteLead = React.useCallback( async (id: string) => {
+    try {
+      const response = await ProductsIncoming.API.Edit.deleteLead(id)
+
+      if (response.status === 204 ) {
+        router.push('/admin/storage-requests/')
+        api.success({
+          message: 'Заявка была успешно удалена',
+          placement: 'top',
+        })
+      } else {
+        api.error({
+          message: 'Что то пошло не так, попробуйте позже',
+          placement: 'top',
+        })
+      }
+    } catch (error) {
+      console.log('error', error)
     }
   }, [])
 
@@ -61,6 +88,7 @@ function useView() {
       getIncomingDetails,
       checkStatus,
       getTagColor,
+      deleteLead,
     },
   }
 }
