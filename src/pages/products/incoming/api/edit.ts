@@ -14,7 +14,7 @@ export const editIncoming = async (body: ProductsIncomingTypes.Form, id: number)
 }
 
 export const deleteLead = async (id: string) => {
-  return axiosRequest.delete(`/leads/${id}`)
+  return axiosRequest.delete(`/leads/${id}/`)
 }
 
 export const getProductIncomingAvailableDates = async (service_ids: string, year: string, month: string) => {
