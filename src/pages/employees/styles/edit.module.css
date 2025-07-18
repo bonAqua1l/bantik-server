@@ -1,0 +1,31 @@
+.main_title h2{
+    font-size: 24px;
+    font-weight: 400;
+}
+
+.main_title{
+    margin: 13px 0px 17px 0px;
+}
+
+.main_form {
+    width: 100%;
+}
+
+.form {
+    width: 100%;
+}
+
+.btn {
+    margin-top: 10px;
+}
+
+.employee {
+    max-width: 700px
+}
+
+.form {
+    padding: 20px 0px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 15px !important;
+}

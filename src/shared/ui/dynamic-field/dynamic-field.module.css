@@ -1,0 +1,27 @@
+.btn_red{
+    color: red !important;
+    border: none !important;
+    transition: 0.3s ease;
+    font-size: 16px;
+}
+
+.formItemField :global(.ant-form-item-row){
+    display: initial !important;
+}
+
+.formItemField :global(.ant-form-item-row .ant-form-item-label){
+    text-align: left !important;
+} 
+
+.formItemField{
+    margin: 0px !important;
+    width: 100% !important;
+}
+
+.dynamic_input{
+    width: 100% !important;
+}
+
+.main_title{
+    font-size: 14px !important;
+}

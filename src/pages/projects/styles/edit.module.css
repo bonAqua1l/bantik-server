@@ -1,0 +1,23 @@
+.header {
+    justify-content: space-between;
+    align-items: flex-start;
+}
+  
+.main_title {
+    margin: 13px 0 17px 0;
+}
+  
+.main_title h2 {
+    font-weight: 400;
+    font-size: 24px;
+}
+  
+.btn {
+    margin-top: 10px;
+}
+  
+.main_form {
+    width: 100%;
+    max-width: 400px !important;
+}
+  

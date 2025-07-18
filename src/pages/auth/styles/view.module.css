@@ -1,0 +1,152 @@
+.auth {
+    width: 100%;
+    height: 100vh;
+    flex-direction: column;
+    position: relative;
+    z-index: 3;
+}
+
+.form_flex {
+    flex-direction: column;
+}
+
+.auth_title {
+    color: #FA541C;
+    font-size: 40px;
+    margin: 0px;
+    font-weight: 500;
+}
+
+.form {
+    width: max-content;
+    height: auto;
+    background-color: #ffffff;
+    border-radius: 15px;
+    padding: 25px !important;
+}
+
+.logo :global(svg) {
+    width: 100%;
+    height: 50px;
+}
+
+.logo {
+    width: max-content;
+    flex-direction: column;
+}
+
+.form__items {
+    width: 365px;
+    margin-top: 30px;
+    flex-direction: column;
+}
+
+.form__btn {
+    height: 44px !important;
+}
+
+.form__btn :global(span) {
+    height: 100% !important;
+    display: flex !important;
+    justify-content: center;
+    align-items: center;
+}
+
+.hero_image {
+    width: 100%;
+    height: 100vh;
+    object-fit: cover;
+    position: absolute;
+    top: 0;
+    z-index: 1;
+}
+
+.black_block {
+    position: absolute;
+    background-color: #000000;
+    opacity: 0.4;
+    top: 0;
+    z-index: 2;
+    width: 100%;
+    height: 100vh;
+}
+
+.text {
+    font-size: 21px;
+    color: white;
+    font-weight: 500;
+}
+
+.footer {
+    position: absolute;
+    bottom: 0;
+    z-index: 3;
+    width: 100%;
+    padding: 20px;
+}
+
+.politics {
+    color: #ffffff;
+    font-size: 12px;
+}
+
+.lng_btn {
+    border-radius: 20px !important;
+    border: none !important;
+    background: rgba(255, 255, 255, 0.2) !important;
+    backdrop-filter: blur(24px);
+    border-radius: 50px;
+    color: white !important;
+    margin-right: 15px;
+}
+
+.companies {
+    width: 100%;
+    flex-direction: column;
+    margin-top: 30px;
+}
+
+.title {
+    font-size: 32px;
+    /* letter-spacing: -1px; */
+    font-weight: 400;
+}
+
+.subject_title {
+    font-size: 18px;
+    font-weight: 400;
+    color: #FA541C;
+}
+
+.companies_item {
+    border: 1px solid #d9d9d9;
+    border-radius: 3px;
+    padding: 10px 8px;
+    cursor: pointer;
+}
+
+.companies_name {
+    margin-bottom: 0px !important;
+}
+
+@media screen and (max-width: 835px) {
+    .auth {
+        align-items: normal !important;
+    }
+    .main_flex {
+        flex-direction: column;
+        gap: 40px !important;
+        padding: 10px;
+    }
+    .form {
+        width: 100%;
+    }
+    .logo {
+        width: 100%;
+        justify-content: center !important;
+        align-items: center !important;
+    }
+    .form__items {
+        width: 100% !important;
+    }
+}

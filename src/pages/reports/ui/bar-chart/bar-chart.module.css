@@ -1,0 +1,71 @@
+.container {
+    border: 1px solid #e5e7eb;
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+  
+.header {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 16px;
+}
+  
+.title {
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: #000000;
+}
+  
+.controls {
+    display: flex;
+    gap: 15px;
+}
+  
+.select {
+    appearance: none;
+    background: transparent;
+    padding: 4px 24px 4px 12px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    border: none;
+    outline: none;
+}
+  
+.icon {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+}
+  
+.chart {
+    margin-left: -20px;
+    margin-bottom: -36px;
+}
+  
+.fields{
+  width: 100% !important;
+  font-size: 10px !important;
+  height: 31px !important;
+  outline: none !important;
+}
+
+.fields :global(.ant-picker-input>input::placeholder) {
+  font-size: 10px !important;
+}
+
+.fields :global(.ant-select-selection-item){
+    font-size: 10px !important;
+}
+
+.fields :global(.ant-select-open){
+    font-size: 10px !important;
+}
+
+.title_sub{
+  font-size: 10px;
+}

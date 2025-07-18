@@ -1,0 +1,43 @@
+.main {
+    padding: 24px;
+    background-color: #f5f7fa;
+    min-height: 100vh;         
+}
+  
+.headerTitle {
+    margin-top: 16px;
+    font-weight: 600;
+    color: #333;              
+}
+  
+.leadsContainer {
+    margin-top: 24px;
+}
+  
+.leadCard {
+    border-radius: 8px;
+    transition: box-shadow 0.3s;
+}
+  
+.leadCard:hover {
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
+}
+  
+.leadTitle {
+    font-size: 16px;
+    font-weight: 500;
+}
+  
+.leadInfo {
+    margin-bottom: 4px;
+    display: flex;
+    gap: 4px;
+    align-items: center;
+}
+
+.leadInfoService{
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: initial !important;
+}
+  

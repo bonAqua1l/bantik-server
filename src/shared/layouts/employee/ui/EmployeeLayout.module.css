@@ -1,0 +1,67 @@
+.header {
+    padding: 0 !important;
+    height: auto !important;
+}
+  
+.sidebar {
+    height: 100%;
+    background-color: #f5f5f5 !important;
+} 
+
+.main_layout {
+    height: 100vh;
+    background-color: #f5f5f5 !important;
+}
+
+.content {
+    overflow: auto;
+    background-color: #ffffff;
+}
+
+.burger_button {
+    display: none !important;
+}
+
+.drawer :global(.ant-drawer-body) {
+    padding: 0px !important;
+}
+
+.drawer :global(.ant-drawer-header) {
+    background-color: #1b1d21 !important;
+    border-bottom: 0px !important;
+}
+
+.drawer :global(.ant-drawer-title) {
+    color: #ffffff !important;
+    font-weight: 500 !important;
+}
+
+.drawer :global(svg) {
+    color: #ffffff !important;
+}
+
+.avatar_mobile {
+    display: none !important;
+}
+
+@media screen and (max-width: 1000px) {
+    .sidebar {
+        display: none;
+    }
+    .sidebar_warehouse {
+        display: block !important;
+    }
+    .burger_button {
+        display: flex !important;
+    }
+    .content {
+        border: none !important;
+        border-radius: 0px !important;
+    }
+    .header {
+        margin: 10px;
+    }
+    .avatar_mobile {
+        display: flex !important;
+    }
+}

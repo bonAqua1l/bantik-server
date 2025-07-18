@@ -1,0 +1,134 @@
+.container {
+  padding: 20px;
+  background: #f7f8fa;
+  min-height: 100vh;
+}
+
+.header {
+  margin-bottom: 20px;
+}
+
+.title {
+  font-weight: 500;
+  margin: 0;
+  font-size: 24px;
+  color: #333;
+}
+
+.controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  margin: 16px 0;
+}
+
+.dateDisplay {
+  font-size: 18px;
+  font-weight: 500;
+  color: #555;
+}
+
+.scrollWrapper {
+  height: 70vh;
+  overflow: auto;
+  border-radius: 8px;
+  background: #fff;
+  padding: 16px;
+}
+
+.daysRow {
+  display: flex;
+  gap: 24px;
+  min-width: max-content;
+}
+
+.dayColumn {
+  flex: 0 0 280px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.dayHeader {
+  font-size: 18px;
+  font-weight: 500;
+  color: #4a4a4a;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 0;
+}
+
+.dayDate {
+  font-size: 14px;
+  color: #9b9b9b;
+}
+
+.noRecords {
+  text-align: center;
+  padding: 40px 0;
+  color: #a0a0a0;
+  font-style: italic;
+  border: 1px dashed #d9d9d9;
+  border-radius: 8px;
+}
+
+.leadCard {
+  border: 1px solid #e6e6e6 !important;
+  border-left: 4px solid #6c63ff !important;
+  border-radius: 10px !important;
+  padding: 12px;
+}
+
+.leadBody {
+  width: 100%;
+}
+
+.masterLink {
+  font-size: 15px;
+}
+
+.serviceLink {
+  font-size: 14px;
+  color: #6c63ff;
+}
+
+.serviceLink:hover {
+  text-decoration: underline;
+}
+
+.time {
+  font-size: 14px;
+  color: #666;
+}
+
+.successIcon {
+  font-size: 18px !important;
+  color: #52c41a !important;
+  margin-top: 4px !important;
+}
+
+.errorIcon {
+  font-size: 18px !important;
+  color: #ff4d4f !important;
+  margin-top: 4px !important;
+}
+
+.dayHeaderSpan{
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+.dayHeaderSpan:hover{
+    color: #6c63ff;
+}
+
+@media screen and (max-width: 767px) {
+  .daysRow {
+    gap: 16px;
+  }
+  .dayColumn {
+    flex: 0 0 240px;
+  }
+}

@@ -1,0 +1,14 @@
+.spin {
+    width: 100%;
+    min-height: 350px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .empty {
+    min-height: 350px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }

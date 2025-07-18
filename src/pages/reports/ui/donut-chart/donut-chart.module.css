@@ -1,0 +1,141 @@
+.container {
+    border: 1px solid #E5E7EB;
+    background-color: #FFFFFF;
+    border-radius: 0.375rem;
+    padding: 1.75rem 1.25rem 1.25rem;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  }
+  
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+  }
+  
+  .title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #111827;
+  }
+  
+  .selectContainer {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+  }
+  
+  .select {
+    appearance: none;
+    background: transparent;
+    border: none;
+    padding: 0.25rem 1.25rem 0.25rem 0.75rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #374151;
+  }
+  
+  .arrow {
+    position: absolute;
+    right: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    display: flex;
+    align-items: center;
+  }
+  
+  .chartWrapper {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 0.5rem;
+  }
+  
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.75rem 2rem;
+  }
+  
+  .legendItem {
+    display: flex;
+    align-items: center;
+    width: calc(50% - 2rem);
+  }
+  
+  .dot {
+    display: inline-block;
+    width: 0.75rem;
+    height: 0.75rem;
+    border-radius: 0.1875rem;
+    margin-right: 0.5rem;
+  }
+  
+  .desktop {
+    background-color: #3C50E0;
+  }
+  .tablet {
+    background-color: #6577F3;
+  }
+  .mobile {
+    background-color: #8FD0EF;
+  }
+  .unknown {
+    background-color: #0FADCF;
+  }
+  
+  .label {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #111827;
+  }
+  
+  .dateRange {
+    font-size: 0.875rem;
+    font-weight: 500;
+    display: block;
+  }
+
+  .fields{
+    width: 140px !important;
+    height: 35px !important;
+}
+.noData {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 200px;
+    color: #888;
+    font-size: 16px;
+  }
+  
+  @media (max-width: 640px) {
+    .rangeButtons{
+      padding: initial !important;
+    }
+    .fields{
+      width: 120px !important;
+      height: 30px !important;
+      font-size: 12px !important;
+    }
+
+    .fields :global(.ant-picker-input>input::placeholder) {
+      font-size: 10px !important;
+    }
+
+    .fields :global(.ant-select-selection-item){
+        font-size: 10px !important;
+    }
+
+    .fields :global(.ant-select-open){
+        font-size: 10px !important;
+    }
+    .header{
+      flex-direction: column;
+      align-items: initial;
+    }
+  }

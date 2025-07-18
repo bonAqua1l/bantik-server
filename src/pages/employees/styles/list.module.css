@@ -1,0 +1,49 @@
+.filter__panel{
+    gap: 8px;
+}
+
+.btn{
+    margin-left: 0.5rem;
+}
+
+.main_title h2{
+    font-weight: 400;
+    font-size: 24px;
+}
+
+.custom__popover{
+    cursor: pointer;
+}
+
+.card{
+    width: 400px !important;
+}
+
+.main_title{
+    margin: 13px 0px 17px 0px;
+}
+
+.avatar img{
+    object-fit: contain !important;
+}
+
+.filter_panel{
+    justify-content: flex-end;
+    gap: 10px;
+    margin-bottom: 19px;
+}
+
+.delete_btn {
+    cursor: pointer !important;
+}
+
+.delete_btn:global(.anticon svg) {
+    width: 18px !important;
+    height: 18px !important;
+    color: #8c8c8c !important;
+    transition-duration: 0.3s;
+}
+
+.delete_btn:global(.anticon svg):hover {
+    color: red !important;
+}
