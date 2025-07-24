@@ -8,6 +8,7 @@ import dayjs from 'dayjs'
 import { useRouter } from 'next/navigation'
 
 import useNotification from '@/shared/hooks/useNotifications'
+import { useNotificationApi } from '@/shared/providers/NotificationProvider'
 
 import { ProductsIncoming } from '..'
 import {
@@ -21,6 +22,9 @@ function useCreate() {
 
   const [services, setServices] = React.useState<ProductsIncomingTypes.Service[]>([])
   const [selectedServiceIds, setSelectedServiceIds] = React.useState<number[]>([])
+  const [servicesPage, setServicesPage] = React.useState(0)
+  const [servicesHasMore, setServicesHasMore] = React.useState(true)
+  const [servicesLoading, setServicesLoading] = React.useState(false)
 
   const [availableDates, setAvailableDates] = React.useState<string[]>([])
   const [selectedDate, setSelectedDate] = React.useState<string | null>(null)
@@ -39,13 +43,25 @@ function useCreate() {
   const today = React.useMemo(() => dayjs(), [])
   const currentMonth = today.month() + 1
   const currentYear = today.year()
+  const api = useNotificationApi()
 
-  const ServiceGET = React.useCallback(async () => {
+  const ServicesGET = React.useCallback(async (page = 0, search = '') => {
     try {
-      const res = await ProductsIncoming.API.List.getServices()
+      setServicesLoading(true)
+      const limit = 20
+      const offset = page * limit
+      const res = await ProductsIncoming.API.Create.getServicesPaginated({ limit, offset, search })
+      const data = res.data.results
 
-      setServices(res.data.results)
-    } catch {}
+      if (page === 0) {
+        setServices(data)
+      } else {
+        setServices((prev) => [...prev, ...data])
+      }
+      setServicesHasMore(Boolean(res.data.next))
+    } finally {
+      setServicesLoading(false)
+    }
   }, [])
 
   const ClientsGET = React.useCallback(async () => {
@@ -104,9 +120,9 @@ function useCreate() {
   )
 
   React.useEffect(() => {
-    ServiceGET()
+    ServicesGET()
     ClientsGET()
-  }, [ServiceGET, ClientsGET])
+  }, [ServicesGET, ClientsGET])
 
   React.useEffect(() => {
     fetchAvailableDates(selectedServiceIds)
@@ -159,14 +175,16 @@ function useCreate() {
         master: selectedMaster,
       } as ProductsIncomingTypes.Form
 
-      console.log(payload)
-
       setSubmitted(true)
       try {
         const res = await ProductsIncoming.API.List.createProductIncoming(payload)
 
         if (res.status !== 201) throw new Error()
         router.push('/admin/storage-requests/')
+        api.success({
+          message: 'Заявка успешно создана',
+          placement: 'top',
+        })
       } catch (e) {
         const err = e as AxiosError
 
@@ -191,6 +209,21 @@ function useCreate() {
       showError,
       timeOptions.length,
     ],
+  )
+
+  const handleServiceScroll = React.useCallback(
+    (e: React.UIEvent<HTMLDivElement>) => {
+      if (!servicesHasMore || servicesLoading) return
+      const target = e.target as HTMLDivElement
+
+      if (target.scrollTop + target.offsetHeight + 10 >= target.scrollHeight) {
+        const nextPage = servicesPage + 1
+
+        setServicesPage(nextPage)
+        ServicesGET(nextPage)
+      }
+    },
+    [servicesPage, servicesHasMore, servicesLoading, ServicesGET],
   )
 
   const breadcrumbData = [
@@ -221,6 +254,9 @@ function useCreate() {
     setSelectedTime,
     contextHolder,
     createIncoming,
+    handleServiceScroll,
+    servicesLoading,
+    servicesHasMore,
   }
 }
 

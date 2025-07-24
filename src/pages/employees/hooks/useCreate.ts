@@ -16,6 +16,9 @@ function useCreate() {
   const [form] = Form.useForm()
   const [submitted, setSubmitted] = React.useState(false)
   const [services, setServices] = React.useState<EmployeeTypes.Services[]>([])
+  const [servicesPage, setServicesPage] = React.useState(0)
+  const [servicesHasMore, setServicesHasMore] = React.useState(true)
+  const [servicesLoading, setServicesLoading] = React.useState(false)
   const router = useRouter()
   const { contextHolder, showError } = useNotification()
 
@@ -35,13 +38,19 @@ function useCreate() {
     { weekday: 7, weekday_name: 'Воскресенье' },
   ]
 
-  const getServices = React.useCallback(async () => {
+  const getServices = React.useCallback(async (page = 0) => {
     try {
-      const response = await Employees.API.Create.getServices()
+      setServicesLoading(true)
+      const limit = 20
+      const offset = page * limit
+      const res = await Employees.API.Create.getServices({ limit, offset })
+      const data = res.data.results
 
-      if (response.status === 200) setServices(response.data.results)
-    } catch (e) {
-      console.error('error get services', e)
+      if (page === 0) setServices(data)
+      else setServices((prev) => [...prev, ...data])
+      setServicesHasMore(Boolean(res.data.next))
+    } finally {
+      setServicesLoading(false)
     }
   }, [])
 
@@ -119,6 +128,21 @@ function useCreate() {
     [router, showError],
   )
 
+  const handleServiceScroll = React.useCallback(
+    (e: React.UIEvent<HTMLDivElement>) => {
+      if (!servicesHasMore || servicesLoading) return
+      const t = e.target as HTMLDivElement
+
+      if (t.scrollTop + t.offsetHeight + 10 >= t.scrollHeight) {
+        const nextPage = servicesPage + 1
+
+        setServicesPage(nextPage)
+        getServices(nextPage)
+      }
+    },
+    [servicesPage, servicesHasMore, servicesLoading, getServices],
+  )
+
   const defaultDraggerProps: UploadProps = {
     name: 'avatar',
     multiple: false,
@@ -140,6 +164,9 @@ function useCreate() {
     form,
     defaultDraggerProps,
     getWeekdayOptions,
+    servicesLoading,
+    handleServiceScroll,
+    servicesHasMore,
     actions: {
       CreateEmployee,
       getServices,

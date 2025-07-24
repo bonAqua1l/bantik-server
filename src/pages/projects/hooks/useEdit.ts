@@ -36,8 +36,18 @@ function useEdit() {
       const response = await Projects.API.Edit.getServiceById(id)
 
       setItems(response.data)
-    } catch (error) {
-      console.log('products by id projects', error)
+      const parents = response.data.parent_services ?? []
+
+      setServices((prev) => {
+        const merged = [...prev]
+
+        parents.forEach((item: ProjectsType.Service) => {
+          if (!merged.some((s) => s.id === item.id)) merged.unshift(item)
+        })
+
+        return merged
+      })
+    } catch {
     } finally {
       setIsProjectsLoading(false)
     }
@@ -54,11 +64,9 @@ function useEdit() {
       if (page === 0) {
         setServices(data)
       } else {
-        setServices(prev => [...prev, ...data])
+        setServices((prev) => [...prev, ...data])
       }
       setServicesHasMore(Boolean(response.data.next))
-    } catch (error) {
-      console.error('services error', error)
     } finally {
       setServicesLoading(false)
     }
@@ -66,21 +74,22 @@ function useEdit() {
 
   const EditService = React.useCallback(async (id: string, data: ProjectsType.FormEdit) => {
     setSubmitted(true)
-
     try {
-      const dataToSend = {
+      const dataToSend: any = {
         ...data,
         image: !Array.isArray(data.image) ? null : data.image,
       }
-
       const formData: any = new FormData()
 
       Object.entries(dataToSend).forEach(([key, value]) => {
         if (key !== 'image' && value !== undefined && value !== null) {
-          formData.append(key, String(value))
+          if (key === 'parent_services' && Array.isArray(value)) {
+            value.forEach((v) => formData.append('parent_services', String(v)))
+          } else {
+            formData.append(key, String(value))
+          }
         }
       })
-
       if (dataToSend.image === null) {
         formData.append('image', '')
       } else if (Array.isArray(dataToSend.image) && dataToSend.image[0]) {
@@ -90,23 +99,14 @@ function useEdit() {
           formData.append('image', file)
         }
       }
-
       const response = await Projects.API.Edit.editService(id, formData)
 
       if (response.status === 200) {
-        api.success({
-          message: 'Сервис успешно был изменён',
-          placement: 'top',
-        })
+        api.success({ message: 'Сервис успешно был изменён', placement: 'top' })
         router.push(`/admin/projects/${id}`)
       } else {
-        api.error({
-          message: 'Что-то пошло не так',
-          placement: 'top',
-        })
+        api.error({ message: 'Что-то пошло не так', placement: 'top' })
       }
-    } catch (error) {
-      console.log('error edit employee', error)
     } finally {
       setSubmitted(false)
     }
@@ -118,16 +118,19 @@ function useEdit() {
     ServicesGET(0, value)
   }, [])
 
-  const handleServiceScroll = React.useCallback((e: React.UIEvent<HTMLDivElement>) => {
-    const target = e.target as HTMLDivElement
+  const handleServiceScroll = React.useCallback(
+    (e: React.UIEvent<HTMLDivElement>) => {
+      const target = e.target as HTMLDivElement
 
-    if (target.scrollTop + target.offsetHeight + 10 >= target.scrollHeight && servicesHasMore && !servicesLoading) {
-      const nextPage = servicesPage + 1
+      if (target.scrollTop + target.offsetHeight + 10 >= target.scrollHeight && servicesHasMore && !servicesLoading) {
+        const nextPage = servicesPage + 1
 
-      setServicesPage(nextPage)
-      ServicesGET(nextPage, servicesSearch)
-    }
-  }, [servicesPage, servicesHasMore, servicesLoading, servicesSearch])
+        setServicesPage(nextPage)
+        ServicesGET(nextPage, servicesSearch)
+      }
+    },
+    [servicesPage, servicesHasMore, servicesLoading, servicesSearch],
+  )
 
   const defaultDraggerProps: UploadProps = {
     name: 'image',
@@ -135,8 +138,6 @@ function useEdit() {
     maxCount: 1,
     beforeUpload(file) {
       if (!file.type.startsWith('image/')) {
-        console.error(`Файл не изображение: "${file.name}"`)
-
         return Upload.LIST_IGNORE
       }
 

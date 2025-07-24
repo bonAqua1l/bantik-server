@@ -7,7 +7,7 @@ export namespace ProjectsType {
         image: string | null;
         is_long: boolean;
         is_additional: boolean;
-        parent_service: {id: number, name: string}
+        parent_services: {id: number, name: string}[]
     }
 
     export interface Service extends AdditionalService {
@@ -26,7 +26,7 @@ export namespace ProjectsType {
         duration: number;
         price: string;
         image: File
-        parent_service: number | null
+        parent_services: number | null
         is_additional: boolean
     }
 

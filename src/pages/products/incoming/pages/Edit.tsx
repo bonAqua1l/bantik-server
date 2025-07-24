@@ -42,6 +42,9 @@ export const Edit: React.FC<Props> = ({ lead_id }) => {
     incomingItemLoading,
     incomingItem,
     getIncomingDetails,
+    handleServiceScroll,
+    servicesLoading,
+    servicesHasMore,
   } = ProductsIncoming.Hooks.Edit.use()
 
   React.useEffect(() => {
@@ -69,6 +72,10 @@ export const Edit: React.FC<Props> = ({ lead_id }) => {
                 label="Услуги"
                 rules={[{ required: true }]}
                 onChange={(v) => setSelectedServiceIds(v)}
+                loading={servicesLoading}
+                dropdownStyle={servicesHasMore ? undefined : { overflowY: 'hidden' }}
+                className={cls.infinityService}
+                onPopupScroll={servicesHasMore ? handleServiceScroll : undefined}
               />
 
               <SelectField

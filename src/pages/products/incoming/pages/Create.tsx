@@ -1,4 +1,3 @@
-// src/pages/products/incoming/pages/Create.tsx
 'use client'
 
 import React from 'react'
@@ -35,6 +34,9 @@ export const Create: React.FC = () => {
     setIsNotUser,
     contextHolder,
     createIncoming,
+    handleServiceScroll,
+    servicesLoading,
+    servicesHasMore,
   } = ProductsIncoming.Hooks.Create.use()
 
   return (
@@ -58,6 +60,10 @@ export const Create: React.FC = () => {
               label="Услуги"
               rules={[{ required: true }]}
               onChange={(v) => setSelectedServiceIds(v)}
+              loading={servicesLoading}
+              dropdownStyle={servicesHasMore ? undefined : { overflowY: 'hidden' }}
+              className={cls.infinityService}
+              onPopupScroll={servicesHasMore ? handleServiceScroll : undefined}
             />
 
             <SelectField

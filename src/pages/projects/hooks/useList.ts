@@ -2,7 +2,7 @@
 
 import React, { ChangeEvent } from 'react'
 
-import { Form, Upload } from 'antd'
+import { Form, Upload, UploadFile } from 'antd'
 import { UploadProps } from 'antd/lib'
 import { useRouter } from 'next/navigation'
 
@@ -25,11 +25,22 @@ function useList() {
   const api = useNotificationApi()
   const PAGE_SIZE = 10
 
+  React.useEffect(() => {
+    const stored = localStorage.getItem('servicesIsAlphabetical')
+
+    if (stored !== null) setIsAlphabetical(stored === 'true')
+  }, [])
+
+  React.useEffect(() => {
+    localStorage.setItem('servicesIsAlphabetical', String(isAlphabetical))
+  }, [isAlphabetical])
+
   const toggleAlphabetical = () => setIsAlphabetical((prev) => !prev)
 
   const createService = (async (data: ProjectsType.Form) => {
     setSubmitted(true)
     try {
+      const { ...rest } = data
       const formData = new FormData()
 
       Object.entries(data).forEach(([key, value]) => {
@@ -38,12 +49,15 @@ function useList() {
         }
       })
 
-      if (Array.isArray(data.image) && data.image[0]) {
-        const file = data.image[0].originFileObj
-
-        if (file) {
-          formData.append('image', file)
-        }
+      if (
+        Array.isArray(rest.image) &&
+                  rest.image.length &&
+                  typeof rest.image[0] !== 'string' &&
+                  (rest.image[0] as UploadFile).originFileObj
+      ) {
+        formData.append('image', (rest.image[0] as UploadFile).originFileObj as File)
+      } else if (!Array.isArray(rest.image)) {
+        formData.append('image', '')
       }
 
       const response = await Projects.API.List.createServices(formData)

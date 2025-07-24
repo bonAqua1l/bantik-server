@@ -8,6 +8,7 @@ import dayjs from 'dayjs'
 import { useRouter } from 'next/navigation'
 
 import useNotification from '@/shared/hooks/useNotifications'
+import { useNotificationApi } from '@/shared/providers/NotificationProvider'
 
 import { ProductsIncoming } from '..'
 import {
@@ -22,6 +23,9 @@ function useEdit() {
 
   const [services, setServices] = React.useState<ProductsIncomingTypes.Service[]>([])
   const [selectedServiceIds, setSelectedServiceIds] = React.useState<number[]>([])
+  const [servicesPage, setServicesPage] = React.useState(0)
+  const [servicesHasMore, setServicesHasMore] = React.useState(true)
+  const [servicesLoading, setServicesLoading] = React.useState(false)
 
   const [availableDates, setAvailableDates] = React.useState<string[]>([])
   const [selectedDate, setSelectedDate] = React.useState<string | null>(null)
@@ -42,11 +46,25 @@ function useEdit() {
 
   const yearFromDate = React.useCallback((d: string) => +d.split('-')[0], [])
   const monthFromDate = React.useCallback((d: string) => +d.split('-')[1], [])
+  const api = useNotificationApi()
 
-  const ServiceGET = React.useCallback(async () => {
-    const { data } = await ProductsIncoming.API.List.getServices()
+  const ServicesGET = React.useCallback(async (page = 0, search = '') => {
+    try {
+      setServicesLoading(true)
+      const limit = 20
+      const offset = page * limit
+      const res = await ProductsIncoming.API.Create.getServicesPaginated({ limit, offset, search })
+      const data = res.data.results
 
-    setServices(data.results)
+      if (page === 0) {
+        setServices(data)
+      } else {
+        setServices((prev) => [...prev, ...data])
+      }
+      setServicesHasMore(Boolean(res.data.next))
+    } finally {
+      setServicesLoading(false)
+    }
   }, [])
 
   const ClientsGET = React.useCallback(async () => {
@@ -108,9 +126,9 @@ function useEdit() {
   )
 
   React.useEffect(() => {
-    ServiceGET()
+    ServicesGET()
     ClientsGET()
-  }, [ServiceGET, ClientsGET])
+  }, [ServicesGET, ClientsGET])
 
   React.useEffect(() => {
     if (!incomingItem || !clients.length) return
@@ -190,6 +208,10 @@ function useEdit() {
       try {
         await editIncoming(payload, incomingItem.id)
         router.back()
+        api.success({
+          message: 'Заявка успешно изменена',
+          placement: 'top',
+        })
       } catch (e) {
         const err = e as AxiosError
 
@@ -215,6 +237,21 @@ function useEdit() {
       timeOptions.length,
       router,
     ],
+  )
+
+  const handleServiceScroll = React.useCallback(
+    (e: React.UIEvent<HTMLDivElement>) => {
+      if (!servicesHasMore || servicesLoading) return
+      const target = e.target as HTMLDivElement
+
+      if (target.scrollTop + target.offsetHeight + 10 >= target.scrollHeight) {
+        const nextPage = servicesPage + 1
+
+        setServicesPage(nextPage)
+        ServicesGET(nextPage)
+      }
+    },
+    [servicesPage, servicesHasMore, servicesLoading, ServicesGET],
   )
 
   const breadcrumbData = [
@@ -248,6 +285,9 @@ function useEdit() {
     incomingItemLoading,
     incomingItem,
     getIncomingDetails,
+    handleServiceScroll,
+    servicesLoading,
+    servicesHasMore,
   }
 }
 

@@ -2,7 +2,7 @@
 
 import React from 'react'
 
-import {  SortAscendingOutlined } from '@ant-design/icons'
+import { SortAscendingOutlined } from '@ant-design/icons'
 import { Badge, Button, Flex, List as ListAntd, Pagination } from 'antd'
 import Image from 'next/image'
 
@@ -25,7 +25,7 @@ export const List = () => {
     isServiceLoading,
     currentPage,
     isAlphabetical,
-    actions:{
+    actions: {
       createModal,
       ServicesGET,
       router,
@@ -56,13 +56,13 @@ export const List = () => {
     <div>
       <div className="main">
         <Flex className={cls.header}>
-          <Breadcrumb items={breadcrumbData}/>
+          <Breadcrumb items={breadcrumbData} />
         </Flex>
         <div className={cls.main_title}>
           <h2>Сервисы</h2>
           <Flex className={cls.filter__panel}>
             <div>
-              <SearchField onChange={(e) => handleServiceSearch(e)}/>
+              <SearchField onChange={(e) => handleServiceSearch(e)} />
             </div>
             <Button onClick={toggleAlphabetical} className={cls.btn} icon={<SortAscendingOutlined />} type={isAlphabetical ? 'primary' : 'default'}>
               A-Z
@@ -88,29 +88,14 @@ export const List = () => {
           dataSource={displayedResults}
           renderItem={(item) => (
             <ListAntd.Item key={item.id} style={{ padding: 0 }}>
-              <Badge
-                dot={item.additional_services.length! > 0}
-                offset={[ -2, 2 ]}
-              >
-
+              <Badge dot={item.additional_services.length! > 0} offset={[-2, 2]}>
                 <div onClick={() => router.push(`/admin/projects/${item.id}`)} className={cls.card}>
                   <div className={cls.card_image_wrap}>
-                    <Image
-                      src={item.image || BantikPhoto.src}
-                      alt={item.name || 'image'}
-                      fill
-                      sizes="100vw"
-                      className={cls.card_image}
-                      priority={true}
-                    />
+                    <Image src={item.image || BantikPhoto.src} alt={item.name || 'image'} fill sizes="100vw" className={cls.card_image} priority />
                   </div>
                   <div className={cls.card__info}>
-                    <div className={cls.card__title}>
-                      {item.name}
-                    </div>
-                    <div className={cls.card__price}>
-                      {parseInt(item.price)} сом
-                    </div>
+                    <div className={cls.card__title}>{item.name}</div>
+                    <div className={cls.card__price}>{parseInt(item.price)} сом</div>
                   </div>
                 </div>
               </Badge>

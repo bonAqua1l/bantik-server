@@ -34,6 +34,25 @@ export const Edit: React.FC<Props> = (props) => {
     ServiceIDGET(Number(props.service_id))
   }, [props.service_id, ServiceIDGET])
 
+  const initialValues = React.useMemo(() => {
+    if (!items) return {}
+
+    return {
+      ...items,
+      parent_services: Array.isArray(items.parent_services) ? items.parent_services.map((p) => p.id) : [],
+      is_additional: items.is_additional,
+      image: items.image
+        ? [
+          {
+            uid: '-1',
+            name: 'current_image',
+            url: items.image,
+          },
+        ]
+        : [],
+    }
+  }, [items])
+
   return (
     <div className="main">
       <Flex className={cls.header}>
@@ -46,62 +65,26 @@ export const Edit: React.FC<Props> = (props) => {
 
       <LoaderData isLoading={isProjectsLoading} data={items}>
         <div className={cls.main_form}>
-          <Form
-            form={form}
-            className={cls.Form}
-            initialValues={{
-              ...items,
-              parent_service: items?.parent_service === null ? '' : items?.parent_service.name,
-              is_additional: items?.is_additional,
-              image: items?.image
-                ? [
-                  {
-                    uid: '-1',
-                    name: 'current_image',
-                    url: items.image,
-                  },
-                ]
-                : [],
-            }}
-            onFinish={(data) => EditService(props.service_id, data)}
-          >
-            <TextField
-              name="name"
-              placeholder="Введите название сервиса"
-              label="Название сервиса"
-            />
-            <TextField
-              name="duration"
-              placeholder="Введите длительность сервиса"
-              label="Длительность сервиса"
-              type="number"
-            />
-            <TextField
-              name="price"
-              placeholder="Введите цену сервиса"
-              label="Цена сервиса"
-              type="number"
-            />
+          <Form form={form} className={cls.Form} initialValues={initialValues} onFinish={(data) => EditService(props.service_id, data)}>
+            <TextField name="name" placeholder="Введите название сервиса" label="Название сервиса" />
+            <TextField name="duration" placeholder="Введите длительность сервиса" label="Длительность сервиса" type="number" />
+            <TextField name="price" placeholder="Введите цену сервиса" label="Цена сервиса" type="number" />
             <SelectField
-              name="parent_service"
+              name="parent_services"
               label="Родительский сервис"
               placeholder="Выбрать сервис"
               showSearch
               filterOption={false}
               allowClear
-              options={services?.map(item => ({
-                label: item.name,
-                value: item.id,
-              }))}
+              mode="multiple"
+              options={services.map((item) => ({ value: item.id, label: item.name }))}
               loading={servicesLoading}
               onSearch={handleServiceSearch}
               onPopupScroll={handleServiceScroll}
             />
-
             <Form.Item name="is_additional" valuePropName="checked">
               <Checkbox>Дополнительная услуга</Checkbox>
             </Form.Item>
-
             <DraggerFileField
               label="Выберите картинку"
               name="image"
@@ -109,13 +92,7 @@ export const Edit: React.FC<Props> = (props) => {
               className={cls.dragger_filed}
               {...defaultDraggerProps}
             />
-
-            <Button
-              htmlType="submit"
-              type="primary"
-              className={cls.btn}
-              loading={submitted}
-            >
+            <Button htmlType="submit" type="primary" className={cls.btn} loading={submitted}>
               Сохранить
             </Button>
           </Form>

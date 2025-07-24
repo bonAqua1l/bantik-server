@@ -3,12 +3,12 @@
 import React from 'react'
 
 import { PlusOutlined, MinusCircleOutlined } from '@ant-design/icons'
-import { Button, Checkbox, Flex, Form, Input, Select, TimePicker } from 'antd'
-import FormItem from 'antd/es/form/FormItem'
+import { Button, Flex, Form, Input, Select, TimePicker } from 'antd'
 
 import { Breadcrumb } from '@/shared/ui/breadcrumb/breadcrumb'
 import { DraggerFileField } from '@/shared/ui/dragger-file-field/dragger-file-field'
 import { LoaderData } from '@/shared/ui/loader/Loader'
+import { SelectField } from '@/shared/ui/select-field/select-field'
 import { TextField } from '@/shared/ui/textfield/textfield'
 
 import { Employees } from '..'
@@ -28,7 +28,9 @@ export const Edit: React.FC<Props> = (props) => {
     services,
     isEmployeeLoading,
     submitted,
-    actions: { EmployeeGET, EditEmployee, getServices, getWeekdayOptions },
+    servicesHasMore,
+    servicesLoading,
+    actions: { EmployeeGET, EditEmployee, getServices, getWeekdayOptions, handleServiceScroll },
   } = Employees.Hooks.Edit.use()
 
   React.useEffect(() => {
@@ -77,20 +79,18 @@ export const Edit: React.FC<Props> = (props) => {
                 label="Email сотрудника"
               />
 
-              <FormItem
+              <SelectField
                 name="services"
                 label="Выберите сервисы"
+                placeholder="Выберите сервисы"
+                mode="multiple"
+                options={services.map((s) => ({ value: s.id, label: s.name }))}
                 rules={[{ required: true, message: 'Поле обязательно' }]}
-                className={cls.radio_field}
-              >
-                <Checkbox.Group>
-                  {services.map((service) => (
-                    <Checkbox key={service.id} value={service.id}>
-                      {service.name}
-                    </Checkbox>
-                  ))}
-                </Checkbox.Group>
-              </FormItem>
+                loading={servicesLoading}
+                dropdownStyle={servicesHasMore ? undefined : { overflowY: 'hidden' }}
+                onPopupScroll={servicesHasMore ? handleServiceScroll : undefined}
+                style={{ height: 'auto' }}
+              />
 
               <DraggerFileField
                 name="avatar"

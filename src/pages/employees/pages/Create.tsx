@@ -4,11 +4,11 @@
 import React from 'react'
 
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons'
-import { Button, Checkbox, Flex, Form, Select, TimePicker } from 'antd'
-import FormItem from 'antd/es/form/FormItem'
+import { Button, Flex, Form, Select, TimePicker } from 'antd'
 
 import { Breadcrumb } from '@/shared/ui/breadcrumb/breadcrumb'
 import { DraggerFileField } from '@/shared/ui/dragger-file-field/dragger-file-field'
+import { SelectField } from '@/shared/ui/select-field/select-field'
 import { TextField } from '@/shared/ui/textfield/textfield'
 
 import { Employees } from '..'
@@ -22,6 +22,9 @@ export const Create = () => {
     contextHolder,
     services,
     form,
+    handleServiceScroll,
+    servicesHasMore,
+    servicesLoading,
     getWeekdayOptions,
     actions: { CreateEmployee, getServices },
   } = Employees.Hooks.Create.use()
@@ -50,15 +53,18 @@ export const Create = () => {
             <TextField name="email" placeholder="Введите email пользвотеля" label="Email сотрудника" rules={[{ required: true, message: 'Поле обязательно' }]} />
             <TextField type="password" name="password" placeholder="Пароль" label="Пароль сотрудника" rules={[{ required: true, message: 'Поле обязательно' }]} />
             <TextField name="about" placeholder="Введите описание" label="О мастере" />
-            <FormItem name="services" label="Выберите сервисы" rules={[{ required: true, message: 'Поле обязательно' }]} className={cls.radio_field}>
-              <Checkbox.Group>
-                {services.map((service) => (
-                  <Checkbox key={service.id} value={service.id}>
-                    {service.name}
-                  </Checkbox>
-                ))}
-              </Checkbox.Group>
-            </FormItem>
+            <SelectField
+              name="services"
+              label="Выберите сервисы"
+              placeholder="Выберите сервисы"
+              mode="multiple"
+              options={services.map((s) => ({ value: s.id, label: s.name }))}
+              rules={[{ required: true, message: 'Поле обязательно' }]}
+              loading={servicesLoading}
+              dropdownStyle={servicesHasMore ? undefined : { overflowY: 'hidden' }}
+              onPopupScroll={servicesHasMore ? handleServiceScroll : undefined}
+              style={{ height: 'auto' }}
+            />
             <DraggerFileField
               name="avatar"
               label="Изменить аватар"

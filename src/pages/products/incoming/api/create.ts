@@ -22,6 +22,10 @@ export const getProductIncomingProject = async () => {
   })
 }
 
+export const getServicesPaginated = async (params: { limit?: number; offset?: number; search?: string }) => {
+  return axiosRequest.get('/services/', { params })
+}
+
 export const getProductIncomingAvailableDates = async (service_ids: string, year: string, month: string) => {
   return axiosRequest.get('/available-dates/', {
     baseURL: NEXT_PUBLIC_COMPANY_BASE_URL,
