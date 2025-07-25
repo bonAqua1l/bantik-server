@@ -55,6 +55,7 @@ export const Create: React.FC = () => {
               name="service"
               placeholder="Выберите услуги"
               mode="multiple"
+              showSearch={false}
               value={selectedServiceIds}
               options={services.map((s) => ({ value: s.id, label: s.name }))}
               label="Услуги"
@@ -72,7 +73,6 @@ export const Create: React.FC = () => {
               options={clients.map((c) => ({ label: c.name, value: c.id }))}
               rules={[{ required: !isNotUser }]}
               label="Клиент"
-              disabled={isNotUser === false}
               onChange={() => setIsNotUser(false)}
             />
 

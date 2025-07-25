@@ -48,7 +48,12 @@ export const List = () => {
         <Breadcrumb items={breadcrumbData} />
         <Flex style={{ marginTop: 18 }} align="center" justify="space-between" wrap="wrap" gap={16}>
           <h1 className={cls.title}>Расписание</h1>
-          <Flex gap={8} wrap="wrap">
+          <Flex gap={8} wrap="wrap" align={'center'}>
+            <div className={cls.controls}>
+              <Button icon={<LeftOutlined />} onClick={handlePrev} />
+              <span className={cls.dateDisplay}>{currentDate.format('DD MMMM YYYY')}</span>
+              <Button icon={<RightOutlined />} onClick={handleNext} />
+            </div>
             <SelectField
               placeholder="Выбрать сервис"
               options={services.map(item => ({ label: item.name, value: item.id }))}
@@ -58,6 +63,7 @@ export const List = () => {
               onSearch={handleServiceSearch}
               onPopupScroll={handleServiceScroll}
               onChange={handleServiceChange}
+              className={cls.action_nav}
             />
             <SelectField
               placeholder="Выбрать мастера"
@@ -66,15 +72,13 @@ export const List = () => {
                 label: `${item.first_name} ${item.last_name}`,
               }))}
               onChange={handleMasterChange}
+              className={cls.action_nav}
             />
+            <Flex gap={10}>
+              <Button type="primary" onClick={() => router.push('/admin/products/incoming/create')} className={cls.action_nav}>Добавить заявку</Button>
+            </Flex>
           </Flex>
         </Flex>
-
-        <div className={cls.controls}>
-          <Button icon={<LeftOutlined />} onClick={handlePrev} />
-          <span className={cls.dateDisplay}>{currentDate.format('DD MMMM YYYY')}</span>
-          <Button icon={<RightOutlined />} onClick={handleNext} />
-        </div>
       </div>
 
       <Spin spinning={loading}>
@@ -115,16 +119,14 @@ export const List = () => {
                             </Tag> */}
                           </Flex>
 
-                          <Flex vertical gap={2}>
-                            {lead.services.map(item => (
-                              <Link
-                                key={item.id}
-                                href={`/admin/projects/${item.id}`}
-                                className={cls.serviceLink}
-                              >
-                                {item.name}
-                              </Link>
-                            ))}
+                          <Flex gap={5}>
+                            <span style={{ color: '#000' }}>Клиент:</span>
+                            <Link
+                              href={`/admin/clients/edit/${lead.client.id}`}
+                              className={cls.serviceLink}
+                            >
+                              {lead.client.name}
+                            </Link>
                           </Flex>
 
                           <div className={cls.time}>{time}</div>

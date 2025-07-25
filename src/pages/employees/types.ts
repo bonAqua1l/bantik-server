@@ -1,6 +1,12 @@
 import { Dayjs } from 'dayjs'
 
 export namespace EmployeeTypes {
+  export interface ApiResponse {
+    count: number;
+    next: string | null;
+    previous: string | null;
+    results: Item[];
+  }
   export interface Item {
     uuid: string
     password: string

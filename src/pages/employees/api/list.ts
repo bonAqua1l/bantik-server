@@ -3,8 +3,8 @@ import { NEXT_PUBLIC_COMPANY_BASE_URL } from '@/shared/utils/consts'
 
 import { EmployeeTypes } from '../types'
 
-export const getEmployeesList = async () => {
-  return axiosRequest.get('/users?is_employee=true', {
+export const getEmployeesList = async (url?: string, previousUrl?: string) => {
+  return axiosRequest.get((previousUrl || url) || '/users?is_employee=true', {
     baseURL: NEXT_PUBLIC_COMPANY_BASE_URL,
   })
 }

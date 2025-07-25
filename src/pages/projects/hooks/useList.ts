@@ -62,18 +62,15 @@ function useList() {
 
       const response = await Projects.API.List.createServices(formData)
 
+      console.log('status', response.status)
+      console.log('error', response?.data?.name?.[0])
+
       if (response.status === 201) {
         form.resetFields()
         await ServicesGET()
         api.success({
           message: 'Сервис успешно создан',
           placement: 'top',
-        })
-      } else if (response.status === 400 && response?.data?.name?.[0] === 'Услуга with this Название услуги already exists.') {
-        api.error({
-          message: 'Мындай аталыштагы товар бар',
-          placement: 'top',
-          duration: 1.5,
         })
       } else {
         api.error({
@@ -83,7 +80,14 @@ function useList() {
       }
       router.refresh()
 
-    } catch (error) {
+    } catch (error: any) {
+      if (error.status === 400 && error?.response.data?.name?.[0] === 'Услуга with this Название услуги already exists.') {
+        api.error({
+          message: 'Сервис с подобным названием уже существует.',
+          placement: 'top',
+          duration: 1.5,
+        })
+      }
       console.log('project create error', error)
     } finally {
       setSubmitted(false)

@@ -180,7 +180,7 @@ function useCreate() {
         const res = await ProductsIncoming.API.List.createProductIncoming(payload)
 
         if (res.status !== 201) throw new Error()
-        router.push('/admin/storage-requests/')
+        router.back()
         api.success({
           message: 'Заявка успешно создана',
           placement: 'top',

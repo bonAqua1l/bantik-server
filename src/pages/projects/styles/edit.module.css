@@ -1,6 +1,6 @@
 .header {
-    justify-content: space-between;
     align-items: flex-start;
+    justify-content: space-between;
 }
   
 .main_title {

@@ -3,7 +3,7 @@
 
 import React from 'react'
 
-import { Avatar, Button, Flex, Table } from 'antd'
+import { Avatar, Button, Flex, Pagination, Table } from 'antd'
 import { ColumnsType } from 'antd/es/table'
 
 import { getFullName } from '@/shared/tools/getFullName'
@@ -64,11 +64,15 @@ export const List = () => {
     breadcrumbData,
     fireEmployeeModal,
     selectedEmployee,
+    currentPage,
+    PAGE_SIZE,
     actions: {
       getEmployeesList,
       handleSelectedEmployee,
       router,
       deleteUser,
+      handlePageChange,
+      setCurrentPage,
     },
   } = Employees.Hooks.List.use()
 
@@ -91,10 +95,24 @@ export const List = () => {
       <Table
         rowKey="uuid"
         columns={createColumns(handleSelectedEmployee, fireEmployeeModal.onOpen, router, deleteUser)}
-        dataSource={employees ? employees : []}
+        dataSource={employees?.results ? employees.results : []}
         loading={isEmployeesLoading}
-        pagination={{ position: ['bottomRight'] }}
+        pagination={false}
         scroll={{ x: 900 }}
+      />
+
+      <Pagination
+        className={cls.pagination}
+        total={employees?.count}
+        align="end"
+        current={currentPage}
+        pageSize={PAGE_SIZE}
+        disabled={isEmployeesLoading}
+        showSizeChanger={false}
+        onChange={(page) => {
+          setCurrentPage(page)
+          handlePageChange(page)
+        }}
       />
 
       <EmployeeFireModal isModalOpen={fireEmployeeModal.isOpen} onCloseModal={fireEmployeeModal.onClose} user={selectedEmployee} />

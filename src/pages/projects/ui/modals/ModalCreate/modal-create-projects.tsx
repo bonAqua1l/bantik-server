@@ -112,7 +112,6 @@ const ModalCreateProjects: React.FC<Props> = ({
           createService(data).finally(() => {
             onCloseModal()
           })}
-        // onFinish={(data) => console.log('data', data)}
       >
         <TextField name="name" placeholder="Введите название сервиса" label="Название сервиса" rules={ProjectsRules.InputRules} />
 

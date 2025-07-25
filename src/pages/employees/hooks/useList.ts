@@ -11,13 +11,15 @@ import { Employees } from '..'
 import { EmployeeTypes } from '../types'
 
 function useList() {
-  const [employees, setEmployees] = React.useState<EmployeeTypes.Item[] | null>(null)
-  const [isEmployeesLoading, setIsEmployeesLoading] = React.useState(true)
+  const [employees, setEmployees] = React.useState<EmployeeTypes.ApiResponse | null>(null)
+  const [currentPage, setCurrentPage] = React.useState(1)
+  const [isEmployeesLoading, setIsEmployeesLoading] = React.useState(false)
   const [selectedEmployee, setSelectedEmployee] = React.useState<EmployeeTypes.Item | null>(null)
   const [submitted, setSubmitted] = React.useState(false)
   const [api, contextHolder] = notification.useNotification()
   const [employee, setEmployee] = React.useState<EmployeeTypes.Item | null>(null)
-  const [isEmployeeLoading, setIsEmployeeLoading] = React.useState(true)
+  const [isEmployeeLoading, setIsEmployeeLoading] = React.useState(false)
+  const PAGE_SIZE = 10
 
   const router = useRouter()
 
@@ -28,11 +30,12 @@ function useList() {
     { href: '/employees', title: 'Мастера' },
   ]
 
-  const getEmployeesList = React.useCallback(async () => {
+  const getEmployeesList = React.useCallback(async (url?: string, previusURL?: string) => {
+    setIsEmployeesLoading(true)
     try {
-      const response = await Employees.API.List.getEmployeesList()
+      const response = await Employees.API.List.getEmployeesList(url || '/users?is_employee=true', previusURL)
 
-      const data = response.data.results
+      const data = response.data
 
       setEmployees(data)
     } catch (error) {
@@ -78,6 +81,7 @@ function useList() {
   )
 
   const EmployeeGET = React.useCallback(async (uuid: string) => {
+    setIsEmployeeLoading(true)
     try {
       const response = await Employees.API.Edit.getEmployeeId(uuid)
 
@@ -120,6 +124,17 @@ function useList() {
     setSelectedEmployee(employee)
   }
 
+  const handlePageChange = (page: number) => {
+    if (isEmployeeLoading || page === currentPage) return
+
+    const offset = (page - 1) * PAGE_SIZE
+
+    const url = `/users?limit=${PAGE_SIZE}&offset=${offset}&is_employee=true`
+
+    getEmployeesList(url, undefined)
+    setCurrentPage(page)
+  }
+
   const deleteUser = React.useCallback(async (id: string) => {
     try {
       await Employees.API.Edit.deleteEmployee(id)
@@ -141,6 +156,8 @@ function useList() {
     contextHolder,
     employee,
     isEmployeeLoading,
+    currentPage,
+    PAGE_SIZE,
     actions: {
       router,
       getEmployeesList,
@@ -149,6 +166,8 @@ function useList() {
       EditEmployee,
       EmployeeGET,
       deleteUser,
+      handlePageChange,
+      setCurrentPage,
     },
   }
 }

@@ -76,7 +76,7 @@
 
 .leadCard {
   border: 1px solid #e6e6e6 !important;
-  border-left: 4px solid #6c63ff !important;
+  border-left: 4px solid #1b1d21 !important;
   border-radius: 10px !important;
   padding: 12px;
 }
@@ -122,6 +122,10 @@
 
 .dayHeaderSpan:hover{
     color: #6c63ff;
+}
+
+.action_nav{
+  height: 35px !important;
 }
 
 @media screen and (max-width: 767px) {
