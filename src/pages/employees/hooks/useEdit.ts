@@ -67,7 +67,11 @@ function useEdit() {
         const response = await Employees.API.Edit.getEmployeeId(uuid)
 
         setEmployee(response.data)
-        originalSchedule.current = response.data.schedule
+        // Инициализируем originalSchedule с пустым массивом по умолчанию
+        originalSchedule.current = Array.isArray(response.data.schedule) 
+          ? response.data.schedule 
+          : []
+        
         const scheduleArr = Array.isArray(response.data.schedule)
           ? response.data.schedule
           : []
@@ -105,8 +109,8 @@ function useEdit() {
 
         if (
           Array.isArray(avatar) &&
-        avatar.length &&
-        (avatar[0] as UploadFile).originFileObj
+          avatar.length &&
+          (avatar[0] as UploadFile).originFileObj
         ) {
           formData.append('avatar', (avatar[0] as UploadFile).originFileObj as File)
         }
@@ -128,14 +132,17 @@ function useEdit() {
           }))
 
         const currentIds = currentList.filter((i) => i?.id).map((i) => i.id)
-        const delete_schedules = originalSchedule.current
+        
+        // Защищаемся от undefined значения
+        const originalScheduleArray = originalSchedule.current || []
+        const delete_schedules = originalScheduleArray
           .filter((o) => !currentIds.includes(o.id))
           .map((o) => o.id)
 
         const update_schedules = currentList
           .filter((i) => i?.id)
           .filter((i) => {
-            const orig = originalSchedule.current.find((o) => o.id === i.id)
+            const orig = originalScheduleArray.find((o) => o.id === i.id)
 
             if (!orig) return false
             const changedWeekday = i.weekday !== orig.weekday
@@ -157,7 +164,10 @@ function useEdit() {
           update_schedules,
         }
 
-        await Employees.API.Edit.editEmployeeSchedule(uuid, schedulePayload)
+        // Добавляем проверку на наличие изменений в расписании
+        if (newSchedules.length > 0 || delete_schedules.length > 0 || update_schedules.length > 0) {
+          await Employees.API.Edit.editEmployeeSchedule(uuid, schedulePayload)
+        }
 
         if (response.status === 200) {
           router.push('/admin/employees/')
