@@ -68,10 +68,9 @@ function useEdit() {
 
         setEmployee(response.data)
         // Инициализируем originalSchedule с пустым массивом по умолчанию
-        originalSchedule.current = Array.isArray(response.data.schedule) 
-          ? response.data.schedule 
+        originalSchedule.current = Array.isArray(response.data.schedule)
+          ? response.data.schedule
           : []
-        
         const scheduleArr = Array.isArray(response.data.schedule)
           ? response.data.schedule
           : []
@@ -96,7 +95,7 @@ function useEdit() {
   )
 
   const EditEmployee = React.useCallback(
-    async (uuid: string, data: EmployeeTypes.Item) => {
+    async (uuid: string, data: any) => {
       setSubmitted(true)
       try {
         console.log('data', data)
@@ -104,7 +103,7 @@ function useEdit() {
         const formData = new FormData()
 
         Object.entries(rest).forEach(([k, v]) => {
-          if (v !== undefined && v !== null) formData.append(k, v as any)
+          if (v !== undefined && v !== null) formData.append(k, String(v))
         })
 
         if (
@@ -121,18 +120,18 @@ function useEdit() {
 
         const response = await Employees.API.Edit.editEmployee(uuid, formData)
 
-        const currentList = (schedule as any[]) || []
+        const currentList = Array.isArray(schedule) ? schedule : []
 
         const newSchedules = currentList
-          .filter((i) => !i?.id)
-          .map((i) => ({
+          .filter((i: any) => !i?.id)
+          .map((i: any) => ({
             weekday: String(i.weekday),
-            start_time: i.time?.[0].format('HH:mm'),
-            end_time: i.time?.[1].format('HH:mm'),
+            start_time: i.time?.[0]?.format('HH:mm') || '',
+            end_time: i.time?.[1]?.format('HH:mm') || '',
           }))
 
-        const currentIds = currentList.filter((i) => i?.id).map((i) => i.id)
-        
+        const currentIds = currentList.filter((i: any) => i?.id).map((i: any) => i.id)
+
         // Защищаемся от undefined значения
         const originalScheduleArray = originalSchedule.current || []
         const delete_schedules = originalScheduleArray
@@ -140,22 +139,22 @@ function useEdit() {
           .map((o) => o.id)
 
         const update_schedules = currentList
-          .filter((i) => i?.id)
-          .filter((i) => {
-            const orig = originalScheduleArray.find((o) => o.id === i.id)
+          .filter((i: any) => i?.id)
+          .filter((i: any) => {
+            const orig = originalScheduleArray.find((o: any) => o.id === i.id)
 
             if (!orig) return false
             const changedWeekday = i.weekday !== orig.weekday
-            const changedStart = i.time?.[0].format('HH:mm') !== orig.start_time
-            const changedEnd = i.time?.[1].format('HH:mm') !== orig.end_time
+            const changedStart = i.time?.[0]?.format('HH:mm') !== orig.start_time
+            const changedEnd = i.time?.[1]?.format('HH:mm') !== orig.end_time
 
             return changedWeekday || changedStart || changedEnd
           })
-          .map((i) => ({
+          .map((i: any) => ({
             id: i.id,
             weekday: String(i.weekday),
-            start_time: i.time?.[0].format('HH:mm'),
-            end_time: i.time?.[1].format('HH:mm'),
+            start_time: i.time?.[0]?.format('HH:mm') || '',
+            end_time: i.time?.[1]?.format('HH:mm') || '',
           }))
 
         const schedulePayload: EmployeeTypes.SchedulePayload = {
