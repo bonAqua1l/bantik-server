@@ -55,7 +55,9 @@ function useEdit() {
     try {
       const response = await Employees.API.Create.getServices()
 
-      if (response.status === 200) setServices(response.data.results)
+      if (response.status === 200) {
+        setServices(response.data)
+      }
     } catch (e) {
       console.error('error get services', e)
     }

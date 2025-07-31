@@ -12,5 +12,5 @@ export const createEmployeeSchedule = (uuid: string, data: EmployeeTypes.Schedul
 }
 
 export const getServices = () => {
-  return axiosRequest.get('/services/', { baseURL: NEXT_PUBLIC_COMPANY_BASE_URL })
+  return axiosRequest.get('/services/?limit=all', { baseURL: NEXT_PUBLIC_COMPANY_BASE_URL })
 }

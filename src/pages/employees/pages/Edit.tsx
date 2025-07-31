@@ -36,6 +36,10 @@ export const Edit: React.FC<Props> = (props) => {
     getServices()
   }, [EmployeeGET, getServices, props.employee_id])
 
+  // Отладка
+  React.useEffect(() => {
+  }, [services])
+
   return (
     <div className="main">
       <Flex vertical className={cls.employee}>
@@ -84,7 +88,7 @@ export const Edit: React.FC<Props> = (props) => {
                 className={cls.radio_field}
               >
                 <Checkbox.Group>
-                  {services.map((service) => (
+                  {(services || []).map((service) => (
                     <Checkbox key={service.id} value={service.id}>
                       {service.name}
                     </Checkbox>
