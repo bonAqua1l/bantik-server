@@ -4,7 +4,7 @@
 import React from 'react'
 
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons'
-import { Button, Checkbox, Flex, Form, Select, TimePicker } from 'antd'
+import { Button, Checkbox, Flex, Form, Select, Spin, TimePicker } from 'antd'
 import FormItem from 'antd/es/form/FormItem'
 
 import { Breadcrumb } from '@/shared/ui/breadcrumb/breadcrumb'
@@ -22,6 +22,7 @@ export const Create = () => {
     contextHolder,
     services,
     form,
+    loading,
     getWeekdayOptions,
     actions: { CreateEmployee, getServices },
   } = Employees.Hooks.Create.use()
@@ -52,11 +53,17 @@ export const Create = () => {
             <TextField name="about" placeholder="Введите описание" label="О мастере" />
             <FormItem name="services" label="Выберите сервисы" rules={[{ required: true, message: 'Поле обязательно' }]} className={cls.radio_field}>
               <Checkbox.Group>
-                {services.map((service) => (
-                  <Checkbox key={service.id} value={service.id}>
-                    {service.name}
-                  </Checkbox>
-                ))}
+                {
+                  loading ? (
+                    <Spin/>
+                  ) : (
+                    services.map((service) => (
+                      <Checkbox key={service.id} value={service.id}>
+                        {service.name}
+                      </Checkbox>
+                    ))
+                  )
+                }
               </Checkbox.Group>
             </FormItem>
             <DraggerFileField
