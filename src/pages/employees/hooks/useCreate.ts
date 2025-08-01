@@ -16,6 +16,7 @@ function useCreate() {
   const [form] = Form.useForm()
   const [submitted, setSubmitted] = React.useState(false)
   const [services, setServices] = React.useState<EmployeeTypes.Services[]>([])
+  const [loading, setLoading] = React.useState(true)
   const router = useRouter()
   const { contextHolder, showError } = useNotification()
 
@@ -36,12 +37,16 @@ function useCreate() {
   ]
 
   const getServices = React.useCallback(async () => {
+    setLoading(true)
+
     try {
       const response = await Employees.API.Create.getServices()
 
-      if (response.status === 200) setServices(response.data.results)
+      if (response.status === 200) setServices(response.data)
     } catch (e) {
       console.error('error get services', e)
+    } finally {
+      setLoading(false)
     }
   }, [])
 
@@ -140,6 +145,7 @@ function useCreate() {
     form,
     defaultDraggerProps,
     getWeekdayOptions,
+    loading,
     actions: {
       CreateEmployee,
       getServices,
